@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 from typing import Iterator
 
-# Make the assgen package importable when running via mkdocs-gen-files
+# Make the assetgen package importable when running via mkdocs-gen-files
 _src = Path(__file__).parent.parent / "src"
 if str(_src) not in sys.path:
     sys.path.insert(0, str(_src))
@@ -39,7 +39,7 @@ import yaml  # noqa: E402
 # ---------------------------------------------------------------------------
 
 def _load_catalog() -> dict:
-    catalog_path = Path(__file__).parent.parent / "src" / "assgen" / "catalog.yaml"
+    catalog_path = Path(__file__).parent.parent / "src" / "assetgen" / "catalog.yaml"
     try:
         with open(catalog_path) as f:
             data = yaml.safe_load(f)
@@ -293,7 +293,7 @@ def _build_index_page(domain_summaries: dict[str, list[dict]], catalog: dict) ->
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    from assgen.client.cli import app as root_typer_app  # noqa: PLC0415
+    from assetgen.client.cli import app as root_typer_app  # noqa: PLC0415
 
     catalog = _load_catalog()
     root_click = typer.main.get_command(root_typer_app)
