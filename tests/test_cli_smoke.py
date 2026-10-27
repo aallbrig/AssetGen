@@ -235,7 +235,9 @@ class TestModelsCommand:
                 "job_types": ["visual.model.create"],
             },
         ]
-        with patch("assetgen.client.api.APIClient", return_value=self._mock_api_client(mock_models)):
+        with patch(
+            "assetgen.client.api.APIClient", return_value=self._mock_api_client(mock_models)
+        ):
             result = invoke("models", "list")
         assert result.exit_code in (0, 1)  # may fail to connect — must not crash
 
