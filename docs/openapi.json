@@ -398,16 +398,16 @@
   },
   "info": {
     "contact": {
-      "name": "AssetGen project",
-      "url": "https://github.com/aallbrig/AssetGen"
+      "name": "assetgen project",
+      "url": "https://github.com/aallbrig/assetgen"
     },
-    "description": "## AssetGen-server\n\nREST API for the **AssetGen** AI game-asset generation pipeline.\n\nClients enqueue *jobs* specifying a [game-dev task](../tasks) and optional parameters.\nThe server downloads the required HuggingFace model (if not already cached),\nruns inference on the GPU, and stores the output files in the server's outputs\ndirectory.  Clients can poll for completion and then download the files.\n\n### Quick start\n\n```bash\n# Start the server (or let the client auto-start it)\nAssetGen-server start\n\n# Submit a job and wait for it\nAssetGen gen visual model create --prompt \"low-poly sword\" --wait\n```\n\n### Docs & source\n\n* Interactive docs: [`/docs`](/docs) (Swagger UI) or [`/redoc`](/redoc) (ReDoc)\n* OpenAPI schema: [`/openapi.json`](/openapi.json)\n* Source: <https://github.com/aallbrig/AssetGen>\n",
+    "description": "## assetgen-server\n\nREST API for the **assetgen** AI game-asset generation pipeline.\n\nClients enqueue *jobs* specifying a [game-dev task](../tasks) and optional parameters.\nThe server downloads the required HuggingFace model (if not already cached),\nruns inference on the GPU, and stores the output files in the server's outputs\ndirectory.  Clients can poll for completion and then download the files.\n\n### Quick start\n\n```bash\n# Start the server (or let the client auto-start it)\nassetgen-server start\n\n# Submit a job and wait for it\nassetgen gen visual model create --prompt \"low-poly sword\" --wait\n```\n\n### Docs & source\n\n* Interactive docs: [`/docs`](/docs) (Swagger UI) or [`/redoc`](/redoc) (ReDoc)\n* OpenAPI schema: [`/openapi.json`](/openapi.json)\n* Source: <https://github.com/aallbrig/assetgen>\n",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
     "summary": "AI game asset generation pipeline server",
-    "title": "AssetGen-server",
+    "title": "assetgen-server",
     "version": "0"
   },
   "openapi": "3.1.0",
