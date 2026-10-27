@@ -1,6 +1,6 @@
 # docker/loki-local-config.yml
 #
-# Minimal Loki configuration for the assgen local observability stack.
+# Minimal Loki configuration for the assetgen local observability stack.
 # Data is stored in a Docker volume — not suitable for production.
 
 auth_enabled: false

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export the OpenAPI schema from the assgen-server FastAPI app.
+"""Export the OpenAPI schema from the assetgen-server FastAPI app.
 
 Usage:
     python scripts/export_openapi.py          # writes docs/openapi.json
@@ -20,7 +20,7 @@ SPEC_PATH = _REPO_ROOT / "docs" / "openapi.json"
 
 
 def _get_spec() -> dict:
-    from assgen.server.app import create_app
+    from assetgen.server.app import create_app
 
     app = create_app(server_config={
         "host": "127.0.0.1",

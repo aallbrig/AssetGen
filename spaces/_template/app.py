@@ -1,8 +1,8 @@
 """
-assgen.<domain>.<command> — HuggingFace Space
+assetgen.<domain>.<command> — HuggingFace Space
 <one-line description>
 
-CLI equivalent: assgen gen <domain> <command> [args]
+CLI equivalent: assetgen gen <domain> <command> [args]
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ except (ImportError, AttributeError):              # running locally — no-op s
     spaces = types.SimpleNamespace(GPU=lambda fn: fn)
 
 import gradio as gr
-from assgen.sdk import run
+from assetgen.sdk import run
 
 JOB_TYPE = "domain.subdomain.command"   # ← change this
 
@@ -24,11 +24,11 @@ def _run(param1: str, param2: float) -> str:
     return result["files"][0]   # or result["files"] for multiple outputs
 
 
-with gr.Blocks(title="assgen · <Title>") as demo:
+with gr.Blocks(title="assetgen · <Title>") as demo:
     gr.Markdown(
-        "# assgen · <Title>\n"
+        "# assetgen · <Title>\n"
         "<Short description of what this Space demonstrates.>\n"
-        "Part of the [assgen](https://github.com/aallbrig/assgen) pipeline."
+        "Part of the [assetgen](https://github.com/aallbrig/assetgen) pipeline."
     )
     with gr.Row():
         with gr.Column():

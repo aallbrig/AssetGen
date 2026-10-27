@@ -2,21 +2,21 @@
 
 The CLI reference below is **generated directly from the source code** — every
 flag, argument, and help string you see here comes from the same Typer
-annotations that power `assgen --help`.  Any change to the code is immediately
+annotations that power `AssetGen --help`.  Any change to the code is immediately
 reflected here on the next docs build.
 
-## assgen
+## AssetGen
 
 ::: mkdocs-typer
-    :module: assgen.client.cli
+    :module: AssetGen.client.cli
     :command: app
-    :prog_name: assgen
+    :prog_name: AssetGen
     :depth: 0
 
 
 
 ```
-assgen [OPTIONS] COMMAND
+AssetGen [OPTIONS] COMMAND
 ```
 
 | Subcommand | Description |
@@ -39,13 +39,13 @@ assgen [OPTIONS] COMMAND
 
 ---
 
-## assgen compose
+## AssetGen compose
 
 Multi-step asset pipelines — a single command that chains multiple generation steps
 sequentially, passing each step's output into the next. The cost equals the sum of the
 individual steps; there is no additional overhead.
 
-### `assgen compose npc`
+### `AssetGen compose npc`
 
 Generate a complete game NPC from a text description:
 
@@ -56,15 +56,15 @@ concept art → multi-view (Zero123++) → mesh → UV unwrap → concept-guided
 ```
 
 ```bash
-assgen compose npc "pig shopkeeper with apron, medieval fantasy" --wait
-assgen compose npc "dark elf archer" --style "gritty realistic" --engine unreal --wait
-assgen compose npc "robot guard" --no-multiview \
+AssetGen compose npc "pig shopkeeper with apron, medieval fantasy" --wait
+AssetGen compose npc "dark elf archer" --style "gritty realistic" --engine unreal --wait
+AssetGen compose npc "robot guard" --no-multiview \
     --animations idle,walk,attack_light,death \
     --skeleton humanoid --engine unity --wait
-assgen compose npc "wizard" --voice "elderly male, wise" --no-lod --no-collider --wait
+AssetGen compose npc "wizard" --voice "elderly male, wise" --no-lod --no-collider --wait
 
 # Preview what steps will run without executing
-assgen compose npc "dwarf warrior" --dry-run
+AssetGen compose npc "dwarf warrior" --dry-run
 ```
 
 | Flag | Default | Description |
@@ -81,7 +81,7 @@ assgen compose npc "dwarf warrior" --dry-run
 | `--output` | — | Output directory |
 | `--dry-run` | off | Print steps without executing |
 
-### `assgen compose weapon`
+### `AssetGen compose weapon`
 
 Generate a complete weapon asset:
 
@@ -91,13 +91,13 @@ concept art → mesh → UV unwrap → concept-guided texture → LOD levels
 ```
 
 ```bash
-assgen compose weapon "rusted iron longsword, dark fantasy" --wait
-assgen compose weapon "plasma rifle" --style "sci-fi, chrome" --engine unreal --wait
+AssetGen compose weapon "rusted iron longsword, dark fantasy" --wait
+AssetGen compose weapon "plasma rifle" --style "sci-fi, chrome" --engine unreal --wait
 ```
 
 ---
 
-### `assgen compose prop`
+### `AssetGen compose prop`
 
 Generate a static game prop (barrel, crate, torch, furniture, etc.):
 
@@ -107,10 +107,10 @@ concept art → mesh → UV unwrap → concept-guided texture → LOD levels
 ```
 
 ```bash
-assgen compose prop "wooden barrel with iron bands, medieval" --wait
-assgen compose prop "stone pillar, dungeon" --type decoration --engine godot --wait
-assgen compose prop "lantern hanging, warm glow" --quality low --wait
-assgen compose prop "ornate chest, treasure" --dry-run
+AssetGen compose prop "wooden barrel with iron bands, medieval" --wait
+AssetGen compose prop "stone pillar, dungeon" --type decoration --engine godot --wait
+AssetGen compose prop "lantern hanging, warm glow" --quality low --wait
+AssetGen compose prop "ornate chest, treasure" --dry-run
 ```
 
 **Flags:**
@@ -120,7 +120,7 @@ assgen compose prop "ornate chest, treasure" --dry-run
 
 ---
 
-### `assgen compose material`
+### `AssetGen compose material`
 
 Generate a full PBR material set from a text description:
 
@@ -132,10 +132,10 @@ albedo texture → seamless tiling → normal map → PBR channels (roughness/AO
 Output: `albedo.png`, `normal.png`, `roughness.png`, `ao.png`, `metallic.png`
 
 ```bash
-assgen compose material "weathered cobblestone, mossy" --wait
-assgen compose material "rusted iron sheet" --resolution 2048 --upscale --wait
-assgen compose material "worn oak planks" --type wood --engine godot --wait
-assgen compose material "dragon scale skin, iridescent" --dry-run
+AssetGen compose material "weathered cobblestone, mossy" --wait
+AssetGen compose material "rusted iron sheet" --resolution 2048 --upscale --wait
+AssetGen compose material "worn oak planks" --type wood --engine godot --wait
+AssetGen compose material "dragon scale skin, iridescent" --dry-run
 ```
 
 **Flags:**
@@ -146,7 +146,7 @@ assgen compose material "dragon scale skin, iridescent" --dry-run
 
 ---
 
-### `assgen compose soundscape`
+### `AssetGen compose soundscape`
 
 Generate a complete audio suite for a game level or biome:
 
@@ -156,11 +156,11 @@ ambient loop → theme music → loopable music → N themed SFX
 ```
 
 ```bash
-assgen compose soundscape "enchanted forest at night" --wait
-assgen compose soundscape "medieval tavern, busy crowd" --sfx-count 8 --wait
-assgen compose soundscape "dungeon" --sfx-list "drip,chain,growl,footstep" --wait
-assgen compose soundscape "space station" --no-music --duration 60 --wait
-assgen compose soundscape "volcano" --dry-run
+AssetGen compose soundscape "enchanted forest at night" --wait
+AssetGen compose soundscape "medieval tavern, busy crowd" --sfx-count 8 --wait
+AssetGen compose soundscape "dungeon" --sfx-list "drip,chain,growl,footstep" --wait
+AssetGen compose soundscape "space station" --no-music --duration 60 --wait
+AssetGen compose soundscape "volcano" --dry-run
 ```
 
 **Flags:**
@@ -171,7 +171,7 @@ assgen compose soundscape "volcano" --dry-run
 
 ---
 
-### `assgen compose ui-kit`
+### `AssetGen compose ui-kit`
 
 Generate a cohesive UI element set for a game:
 
@@ -181,10 +181,10 @@ style reference → button states → dialog panel → N icons
 ```
 
 ```bash
-assgen compose ui-kit "dark fantasy RPG" --wait
-assgen compose ui-kit "sci-fi HUD, blue glow" --icons "health,shield,ammo,radar" --wait
-assgen compose ui-kit "cozy farming game" --palette "warm earthy tones" --wait
-assgen compose ui-kit "horror survival" --dry-run
+AssetGen compose ui-kit "dark fantasy RPG" --wait
+AssetGen compose ui-kit "sci-fi HUD, blue glow" --icons "health,shield,ammo,radar" --wait
+AssetGen compose ui-kit "cozy farming game" --palette "warm earthy tones" --wait
+AssetGen compose ui-kit "horror survival" --dry-run
 ```
 
 **Flags:**
@@ -194,7 +194,7 @@ assgen compose ui-kit "horror survival" --dry-run
 
 ---
 
-### `assgen compose environment`
+### `AssetGen compose environment`
 
 Generate a complete level environment kit — multiple props, ground material, and ambient audio — all sharing a common visual style:
 
@@ -205,11 +205,11 @@ style reference → N × (concept → mesh → UV → texture → LOD → collid
 ```
 
 ```bash
-assgen compose environment "medieval tavern interior" --count 6 --wait
-assgen compose environment "sci-fi corridor" --count 4 --engine unreal --wait
-assgen compose environment "haunted forest clearing" \
+AssetGen compose environment "medieval tavern interior" --count 6 --wait
+AssetGen compose environment "sci-fi corridor" --count 4 --engine unreal --wait
+AssetGen compose environment "haunted forest clearing" \
     --items "dead tree,gravestone,iron fence,lantern" --wait
-assgen compose environment "crystal cave" --no-audio --no-ground --dry-run
+AssetGen compose environment "crystal cave" --no-audio --no-ground --dry-run
 ```
 
 **Flags:**
@@ -224,9 +224,9 @@ assgen compose environment "crystal cave" --no-audio --no-ground --dry-run
 
 ---
 
-## assgen pipeline
+## AssetGen pipeline
 
-### `assgen pipeline workflow`
+### `AssetGen pipeline workflow`
 
 Define and execute multi-step workflows. Unlike `compose`, workflows are saved as YAML
 and can be parameterised at run-time. Each step waits for the previous to complete
@@ -234,20 +234,20 @@ and receives its output files as `upstream_files`.
 
 ```bash
 # Define a workflow (auto-chains output → input by default)
-assgen pipeline workflow create my-npc \
+AssetGen pipeline workflow create my-npc \
     visual.concept.generate visual.model.splat visual.uv.auto visual.rig.auto
 
 # Preview without executing
-assgen pipeline workflow run my-npc --dry-run
+AssetGen pipeline workflow run my-npc --dry-run
 
 # Execute with custom inputs
-assgen pipeline workflow run my-npc --inputs '{"prompt": "pig shopkeeper"}'
+AssetGen pipeline workflow run my-npc --inputs '{"prompt": "pig shopkeeper"}'
 
 # List saved workflows
-assgen pipeline workflow list
+AssetGen pipeline workflow list
 ```
 
-Workflow YAML format (saved to `~/.config/assgen/workflows/<name>.yaml`):
+Workflow YAML format (saved to `~/.config/AssetGen/workflows/<name>.yaml`):
 
 ```yaml
 name: my-npc
@@ -284,22 +284,22 @@ Three mutually exclusive output modes are available on every command:
 
 ```bash
 # JSON — pipe to jq
-assgen --json gen visual concept generate "ruined castle" --wait | jq .job_id
+AssetGen --json gen visual concept generate "ruined castle" --wait | jq .job_id
 
 # YAML — human-friendly alternative
-assgen --yaml jobs status a1b2c3d4
+AssetGen --yaml jobs status a1b2c3d4
 
 # Use in a pipeline
-JOB=$(assgen --json gen visual model create --wait | python -c "import sys,json; print(json.load(sys.stdin)['job_id'])")
-assgen --yaml jobs status "$JOB"
+JOB=$(AssetGen --json gen visual model create --wait | python -c "import sys,json; print(json.load(sys.stdin)['job_id'])")
+AssetGen --yaml jobs status "$JOB"
 ```
 
 ---
 
-## assgen tasks
+## AssetGen tasks
 
 ```bash
-assgen tasks [--domain DOMAIN] [--json]
+AssetGen tasks [--domain DOMAIN] [--json]
 ```
 
 Displays a rich tree of all 82 game development tasks with their assigned AI models.
@@ -311,52 +311,52 @@ Displays a rich tree of all 82 game development tasks with their assigned AI mod
 
 ---
 
-## assgen gen visual
+## AssetGen gen visual
 
-### `assgen gen visual model`
+### `AssetGen gen visual model`
 
 ```bash
-assgen gen visual model create --prompt "medieval sword" [--input-image img.png] \
+AssetGen gen visual model create --prompt "medieval sword" [--input-image img.png] \
     [--format glb] [--model-id org/repo] [--wait]
-assgen gen visual model retopo input.glb [--target-faces 5000] [--wait]
-assgen gen visual model splat [--input-dir ./frames] [--wait]
-assgen gen visual model optimize input.glb [--lod-levels 3] [--wait]
-assgen gen visual model export input.glb [--engine unity|unreal|godot] [--wait]
+AssetGen gen visual model retopo input.glb [--target-faces 5000] [--wait]
+AssetGen gen visual model splat [--input-dir ./frames] [--wait]
+AssetGen gen visual model optimize input.glb [--lod-levels 3] [--wait]
+AssetGen gen visual model export input.glb [--engine unity|unreal|godot] [--wait]
 
 # Multi-view turnaround: single image → 6 views (Zero123++) — better mesh quality
-assgen gen visual model multiview --input concept.png [--prompt "pig shopkeeper"] [--wait]
+AssetGen gen visual model multiview --input concept.png [--prompt "pig shopkeeper"] [--wait]
 ```
 
-### `assgen gen visual texture`
+### `AssetGen gen visual texture`
 
 ```bash
-assgen gen visual texture generate input.glb --prompt "worn leather" [--resolution 2048] [--wait]
-assgen gen visual texture bake high.glb low.glb [--map-types all] [--wait]
-assgen gen visual texture pbr input.glb [--style "sci-fi metal"] [--wait]
+AssetGen gen visual texture generate input.glb --prompt "worn leather" [--resolution 2048] [--wait]
+AssetGen gen visual texture bake high.glb low.glb [--map-types all] [--wait]
+AssetGen gen visual texture pbr input.glb [--style "sci-fi metal"] [--wait]
 
 # Concept-guided texturing: style from concept art → UV texture atlas (IP-Adapter SDXL)
-assgen gen visual texture from-concept mesh.glb --concept concept.png \
+AssetGen gen visual texture from-concept mesh.glb --concept concept.png \
     --prompt "pig shopkeeper, painterly" [--resolution 1024] [--wait]
 ```
 
-### `assgen gen visual rig`
+### `AssetGen gen visual rig`
 
 ```bash
-assgen gen visual rig auto character.glb [--skeleton humanoid|biped|animal|custom] [--wait]
+AssetGen gen visual rig auto character.glb [--skeleton humanoid|biped|animal|custom] [--wait]
 # --skeleton humanoid  outputs Unity-compatible 55-bone naming (Hips, Spine, LeftUpperArm…)
-assgen gen visual rig skin character.glb [--bone-influence 4] [--wait]
-assgen gen visual rig retarget source.glb target.glb [--wait]
+AssetGen gen visual rig skin character.glb [--bone-influence 4] [--wait]
+AssetGen gen visual rig retarget source.glb target.glb [--wait]
 ```
 
-### `assgen gen visual animate`
+### `AssetGen gen visual animate`
 
 ```bash
-assgen gen visual animate keyframe character.glb --prompt "walk cycle" [--frames 60] [--wait]
-assgen gen visual animate mocap video.mp4 [--target character.glb] [--wait]
-assgen gen visual animate blend anim1.glb anim2.glb [--weight 0.5] [--wait]
+AssetGen gen visual animate keyframe character.glb --prompt "walk cycle" [--frames 60] [--wait]
+AssetGen gen visual animate mocap video.mp4 [--target character.glb] [--wait]
+AssetGen gen visual animate blend anim1.glb anim2.glb [--weight 0.5] [--wait]
 
 # BVH clip retargeting: apply bundled CMU Mocap clips to a rigged character
-assgen gen visual animate retarget rig.glb \
+AssetGen gen visual animate retarget rig.glb \
     --clips idle,walk,run,talk,attack_light,death \
     [--skeleton humanoid] [--wait]
 # Available clips: idle, walk, run, turn_left, turn_right, talk, attack_light,
@@ -367,54 +367,54 @@ assgen gen visual animate retarget rig.glb \
 ### Other visual subcommands
 
 ```bash
-assgen gen visual concept generate --prompt "fantasy castle" [--wait]
-assgen gen visual uv auto mesh.glb [--wait]
-assgen gen visual vfx particle --prompt "fire explosion" [--wait]
+AssetGen gen visual concept generate --prompt "fantasy castle" [--wait]
+AssetGen gen visual uv auto mesh.glb [--wait]
+AssetGen gen visual vfx particle --prompt "fire explosion" [--wait]
 ```
 
-### assgen gen visual ui
+### AssetGen gen visual ui
 
 Generate UI components for games — icons, HUD elements, and full screen compositions.
 
 ```bash
 # Single items
-assgen gen visual ui icon    "health potion"         [--size 256] [--wait]
-assgen gen visual ui button  "medieval stone button" [--states normal,hover,pressed,focused] [--nine-slice auto] [--dpi 1x,2x] [--greyscale-base] [--wait]
-assgen gen visual ui panel   "gothic dialog frame"   [--type dialog] [--wait]
-assgen gen visual ui widget  "fantasy scroll health bar" [--type progressbar] [--wait]
+AssetGen gen visual ui icon    "health potion"         [--size 256] [--wait]
+AssetGen gen visual ui button  "medieval stone button" [--states normal,hover,pressed,focused] [--nine-slice auto] [--dpi 1x,2x] [--greyscale-base] [--wait]
+AssetGen gen visual ui panel   "gothic dialog frame"   [--type dialog] [--wait]
+AssetGen gen visual ui widget  "fantasy scroll health bar" [--type progressbar] [--wait]
 
 # Screen-level compositions
-assgen gen visual ui mockup  "RPG main menu dark castle" [--reference sketch.png] [--wait]
-assgen gen visual ui layout  "sci-fi HUD, minimap top-right" [--reference grid.png] [--wait]
-assgen gen visual ui screen  "RPG combat HUD"        [--type gameplay] [--wait]
+AssetGen gen visual ui mockup  "RPG main menu dark castle" [--reference sketch.png] [--wait]
+AssetGen gen visual ui layout  "sci-fi HUD, minimap top-right" [--reference grid.png] [--wait]
+AssetGen gen visual ui screen  "RPG combat HUD"        [--type gameplay] [--wait]
 
 # Theme kits
-assgen gen visual ui iconset "fantasy RPG" --icons "sword,shield,potion,key" [--wait]
-assgen gen visual ui theme   "dark souls gothic stone" style_ref.png          [--wait]
+AssetGen gen visual ui iconset "fantasy RPG" --icons "sword,shield,potion,key" [--wait]
+AssetGen gen visual ui theme   "dark souls gothic stone" style_ref.png          [--wait]
 ```
 
 ---
 
-## assgen gen audio
+## AssetGen gen audio
 
 ```bash
-assgen gen audio sfx generate "laser gun firing" [--duration 2.0] [--model-id org/repo] [--wait]
-assgen gen audio music compose "epic battle theme" [--duration 30] [--wait]
-assgen gen audio music loop input.wav [--target-duration 60] [--wait]
-assgen gen audio voice tts "Welcome, hero." [--voice en_default] [--wait]
-assgen gen audio voice dialog dialog.json [--voice npcs.yaml] [--wait]
+AssetGen gen audio sfx generate "laser gun firing" [--duration 2.0] [--model-id org/repo] [--wait]
+AssetGen gen audio music compose "epic battle theme" [--duration 30] [--wait]
+AssetGen gen audio music loop input.wav [--target-duration 60] [--wait]
+AssetGen gen audio voice tts "Welcome, hero." [--voice en_default] [--wait]
+AssetGen gen audio voice dialog dialog.json [--voice npcs.yaml] [--wait]
 ```
 
 ---
 
-## assgen jobs
+## AssetGen jobs
 
 ```bash
-assgen jobs list [--status queued|running|completed|failed] [--limit 50]
-assgen jobs status <id>        # full 36-char UUID or 8-char prefix
-assgen jobs wait <id>          # block with live progress bar
-assgen jobs cancel <id>
-assgen jobs clean [--days 30]  # remove completed jobs older than N days
+AssetGen jobs list [--status queued|running|completed|failed] [--limit 50]
+AssetGen jobs status <id>        # full 36-char UUID or 8-char prefix
+AssetGen jobs wait <id>          # block with live progress bar
+AssetGen jobs cancel <id>
+AssetGen jobs clean [--days 30]  # remove completed jobs older than N days
 ```
 
 `jobs status` displays the job type, status, timestamps, **and the original user
@@ -424,55 +424,55 @@ suitable for re-running the job with tweaked parameters:
 
 ```bash
 # Inspect a past run in YAML
-assgen --yaml jobs status a1b2c3d4
+AssetGen --yaml jobs status a1b2c3d4
 
 # Capture params and re-submit
-assgen --json jobs status a1b2c3d4 | jq .params
+AssetGen --json jobs status a1b2c3d4 | jq .params
 ```
 
 ---
 
-## assgen models
+## AssetGen models
 
 ```bash
-assgen models list [--domain DOMAIN] [--installed]
-assgen models status <model-id>
-assgen models install [model-id ...]   # download from HuggingFace
+AssetGen models list [--domain DOMAIN] [--installed]
+AssetGen models status <model-id>
+AssetGen models install [model-id ...]   # download from HuggingFace
 ```
 
 ---
 
-## assgen config
+## AssetGen config
 
 Manages the task → HuggingFace model catalog. User overrides are saved to
-`~/.config/assgen/models.yaml` and sent with each job submission.
+`~/.config/AssetGen/models.yaml` and sent with each job submission.
 
 ```bash
-assgen config list [--domain DOMAIN] [--installed]
-assgen config show <job-type>
-assgen config set <job-type> [--model-id org/repo]   # interactive if no --model-id
-assgen config remove <job-type>                       # revert to built-in default
-assgen config search <query>                          # search HuggingFace
+AssetGen config list [--domain DOMAIN] [--installed]
+AssetGen config show <job-type>
+AssetGen config set <job-type> [--model-id org/repo]   # interactive if no --model-id
+AssetGen config remove <job-type>                       # revert to built-in default
+AssetGen config search <query>                          # search HuggingFace
 ```
 
 ---
 
-## assgen client config
+## AssetGen client config
 
 ```bash
-assgen client config show              # show resolved server URL + live health check
-assgen client config set-server <url>  # point client at a remote server
-assgen client config unset-server      # revert to auto-start local server
+AssetGen client config show              # show resolved server URL + live health check
+AssetGen client config set-server <url>  # point client at a remote server
+AssetGen client config unset-server      # revert to auto-start local server
 ```
 
 ---
 
-## assgen server config
+## AssetGen server config
 
 ```bash
-assgen server config show              # show all resolved server settings
-assgen server config set <key> <val>   # persist to ~/.config/assgen/server.yaml
-assgen server config models [--domain] # view task → model catalog
+AssetGen server config show              # show all resolved server settings
+AssetGen server config set <key> <val>   # persist to ~/.config/AssetGen/server.yaml
+AssetGen server config models [--domain] # view task → model catalog
 ```
 
 ### Configurable keys
@@ -491,34 +491,34 @@ assgen server config models [--domain] # view task → model catalog
 
 ---
 
-## assgen server
+## AssetGen server
 
 ```bash
-assgen server start [--daemon]    # start local assgen-server
-assgen server stop                # stop local assgen-server
-assgen server status              # check if server is healthy
-assgen server use <url>           # alias for: assgen client config set-server
-assgen server unset               # alias for: assgen client config unset-server
+AssetGen server start [--daemon]    # start local AssetGen-server
+AssetGen server stop                # stop local AssetGen-server
+AssetGen server status              # check if server is healthy
+AssetGen server use <url>           # alias for: AssetGen client config set-server
+AssetGen server unset               # alias for: AssetGen client config unset-server
 ```
 
 ---
 
-## assgen upgrade
+## AssetGen upgrade
 
 ```bash
-assgen upgrade               # check and prompt to upgrade
-assgen upgrade --check       # exit 0 if up-to-date, exit 1 if outdated
-assgen upgrade --yes         # skip confirmation prompt
-assgen upgrade --pre         # include pre-release versions
+AssetGen upgrade               # check and prompt to upgrade
+AssetGen upgrade --check       # exit 0 if up-to-date, exit 1 if outdated
+AssetGen upgrade --yes         # skip confirmation prompt
+AssetGen upgrade --pre         # include pre-release versions
 ```
 
 ---
 
-## assgen version
+## AssetGen version
 
 ```bash
-assgen version
-# assgen  version: 0.0.1  python: 3.12.3  platform: Linux-6.8.0  build: v0.0.1-0-gabcdef0
+AssetGen version
+# AssetGen  version: 0.0.1  python: 3.12.3  platform: Linux-6.8.0  build: v0.0.1-0-gabcdef0
 ```
 
 ---
@@ -529,6 +529,6 @@ All commands support `--help`. The `--wait` / `-w` flag is available on all asse
 generation commands and blocks until the job completes, showing a progress bar.
 
 ```bash
-assgen gen visual model create --help
-assgen gen audio sfx generate --help
+AssetGen gen visual model create --help
+AssetGen gen audio sfx generate --help
 ```

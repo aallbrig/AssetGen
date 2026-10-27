@@ -19,7 +19,7 @@
       }
     ]
   },
-  "description": "Google SRE 4 Golden Signals (Latency, Traffic, Errors, Saturation) for the assgen-server. Powered by OpenTelemetry → Prometheus + Loki + Tempo.",
+  "description": "Google SRE 4 Golden Signals (Latency, Traffic, Errors, Saturation) for the assetgen-server. Powered by OpenTelemetry → Prometheus + Loki + Tempo.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -54,7 +54,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[2m])) by (url_route, http_request_method)",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[2m])) by (url_route, http_request_method)",
           "legendFormat": "{{http_request_method}} {{url_route}}",
           "refId": "A"
         }
@@ -95,7 +95,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[2m])) by (http_response_status_code)",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[2m])) by (http_response_status_code)",
           "legendFormat": "HTTP {{http_response_status_code}}",
           "refId": "A"
         }
@@ -139,19 +139,19 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.50, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le))",
           "legendFormat": "P50",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le))",
           "legendFormat": "P95",
           "refId": "B"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.99, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le))",
           "legendFormat": "P99",
           "refId": "C"
         }
@@ -190,7 +190,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le))",
           "legendFormat": "P95 Latency",
           "refId": "A"
         }
@@ -224,7 +224,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[2m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[2m]))",
           "legendFormat": "req/s",
           "refId": "A"
         }
@@ -269,13 +269,13 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\", http_response_status_code=~\"5..\"}[2m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\", http_response_status_code=~\"5..\"}[2m]))",
           "legendFormat": "5xx Errors",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\", http_response_status_code=~\"4..\"}[2m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\", http_response_status_code=~\"4..\"}[2m]))",
           "legendFormat": "4xx Client Errors",
           "refId": "B"
         }
@@ -315,7 +315,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\", http_response_status_code=~\"5..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[5m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\", http_response_status_code=~\"5..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[5m]))",
           "legendFormat": "5xx Error Ratio",
           "refId": "A"
         }
@@ -355,7 +355,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\", http_response_status_code=~\"4..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[5m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\", http_response_status_code=~\"4..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[5m]))",
           "legendFormat": "4xx Error Ratio",
           "refId": "A"
         }
@@ -385,7 +385,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\", http_response_status_code=~\"5..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assgen-server\"}[5m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\", http_response_status_code=~\"5..\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{service_name=\"assetgen-server\"}[5m]))",
           "legendFormat": "5xx error ratio",
           "refId": "A"
         }
@@ -431,13 +431,13 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(assgen_jobs_active{service_name=\"assgen-server\"})",
+          "expr": "sum(assetgen_jobs_active{service_name=\"assetgen-server\"})",
           "legendFormat": "Active (Running)",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(assgen_jobs_queued{service_name=\"assgen-server\"})",
+          "expr": "sum(assetgen_jobs_queued{service_name=\"assetgen-server\"})",
           "legendFormat": "Queued",
           "refId": "B"
         }
@@ -478,19 +478,19 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(assgen_jobs_enqueued_total{service_name=\"assgen-server\"}[2m]))",
+          "expr": "sum(rate(assetgen_jobs_enqueued_total{service_name=\"assetgen-server\"}[2m]))",
           "legendFormat": "Enqueued",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(assgen_jobs_completed_total{service_name=\"assgen-server\"}[2m]))",
+          "expr": "sum(rate(assetgen_jobs_completed_total{service_name=\"assetgen-server\"}[2m]))",
           "legendFormat": "Completed",
           "refId": "B"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(assgen_jobs_failed_total{service_name=\"assgen-server\"}[2m]))",
+          "expr": "sum(rate(assetgen_jobs_failed_total{service_name=\"assetgen-server\"}[2m]))",
           "legendFormat": "Failed",
           "refId": "C"
         }
@@ -518,13 +518,13 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.50, sum(rate(assgen_jobs_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le, job_type))",
+          "expr": "histogram_quantile(0.50, sum(rate(assetgen_jobs_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le, job_type))",
           "legendFormat": "P50 {{job_type}}",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.95, sum(rate(assgen_jobs_duration_seconds_bucket{service_name=\"assgen-server\"}[5m])) by (le, job_type))",
+          "expr": "histogram_quantile(0.95, sum(rate(assetgen_jobs_duration_seconds_bucket{service_name=\"assetgen-server\"}[5m])) by (le, job_type))",
           "legendFormat": "P95 {{job_type}}",
           "refId": "B"
         }
@@ -564,7 +564,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(assgen_jobs_failed_total{service_name=\"assgen-server\"}[5m])) / (sum(rate(assgen_jobs_completed_total{service_name=\"assgen-server\"}[5m])) + sum(rate(assgen_jobs_failed_total{service_name=\"assgen-server\"}[5m])))",
+          "expr": "sum(rate(assetgen_jobs_failed_total{service_name=\"assetgen-server\"}[5m])) / (sum(rate(assetgen_jobs_completed_total{service_name=\"assetgen-server\"}[5m])) + sum(rate(assetgen_jobs_failed_total{service_name=\"assetgen-server\"}[5m])))",
           "legendFormat": "Job Failure Rate",
           "refId": "A"
         }
@@ -597,12 +597,12 @@
       "targets": [
         {
           "datasource": {"type": "loki", "uid": "loki"},
-          "expr": "{service_name=\"assgen-server\"} |= ``",
+          "expr": "{service_name=\"assetgen-server\"} |= ``",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "assgen-server Logs",
+      "title": "assetgen-server Logs",
       "type": "logs"
     },
 
@@ -622,7 +622,7 @@
       "targets": [
         {
           "datasource": {"type": "loki", "uid": "loki"},
-          "expr": "{service_name=\"assgen-server\"} |= `\"level\":\"ERROR\"` or {service_name=\"assgen-server\"} |= `ERROR`",
+          "expr": "{service_name=\"assetgen-server\"} |= `\"level\":\"ERROR\"` or {service_name=\"assetgen-server\"} |= `ERROR`",
           "legendFormat": "",
           "refId": "A"
         }
@@ -649,7 +649,7 @@
       "targets": [
         {
           "datasource": {"type": "loki", "uid": "loki"},
-          "expr": "sum(count_over_time({service_name=\"assgen-server\"}[1m])) by (level)",
+          "expr": "sum(count_over_time({service_name=\"assetgen-server\"}[1m])) by (level)",
           "legendFormat": "{{level}}",
           "refId": "A"
         }
@@ -661,13 +661,13 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["assgen", "sre", "golden-signals", "otel"],
+  "tags": ["assetgen", "sre", "golden-signals", "otel"],
   "templating": {"list": []},
   "time": {"from": "now-1h", "to": "now"},
   "timepicker": {},
   "timezone": "browser",
-  "title": "assgen Server — SRE Golden Signals",
-  "uid": "assgen-sre-golden",
+  "title": "assetgen Server — SRE Golden Signals",
+  "uid": "assetgen-sre-golden",
   "version": 1,
   "weekStart": ""
 }

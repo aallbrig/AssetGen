@@ -1,5 +1,5 @@
 ---
-title: "assgen · <Title>"
+title: "assetgen · <Title>"
 emoji: 🎮
 colorFrom: purple
 colorTo: blue
@@ -11,15 +11,15 @@ license: apache-2.0
 hardware: zero-gpu
 tags:
   - game-assets
-  - assgen
+  - assetgen
 short_description: <One-line description>
 ---
 
-# assgen · <Title>
+# assetgen · <Title>
 
 <Description of what this Space does.>
 
-Part of the [assgen](https://github.com/aallbrig/assgen) game asset generation pipeline.
+Part of the [assetgen](https://github.com/aallbrig/assetgen) game asset generation pipeline.
 
 **Model:** [model-org/model-name](https://huggingface.co/model-org/model-name)
-**CLI equivalent:** `assgen gen <domain> <command>`
+**CLI equivalent:** `assetgen gen <domain> <command>`

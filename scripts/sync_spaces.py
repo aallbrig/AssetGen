@@ -5,7 +5,7 @@ Generates requirements.txt (and packages.txt where needed) for each Space before
 
 Usage:
     python scripts/sync_spaces.py --version 0.2.0
-    python scripts/sync_spaces.py --version 0.2.0 --space assgen.audio.sfx.generate
+    python scripts/sync_spaces.py --version 0.2.0 --space assetgen.audio.sfx.generate
 """
 from __future__ import annotations
 
@@ -27,89 +27,89 @@ AUDIOCRAFT_SPACES: set[str] = set()
 
 # Spaces that are CPU-only (no ZeroGPU needed)
 CPU_SPACES = {
-    "assgen.procedural.terrain.heightmap",
-    "assgen.mesh.validate",
-    "assgen.mesh.convert",
-    "assgen.mesh.bounds",
-    "assgen.mesh.center",
-    "assgen.mesh.scale",
-    "assgen.mesh.flipnormals",
-    "assgen.mesh.weld",
-    "assgen.mesh.merge",
-    "assgen.texture.pbr",
-    "assgen.texture.channel_pack",
-    "assgen.texture.atlas_pack",
-    "assgen.texture.mipmap",
-    "assgen.texture.normalmap_convert",
-    "assgen.texture.seamless",
-    "assgen.texture.resize",
-    "assgen.texture.report",
-    "assgen.texture.convert",
-    "assgen.audio.process.normalize",
-    "assgen.audio.process.trim_silence",
-    "assgen.audio.process.convert",
-    "assgen.audio.process.downmix",
-    "assgen.audio.process.resample",
-    "assgen.audio.process.loop_optimize",
-    "assgen.audio.process.waveform",
-    "assgen.procedural.level.dungeon",
-    "assgen.procedural.texture.noise",
-    "assgen.procedural.level.voronoi",
-    "assgen.procedural.foliage.scatter",
-    "assgen.procedural.plant.lsystem",
-    "assgen.procedural.tileset.wfc",
-    "assgen.scene.physics.collider",
-    "assgen.lod.generate",
-    "assgen.uv.auto",
-    "assgen.sprite.pack",
-    "assgen.vfx.particle",
-    "assgen.narrative.dialogue.validate",
-    "assgen.narrative.quest.validate",
+    "assetgen.procedural.terrain.heightmap",
+    "assetgen.mesh.validate",
+    "assetgen.mesh.convert",
+    "assetgen.mesh.bounds",
+    "assetgen.mesh.center",
+    "assetgen.mesh.scale",
+    "assetgen.mesh.flipnormals",
+    "assetgen.mesh.weld",
+    "assetgen.mesh.merge",
+    "assetgen.texture.pbr",
+    "assetgen.texture.channel_pack",
+    "assetgen.texture.atlas_pack",
+    "assetgen.texture.mipmap",
+    "assetgen.texture.normalmap_convert",
+    "assetgen.texture.seamless",
+    "assetgen.texture.resize",
+    "assetgen.texture.report",
+    "assetgen.texture.convert",
+    "assetgen.audio.process.normalize",
+    "assetgen.audio.process.trim_silence",
+    "assetgen.audio.process.convert",
+    "assetgen.audio.process.downmix",
+    "assetgen.audio.process.resample",
+    "assetgen.audio.process.loop_optimize",
+    "assetgen.audio.process.waveform",
+    "assetgen.procedural.level.dungeon",
+    "assetgen.procedural.texture.noise",
+    "assetgen.procedural.level.voronoi",
+    "assetgen.procedural.foliage.scatter",
+    "assetgen.procedural.plant.lsystem",
+    "assetgen.procedural.tileset.wfc",
+    "assetgen.scene.physics.collider",
+    "assetgen.lod.generate",
+    "assetgen.uv.auto",
+    "assetgen.sprite.pack",
+    "assetgen.vfx.particle",
+    "assetgen.narrative.dialogue.validate",
+    "assetgen.narrative.quest.validate",
 }
 
 # Spaces that need ffmpeg apt package
 FFMPEG_SPACES = {
-    "assgen.audio.process.convert",
-    "assgen.audio.process.downmix",
-    "assgen.audio.process.normalize",
-    "assgen.audio.process.resample",
-    "assgen.audio.process.trim_silence",
-    "assgen.audio.process.loop_optimize",
-    "assgen.audio.process.waveform",
+    "assetgen.audio.process.convert",
+    "assetgen.audio.process.downmix",
+    "assetgen.audio.process.normalize",
+    "assetgen.audio.process.resample",
+    "assetgen.audio.process.trim_silence",
+    "assetgen.audio.process.loop_optimize",
+    "assetgen.audio.process.waveform",
 }
 
-# Per-Space extra pip packages (beyond assgen[spaces]).
+# Per-Space extra pip packages (beyond assetgen[spaces]).
 # Heavy or fragile packages are listed here rather than in the [spaces] extra
 # so a broken package only breaks the one Space that needs it, not all of them.
 EXTRA_PIP: dict[str, list[str]] = {
     # texture.upscale now uses diffusers StableDiffusionUpscalePipeline (already in
-    # assgen[spaces]) — no opencv/basicsr/realesrgan needed.
-    # "assgen.texture.upscale": [...],  # placeholder kept for reference
+    # assetgen[spaces]) — no opencv/basicsr/realesrgan needed.
+    # "assetgen.texture.upscale": [...],  # placeholder kept for reference
     # voice.tts uses transformers BarkModel — no Coqui TTS needed.
     # voice.clone uses XTTS-v2 via Coqui TTS (standalone app.py).
-    "assgen.audio.voice.clone": ["TTS>=0.22"],
+    "assetgen.audio.voice.clone": ["TTS>=0.22"],
     # LOD generation — pyfqmr is a C extension, build may fail on some platforms
-    "assgen.lod.generate": ["pyfqmr>=0.2"],
+    "assetgen.lod.generate": ["pyfqmr>=0.2"],
     # UV unwrapping — xatlas Python bindings
-    "assgen.uv.auto": ["xatlas>=0.0.9"],
+    "assetgen.uv.auto": ["xatlas>=0.0.9"],
     # TripoSR — image-to-3D (git install, not on PyPI)
-    "assgen.model.splat": [
+    "assetgen.model.splat": [
         "tsr @ git+https://github.com/VAST-AI-Research/TripoSR.git",
         "rembg>=2.0.57",
     ],
     # AnimateDiff needs imageio for GIF/MP4 export
-    "assgen.animate.keyframe": [
+    "assetgen.animate.keyframe": [
         "imageio>=2.34.0",
         "imageio-ffmpeg>=0.4.9",
     ],
     # UI mockup uses ControlNet auxiliary preprocessors
-    "assgen.ui.mockup": ["controlnet-aux>=0.0.7"],
+    "assetgen.ui.mockup": ["controlnet-aux>=0.0.7"],
 }
 
 
 def make_requirements(space_name: str, version: str) -> str:
     """Generate requirements.txt content for a Space."""
-    lines = [f"assgen[spaces]=={version}"]
+    lines = [f"assetgen[spaces]=={version}"]
     if space_name in AUDIOCRAFT_SPACES:
         lines.append(
             "audiocraft @ git+https://github.com/facebookresearch/audiocraft.git"
@@ -161,7 +161,7 @@ def sync_space(space_name: str, version: str, hf_username: str, api: HfApi) -> N
                 folder_path=str(tmp_path),
                 repo_id=repo_id,
                 repo_type="space",
-                commit_message=f"assgen {version}",
+                commit_message=f"assetgen {version}",
             )
             print(f"  OK    {space_name}")
         except Exception as exc:
@@ -169,8 +169,8 @@ def sync_space(space_name: str, version: str, hf_username: str, api: HfApi) -> N
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Sync assgen Spaces to HuggingFace Hub")
-    parser.add_argument("--version", required=True, help="assgen version tag, e.g. v0.2.0")
+    parser = argparse.ArgumentParser(description="Sync assetgen Spaces to HuggingFace Hub")
+    parser.add_argument("--version", required=True, help="assetgen version tag, e.g. v0.2.0")
     parser.add_argument("--space", help="sync only this space (for manual use)")
     args = parser.parse_args()
 
@@ -186,7 +186,7 @@ def main() -> None:
 
     api = HfApi()
     hf_username = get_hf_username(api)
-    print(f"Syncing {len(spaces_to_sync)} space(s) — assgen {version} → {hf_username}")
+    print(f"Syncing {len(spaces_to_sync)} space(s) — assetgen {version} → {hf_username}")
     for space_name in spaces_to_sync:
         sync_space(space_name, version, hf_username, api)
 

@@ -18,9 +18,9 @@
 ## Prerequisites
 
 ```bash
-pip install "assgen[inference]"
-assgen server status   # confirm CUDA device, confirm audio models are available
-assgen tasks --domain audio   # see all audio tasks and assigned models
+pip install "AssetGen[inference]"
+AssetGen server status   # confirm CUDA device, confirm audio models are available
+AssetGen tasks --domain audio   # see all audio tasks and assigned models
 ```
 
 ---
@@ -30,7 +30,7 @@ assgen tasks --domain audio   # see all audio tasks and assigned models
 ### Single SFX
 
 ```bash
-assgen gen audio sfx generate \
+AssetGen gen audio sfx generate \
   --prompt "plasma rifle shot, sci-fi, sharp crack, with energy tail" \
   --duration 2.0 \
   --wait
@@ -59,13 +59,13 @@ VARIANTS=(
 )
 
 for VARIANT in "${VARIANTS[@]}"; do
-  assgen gen audio sfx generate \
+  AssetGen gen audio sfx generate \
     --prompt "$VARIANT" \
     --duration 2.0 &
 done
 wait
-echo "✓ Queued $(assgen jobs list | grep pending | wc -l) jobs"
-echo "   Monitor: assgen jobs list"
+echo "✓ Queued $(AssetGen jobs list | grep pending | wc -l) jobs"
+echo "   Monitor: AssetGen jobs list"
 ```
 
 !!! tip "Duration guidance"
@@ -81,7 +81,7 @@ echo "   Monitor: assgen jobs list"
 ### Combat loop (single stem)
 
 ```bash
-assgen gen audio music loop \
+AssetGen gen audio music loop \
   --prompt "tense sci-fi combat music, electronic drums, 120bpm, driving bass, minor key, loopable" \
   --duration 30 \
   --wait
@@ -97,17 +97,17 @@ For a reactive music system, generate stems that share BPM and key so they blend
 SHARED="120bpm, D minor, sci-fi electronic, adaptive game music stem"
 
 # Low-intensity: ambient underscore
-assgen gen audio music loop \
+AssetGen gen audio music loop \
   --prompt "quiet ambient exploration, no drums, $SHARED" \
   --duration 60 &
 
 # Mid-intensity: tension ramp
-assgen gen audio music loop \
+AssetGen gen audio music loop \
   --prompt "building tension, light percussion, $SHARED" \
   --duration 60 &
 
 # High-intensity: full combat
-assgen gen audio music loop \
+AssetGen gen audio music loop \
   --prompt "full combat, heavy drums, aggressive bass, $SHARED" \
   --duration 60 &
 
@@ -129,7 +129,7 @@ wait
 ## Ambient audio
 
 ```bash
-assgen gen audio ambient generate \
+AssetGen gen audio ambient generate \
   --prompt "deep space station ambience, low mechanical hum, distant metallic resonance, pressurised atmosphere" \
   --duration 60 \
   --wait
@@ -147,7 +147,7 @@ Generate 2–3 variants and crossfade between them at runtime.
 ### TTS scratch track
 
 ```bash
-assgen gen audio voice tts \
+AssetGen gen audio voice tts \
   "Your species ends today." \
   --voice villain \
   --wait
@@ -171,7 +171,7 @@ Output: `tts_<id>.wav` — Bark-generated speech.
 #   {"character": "scientist", "line": "The readings are off the charts!"}
 # ]
 
-assgen gen audio voice dialog dialog.json \
+AssetGen gen audio voice dialog dialog.json \
   --voice npcs.yaml \
   --wait
 ```
@@ -181,7 +181,7 @@ assgen gen audio voice dialog dialog.json \
 When a director has recorded a temp track and you need consistent voice identity:
 
 ```bash
-assgen gen audio voice clone \
+AssetGen gen audio voice clone \
   --input director_reference.wav \
   --text "We need to retreat now. Fall back to the extraction point." \
   --wait

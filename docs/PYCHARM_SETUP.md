@@ -1,26 +1,26 @@
-# PyCharm IDE Setup Guide for assgen
+# PyCharm IDE Setup Guide for AssetGen
 
 This guide explains how to use the preconfigured PyCharm run configurations for faster development.
 
 ## Quick Start
 
-1. **Open the project** in PyCharm: `File > Open` → select `/path/to/assgen`
+1. **Open the project** in PyCharm: `File > Open` → select `/path/to/AssetGen`
 2. **Configure Python interpreter** (if needed): `Settings > Project > Python Interpreter` → Select or add Python 3.11+
 3. **Select a run configuration** from the Run dropdown (top-right toolbar)
 4. **Click Run** (▶ button) or press Shift+F10
 
 ## Available Run Configurations
 
-### 1. **assgen (CLI)**
-- **What it does:** Runs the `assgen` client CLI directly
-- **Use case:** Test CLI commands during development (e.g., `assgen version`, `assgen models list`)
-- **How to run:** Select "assgen (CLI)" from Run dropdown, then add command arguments in the Run Parameters field
+### 1. **AssetGen (CLI)**
+- **What it does:** Runs the `AssetGen` client CLI directly
+- **Use case:** Test CLI commands during development (e.g., `AssetGen version`, `AssetGen models list`)
+- **How to run:** Select "AssetGen (CLI)" from Run dropdown, then add command arguments in the Run Parameters field
 - **Keyboard shortcut:** Shift+F10 (after selecting this config)
 
-### 2. **assgen-server start**
-- **What it does:** Starts the `assgen-server` locally with the debugger attached
+### 2. **AssetGen-server start**
+- **What it does:** Starts the `AssetGen-server` locally with the debugger attached
 - **Use case:** Debug server-side issues; hit breakpoints in FastAPI handlers
-- **How to run:** Select "assgen-server start" and click Run. The server will start on the configured host/port (default: http://localhost:8000)
+- **How to run:** Select "AssetGen-server start" and click Run. The server will start on the configured host/port (default: http://localhost:8000)
 - **Stop the server:** Press Ctrl+C or click the Stop button (red square)
 
 ### 3. **pytest: all tests**
@@ -71,10 +71,10 @@ This guide explains how to use the preconfigured PyCharm run configurations for 
 6. Press Shift+F9 to continue execution
 
 ### Workflow 3: Debug the Server
-1. Select **assgen-server start**
-2. Set breakpoints in server code (e.g., `src/assgen/server/app.py`, `src/assgen/server/routes/`)
+1. Select **AssetGen-server start**
+2. Set breakpoints in server code (e.g., `src/AssetGen/server/app.py`, `src/AssetGen/server/routes/`)
 3. Click Run
-4. In another terminal or with the assgen CLI, make requests to the server
+4. In another terminal or with the AssetGen CLI, make requests to the server
 5. Breakpoints will trigger, and you can inspect server state
 
 ### Workflow 4: Performance Profile Tests
@@ -105,9 +105,9 @@ The `.idea/` directory contains the following shared configurations (version-con
 - Go to `Settings > Project > Python Interpreter`
 - Click "Add Interpreter" and select your Python 3.11+ installation or `.venv/bin/python`
 
-### "Module 'assgen' not found"
+### "Module 'AssetGen' not found"
 - Ensure the project root is marked as a source root: `Right-click project folder > Mark Directory as > Sources Root`
-- Or configure the Python path: `Settings > Project > Python Interpreter > Show All > Edit > Add paths to `.../assgen/src`
+- Or configure the Python path: `Settings > Project > Python Interpreter > Show All > Edit > Add paths to `.../AssetGen/src`
 
 ### Tests won't run
 - Ensure pytest is installed: `pip install pytest pytest-asyncio`
@@ -124,11 +124,11 @@ The `.idea/` directory contains the following shared configurations (version-con
 
 ## Next Steps
 
-- **Explore the code:** Start in `src/assgen/client/cli.py` (client CLI) or `src/assgen/server/app.py` (server FastAPI app)
+- **Explore the code:** Start in `src/AssetGen/client/cli.py` (client CLI) or `src/AssetGen/server/app.py` (server FastAPI app)
 - **Read docs:** Check `docs/` directory for architecture and API documentation
 - **Run tests:** Try `pytest: all tests` to see the project structure through test cases
 - **Start contributing:** Pick a test or feature, use these run configs to develop faster!
 
 ---
 
-**Questions?** Check the [main README](https://github.com/aallbrig/assgen#readme) or browse the docs navigation above.
+**Questions?** Check the [main README](https://github.com/aallbrig/AssetGen#readme) or browse the docs navigation above.

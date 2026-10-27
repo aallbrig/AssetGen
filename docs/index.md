@@ -1,13 +1,13 @@
-# assgen
+# AssetGen
 
 **AI-driven game asset generation pipeline** — a Kubernetes-style client/server CLI that lets you generate 3D models, textures, rigs, animations, sound effects, and music using open-source HuggingFace models running locally on your GPU.
 
 <p class="hero-badges">
-  <a href="https://github.com/aallbrig/assgen/actions/workflows/ci.yml">
-    <img src="https://github.com/aallbrig/assgen/actions/workflows/ci.yml/badge.svg" alt="CI">
+  <a href="https://github.com/aallbrig/AssetGen/actions/workflows/ci.yml">
+    <img src="https://github.com/aallbrig/AssetGen/actions/workflows/ci.yml/badge.svg" alt="CI">
   </a>
-  <a href="https://github.com/aallbrig/assgen/releases">
-    <img src="https://img.shields.io/github/v/release/aallbrig/assgen" alt="Latest Release">
+  <a href="https://github.com/aallbrig/AssetGen/releases">
+    <img src="https://img.shields.io/github/v/release/aallbrig/AssetGen" alt="Latest Release">
   </a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
@@ -15,32 +15,32 @@
 
 ---
 
-## What is assgen?
+## What is AssetGen?
 
-assgen is a command-line tool designed for indie game developers and artists who want to leverage AI for asset creation — without cloud costs, without proprietary APIs, and without leaving their terminal.
+AssetGen is a command-line tool designed for indie game developers and artists who want to leverage AI for asset creation — without cloud costs, without proprietary APIs, and without leaving their terminal.
 
-You describe what you want. assgen dispatches the work to a local server that downloads the right model from HuggingFace, runs inference on your GPU, and saves the result.
+You describe what you want. AssetGen dispatches the work to a local server that downloads the right model from HuggingFace, runs inference on your GPU, and saves the result.
 
 ```bash
 # Generate a 3D prop
-assgen gen visual model create --prompt "low-poly medieval sword" --wait
+AssetGen gen visual model create --prompt "low-poly medieval sword" --wait
 
 # Generate a sound effect
-assgen gen audio sfx generate "laser gun firing" --wait
+AssetGen gen audio sfx generate "laser gun firing" --wait
 
 # View all available tasks and their assigned AI models
-assgen tasks
+AssetGen tasks
 ```
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  assgen  (client CLI, runs anywhere)                 │
+│  AssetGen  (client CLI, runs anywhere)                 │
 └──────────────────────┬──────────────────────────────┘
                        │ HTTP REST
 ┌──────────────────────▼──────────────────────────────┐
-│  assgen-server  (FastAPI + SQLite job queue)         │
+│  AssetGen-server  (FastAPI + SQLite job queue)         │
 │  ├── ModelManager   (HuggingFace Hub download/cache) │
 │  ├── WorkerThread   (GPU inference)                  │
 │  └── Validation     (allow-list + HF tag checking)  │
@@ -50,7 +50,7 @@ assgen tasks
 The client auto-starts a local server on first use, or you can point it at a remote GPU machine:
 
 ```bash
-assgen client config set-server http://my-gpu-desktop:8432
+AssetGen client config set-server http://my-gpu-desktop:8432
 ```
 
 ## Feature Highlights
@@ -99,4 +99,4 @@ Jump straight to a guide written for your role:
 ---
 
 [Get started →](install.md){ .md-button .md-button--primary }
-[View source on GitHub →](https://github.com/aallbrig/assgen){ .md-button }
+[View source on GitHub →](https://github.com/aallbrig/AssetGen){ .md-button }

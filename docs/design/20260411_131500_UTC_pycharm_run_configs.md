@@ -12,10 +12,10 @@ This document specifies the developer tooling that lets you open any Gradio Spac
 ```
 .idea/
 └── runConfigurations/
-    ├── space_assgen_audio_sfx_generate.xml      # Space: assgen.audio.sfx.generate
-    ├── space_assgen_audio_music_compose.xml
+    ├── space_AssetGen_audio_sfx_generate.xml      # Space: AssetGen.audio.sfx.generate
+    ├── space_AssetGen_audio_music_compose.xml
     ├── ...                                       # 72 total — one per feasible Space
-    └── space_assgen_ui_screen.xml
+    └── space_AssetGen_ui_screen.xml
 ```
 
 Each XML file is a standard PyCharm Python run configuration. Opening the project in
@@ -37,8 +37,8 @@ block tracks only the run configuration XMLs, keeping all other IDE-local files 
 !.idea/runConfigurations/*.xml
 ```
 
-This is already applied. The six existing non-Space configurations (`assgen_cli.xml`,
-`assgen_server.xml`, `pytest_all_tests.xml`, etc.) are also tracked under the same rule.
+This is already applied. The six existing non-Space configurations (`AssetGen_cli.xml`,
+`AssetGen_server.xml`, `pytest_all_tests.xml`, etc.) are also tracked under the same rule.
 
 ---
 
@@ -64,7 +64,7 @@ run config style:
 | Property | Value |
 |---|---|
 | Type | Python |
-| Module | `assgen` (uses project SDK = `.venv`) |
+| Module | `AssetGen` (uses project SDK = `.venv`) |
 | Working directory | `$PROJECT_DIR$/spaces/<space-name>/` |
 | Script | `$PROJECT_DIR$/spaces/<space-name>/app.py` |
 | `EMULATE_TERMINAL` | `true` (so the Gradio URL prints in the console pane) |
@@ -75,30 +75,30 @@ run config style:
 
 ## 5. XML Template
 
-When adding a new Space (e.g. after a new command is added to assgen), create its run
+When adding a new Space (e.g. after a new command is added to AssetGen), create its run
 config by copying this template to `.idea/runConfigurations/space_<name_with_underscores>.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false"
-                 name="Space: assgen.<domain>.<command>"
+                 name="Space: AssetGen.<domain>.<command>"
                  type="PythonConfigurationType"
                  factoryName="Python"
                  folderName="Spaces: <Domain>">
-    <module name="assgen" />
+    <module name="AssetGen" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spaces/assgen.<domain>.<command>" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spaces/AssetGen.<domain>.<command>" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spaces/assgen.<domain>.<command>/app.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spaces/AssetGen.<domain>.<command>/app.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="true" />
@@ -111,7 +111,7 @@ config by copying this template to `.idea/runConfigurations/space_<name_with_und
 ```
 
 **Filename convention:** replace every `.` in the Space name with `_` and prefix with `space_`:
-`assgen.audio.sfx.generate` → `space_assgen_audio_sfx_generate.xml`
+`AssetGen.audio.sfx.generate` → `space_AssetGen_audio_sfx_generate.xml`
 
 ---
 
@@ -125,7 +125,7 @@ python scripts/generate_run_configs.py
 ```
 
 This script lives at `scripts/generate_run_configs.py` and reads the list of feasible
-Spaces from `assgen.catalog` (all_job_types) cross-referenced with the feasibility matrix.
+Spaces from `AssetGen.catalog` (all_job_types) cross-referenced with the feasibility matrix.
 See Section 7 for the script source.
 
 Alternatively, run the inline generator directly:
@@ -170,89 +170,89 @@ RUNCONFIGS_DIR = REPO_ROOT / ".idea" / "runConfigurations"
 # One entry per feasible Space: (space_repo_name, pycharm_folder_name)
 SPACES: list[tuple[str, str]] = [
     # Audio (14)
-    ("assgen.audio.sfx.generate",           "Spaces: Audio"),
-    ("assgen.audio.music.compose",          "Spaces: Audio"),
-    ("assgen.audio.music.loop",             "Spaces: Audio"),
-    ("assgen.audio.music.adaptive",         "Spaces: Audio"),
-    ("assgen.audio.ambient.generate",       "Spaces: Audio"),
-    ("assgen.audio.voice.tts",              "Spaces: Audio"),
-    ("assgen.audio.voice.clone",            "Spaces: Audio"),
-    ("assgen.audio.process.normalize",      "Spaces: Audio"),
-    ("assgen.audio.process.trim_silence",   "Spaces: Audio"),
-    ("assgen.audio.process.loop_optimize",  "Spaces: Audio"),
-    ("assgen.audio.process.convert",        "Spaces: Audio"),
-    ("assgen.audio.process.downmix",        "Spaces: Audio"),
-    ("assgen.audio.process.resample",       "Spaces: Audio"),
-    ("assgen.audio.process.waveform",       "Spaces: Audio"),
+    ("AssetGen.audio.sfx.generate",           "Spaces: Audio"),
+    ("AssetGen.audio.music.compose",          "Spaces: Audio"),
+    ("AssetGen.audio.music.loop",             "Spaces: Audio"),
+    ("AssetGen.audio.music.adaptive",         "Spaces: Audio"),
+    ("AssetGen.audio.ambient.generate",       "Spaces: Audio"),
+    ("AssetGen.audio.voice.tts",              "Spaces: Audio"),
+    ("AssetGen.audio.voice.clone",            "Spaces: Audio"),
+    ("AssetGen.audio.process.normalize",      "Spaces: Audio"),
+    ("AssetGen.audio.process.trim_silence",   "Spaces: Audio"),
+    ("AssetGen.audio.process.loop_optimize",  "Spaces: Audio"),
+    ("AssetGen.audio.process.convert",        "Spaces: Audio"),
+    ("AssetGen.audio.process.downmix",        "Spaces: Audio"),
+    ("AssetGen.audio.process.resample",       "Spaces: Audio"),
+    ("AssetGen.audio.process.waveform",       "Spaces: Audio"),
     # Visual (43)
-    ("assgen.concept.generate",             "Spaces: Visual"),
-    ("assgen.concept.style",                "Spaces: Visual"),
-    ("assgen.blockout.create",              "Spaces: Visual"),
-    ("assgen.model.create",                 "Spaces: Visual"),
-    ("assgen.model.multiview",              "Spaces: Visual"),
-    ("assgen.model.splat",                  "Spaces: Visual"),
-    ("assgen.mesh.validate",                "Spaces: Visual"),
-    ("assgen.mesh.convert",                 "Spaces: Visual"),
-    ("assgen.mesh.merge",                   "Spaces: Visual"),
-    ("assgen.mesh.bounds",                  "Spaces: Visual"),
-    ("assgen.mesh.flipnormals",             "Spaces: Visual"),
-    ("assgen.mesh.weld",                    "Spaces: Visual"),
-    ("assgen.mesh.center",                  "Spaces: Visual"),
-    ("assgen.mesh.scale",                   "Spaces: Visual"),
-    ("assgen.lod.generate",                 "Spaces: Visual"),
-    ("assgen.uv.auto",                      "Spaces: Visual"),
-    ("assgen.texture.generate",             "Spaces: Visual"),
-    ("assgen.texture.upscale",              "Spaces: Visual"),
-    ("assgen.texture.from_concept",         "Spaces: Visual"),
-    ("assgen.texture.inpaint",              "Spaces: Visual"),
-    ("assgen.texture.pbr",                  "Spaces: Visual"),
-    ("assgen.texture.channel_pack",         "Spaces: Visual"),
-    ("assgen.texture.convert",              "Spaces: Visual"),
-    ("assgen.texture.atlas_pack",           "Spaces: Visual"),
-    ("assgen.texture.mipmap",               "Spaces: Visual"),
-    ("assgen.texture.normalmap_convert",    "Spaces: Visual"),
-    ("assgen.texture.seamless",             "Spaces: Visual"),
-    ("assgen.texture.resize",               "Spaces: Visual"),
-    ("assgen.texture.report",               "Spaces: Visual"),
-    ("assgen.rig.auto",                     "Spaces: Visual"),
-    ("assgen.animate.keyframe",             "Spaces: Visual"),
-    ("assgen.animate.mocap",                "Spaces: Visual"),
-    ("assgen.vfx.particle",                 "Spaces: Visual"),
-    ("assgen.sprite.pack",                  "Spaces: Visual"),
-    ("assgen.ui.icon",                      "Spaces: Visual"),
-    ("assgen.ui.button",                    "Spaces: Visual"),
-    ("assgen.ui.panel",                     "Spaces: Visual"),
-    ("assgen.ui.widget",                    "Spaces: Visual"),
-    ("assgen.ui.mockup",                    "Spaces: Visual"),
-    ("assgen.ui.layout",                    "Spaces: Visual"),
-    ("assgen.ui.iconset",                   "Spaces: Visual"),
-    ("assgen.ui.theme",                     "Spaces: Visual"),
-    ("assgen.ui.screen",                    "Spaces: Visual"),
+    ("AssetGen.concept.generate",             "Spaces: Visual"),
+    ("AssetGen.concept.style",                "Spaces: Visual"),
+    ("AssetGen.blockout.create",              "Spaces: Visual"),
+    ("AssetGen.model.create",                 "Spaces: Visual"),
+    ("AssetGen.model.multiview",              "Spaces: Visual"),
+    ("AssetGen.model.splat",                  "Spaces: Visual"),
+    ("AssetGen.mesh.validate",                "Spaces: Visual"),
+    ("AssetGen.mesh.convert",                 "Spaces: Visual"),
+    ("AssetGen.mesh.merge",                   "Spaces: Visual"),
+    ("AssetGen.mesh.bounds",                  "Spaces: Visual"),
+    ("AssetGen.mesh.flipnormals",             "Spaces: Visual"),
+    ("AssetGen.mesh.weld",                    "Spaces: Visual"),
+    ("AssetGen.mesh.center",                  "Spaces: Visual"),
+    ("AssetGen.mesh.scale",                   "Spaces: Visual"),
+    ("AssetGen.lod.generate",                 "Spaces: Visual"),
+    ("AssetGen.uv.auto",                      "Spaces: Visual"),
+    ("AssetGen.texture.generate",             "Spaces: Visual"),
+    ("AssetGen.texture.upscale",              "Spaces: Visual"),
+    ("AssetGen.texture.from_concept",         "Spaces: Visual"),
+    ("AssetGen.texture.inpaint",              "Spaces: Visual"),
+    ("AssetGen.texture.pbr",                  "Spaces: Visual"),
+    ("AssetGen.texture.channel_pack",         "Spaces: Visual"),
+    ("AssetGen.texture.convert",              "Spaces: Visual"),
+    ("AssetGen.texture.atlas_pack",           "Spaces: Visual"),
+    ("AssetGen.texture.mipmap",               "Spaces: Visual"),
+    ("AssetGen.texture.normalmap_convert",    "Spaces: Visual"),
+    ("AssetGen.texture.seamless",             "Spaces: Visual"),
+    ("AssetGen.texture.resize",               "Spaces: Visual"),
+    ("AssetGen.texture.report",               "Spaces: Visual"),
+    ("AssetGen.rig.auto",                     "Spaces: Visual"),
+    ("AssetGen.animate.keyframe",             "Spaces: Visual"),
+    ("AssetGen.animate.mocap",                "Spaces: Visual"),
+    ("AssetGen.vfx.particle",                 "Spaces: Visual"),
+    ("AssetGen.sprite.pack",                  "Spaces: Visual"),
+    ("AssetGen.ui.icon",                      "Spaces: Visual"),
+    ("AssetGen.ui.button",                    "Spaces: Visual"),
+    ("AssetGen.ui.panel",                     "Spaces: Visual"),
+    ("AssetGen.ui.widget",                    "Spaces: Visual"),
+    ("AssetGen.ui.mockup",                    "Spaces: Visual"),
+    ("AssetGen.ui.layout",                    "Spaces: Visual"),
+    ("AssetGen.ui.iconset",                   "Spaces: Visual"),
+    ("AssetGen.ui.theme",                     "Spaces: Visual"),
+    ("AssetGen.ui.screen",                    "Spaces: Visual"),
     # Scene (3)
-    ("assgen.scene.depth.estimate",         "Spaces: Scene"),
-    ("assgen.scene.lighting.hdri",          "Spaces: Scene"),
-    ("assgen.scene.physics.collider",       "Spaces: Scene"),
+    ("AssetGen.scene.depth.estimate",         "Spaces: Scene"),
+    ("AssetGen.scene.lighting.hdri",          "Spaces: Scene"),
+    ("AssetGen.scene.physics.collider",       "Spaces: Scene"),
     # Procedural (7)
-    ("assgen.procedural.terrain.heightmap", "Spaces: Procedural"),
-    ("assgen.procedural.texture.noise",     "Spaces: Procedural"),
-    ("assgen.procedural.level.dungeon",     "Spaces: Procedural"),
-    ("assgen.procedural.level.voronoi",     "Spaces: Procedural"),
-    ("assgen.procedural.foliage.scatter",   "Spaces: Procedural"),
-    ("assgen.procedural.tileset.wfc",       "Spaces: Procedural"),
-    ("assgen.procedural.plant.lsystem",     "Spaces: Procedural"),
+    ("AssetGen.procedural.terrain.heightmap", "Spaces: Procedural"),
+    ("AssetGen.procedural.texture.noise",     "Spaces: Procedural"),
+    ("AssetGen.procedural.level.dungeon",     "Spaces: Procedural"),
+    ("AssetGen.procedural.level.voronoi",     "Spaces: Procedural"),
+    ("AssetGen.procedural.foliage.scatter",   "Spaces: Procedural"),
+    ("AssetGen.procedural.tileset.wfc",       "Spaces: Procedural"),
+    ("AssetGen.procedural.plant.lsystem",     "Spaces: Procedural"),
     # Narrative (5)
-    ("assgen.narrative.dialogue.npc",       "Spaces: Narrative"),
-    ("assgen.narrative.dialogue.validate",  "Spaces: Narrative"),
-    ("assgen.narrative.lore.generate",      "Spaces: Narrative"),
-    ("assgen.narrative.quest.design",       "Spaces: Narrative"),
-    ("assgen.narrative.quest.validate",     "Spaces: Narrative"),
+    ("AssetGen.narrative.dialogue.npc",       "Spaces: Narrative"),
+    ("AssetGen.narrative.dialogue.validate",  "Spaces: Narrative"),
+    ("AssetGen.narrative.lore.generate",      "Spaces: Narrative"),
+    ("AssetGen.narrative.quest.design",       "Spaces: Narrative"),
+    ("AssetGen.narrative.quest.validate",     "Spaces: Narrative"),
 ]
 
 TEMPLATE = """\
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Space: {space_name}" type="PythonConfigurationType" factoryName="Python" folderName="{folder}">
-    <module name="assgen" />
+    <module name="AssetGen" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
@@ -310,12 +310,12 @@ if __name__ == "__main__":
 
 ## 9. Usage in PyCharm
 
-1. Open the project root in PyCharm (File > Open > `/path/to/assgen`)
+1. Open the project root in PyCharm (File > Open > `/path/to/AssetGen`)
 2. PyCharm detects the `.venv` and sets it as the project SDK automatically
 3. Open "Run > Edit Configurations" (or the run selector dropdown at the top)
 4. Find the `Spaces: Audio`, `Spaces: Visual`, etc. folders
 5. Select any Space and click Run (▶) — Gradio opens at `http://127.0.0.1:7860`
 
-> **Note:** If `spaces/assgen.X/app.py` does not exist yet (Space not implemented),
+> **Note:** If `spaces/AssetGen.X/app.py` does not exist yet (Space not implemented),
 > PyCharm shows a "Script file not found" warning. The run config is still valid —
 > it just needs the implementation file to exist before it can execute.

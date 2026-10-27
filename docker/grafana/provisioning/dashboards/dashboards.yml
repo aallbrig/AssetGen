@@ -5,9 +5,9 @@
 apiVersion: 1
 
 providers:
-  - name: assgen
+  - name: assetgen
     orgId: 1
-    folder: assgen
+    folder: assetgen
     type: file
     disableDeletion: false
     updateIntervalSeconds: 30

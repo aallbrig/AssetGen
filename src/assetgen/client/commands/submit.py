@@ -1,0 +1,214 @@
+"""Shared helper: submit_job.
+
+All game-asset commands call submit_job(job_type, params, ...)
+which enqueues the job and either waits or prints the job ID.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import typer
+
+from assetgen.client.api import APIError, get_client
+from assetgen.client.context import (
+    get_context_map,
+    get_from_job,
+    get_quality,
+    get_variants,
+    is_json_mode,
+    is_yaml_mode,
+)
+from assetgen.client.output import (
+    abort_with_error,
+    console,
+    download_job_output,
+    job_to_dict,
+    print_job_json,
+    print_job_summary,
+    print_job_yaml,
+    wait_for_job,
+)
+from assetgen.config import load_client_config
+
+
+def _resolve_upstream(client: Any, job_id: str) -> dict[str, Any]:
+    """Look up *job_id*, assert it completed, return its metadata."""
+    try:
+        job = client.get_job(job_id)
+    except APIError as e:
+        abort_with_error(f"--from-job: could not find job {job_id!r}: {e}")
+
+    if job.get("status") != "COMPLETED":
+        abort_with_error(
+            f"--from-job: upstream job {job_id!r} has status "
+            f"'{job.get('status')}' — must be COMPLETED before chaining."
+        )
+    return job
+
+
+def _read_context_text(client: Any, job_id: str) -> str:
+    """Resolve a --context job_id to its primary text content.
+
+    Tries these file extensions in order: .txt, .json (reads as string), then
+    falls back to any file in the result's file list.  Returns empty string if
+    nothing readable is found.
+    """
+    try:
+        job = client.get_job(job_id)
+    except APIError:
+        return ""
+
+    if job.get("status") != "COMPLETED":
+        return ""
+
+    files: list[str] = (job.get("result") or {}).get("files", [])
+    # Prefer plain text files; fall back to JSON, then any file
+    preferred = next(
+        (f for f in files if f.endswith(".txt")),
+        next((f for f in files if f.endswith(".json")), files[0] if files else None),
+    )
+    if not preferred:
+        return ""
+
+    try:
+        content = client.download_file(job_id, preferred)
+        if isinstance(content, bytes):
+            return content.decode("utf-8", errors="replace")
+        return str(content)
+    except Exception:
+        return ""
+
+
+def submit_job(
+    job_type: str,
+    params: dict[str, Any],
+    wait: bool | None = None,
+    priority: int = 0,
+    tags: list[str] | None = None,
+    model_id: str | None = None,
+    output_path: str | None = None,
+) -> None:
+    """Enqueue one (or N via ``--variants``) job(s) and wait or print job ID(s)."""
+    cfg = load_client_config()
+    should_wait = wait if wait is not None else cfg.get("default_wait", False)
+    n_variants = get_variants()
+    json_mode = is_json_mode()
+    yaml_mode = is_yaml_mode()
+
+    # Inject global context flags into params so the worker can see them
+    params = dict(params)
+    quality = get_quality()
+    if quality != "standard":
+        params["_quality"] = quality
+
+    from_job = get_from_job()
+
+    # --- Resolve upstream job for chaining ---
+    if from_job:
+        with get_client() as client:
+            upstream_job = _resolve_upstream(client, from_job)
+        result = upstream_job.get("result") or {}
+        params["upstream_job_id"] = from_job
+        params["upstream_files"] = result.get("files", [])
+
+    # --- Resolve --context key=job_id pairs into text content ---
+    context_job_map = get_context_map()
+    if context_job_map:
+        resolved_context: dict[str, str] = {}
+        with get_client() as client:
+            for key, ctx_job_id in context_job_map.items():
+                resolved_context[key] = _read_context_text(client, ctx_job_id)
+        if resolved_context:
+            params["context_map"] = resolved_context
+
+    # --- Enqueue N jobs ---
+    job_ids: list[str] = []
+    with get_client() as client:
+        for _ in range(n_variants):
+            try:
+                job = client.enqueue_job(
+                    job_type,
+                    params,
+                    priority=priority,
+                    tags=tags or [],
+                    model_id=model_id,
+                )
+                job_ids.append(job["id"])
+            except APIError as e:
+                abort_with_error(str(e))
+
+    if not should_wait:
+        if json_mode or yaml_mode:
+            results = [{"job_id": jid, "status": "QUEUED", "job_type": job_type} for jid in job_ids]
+            out = results[0] if n_variants == 1 else {"jobs": results}
+            if yaml_mode:
+                import yaml
+
+                print(yaml.dump(out, default_flow_style=False, sort_keys=False), end="", flush=True)
+            else:
+                print(json.dumps(out), flush=True)
+        else:
+            for jid in job_ids:
+                console.print(
+                    f"[green]✓ Job enqueued[/green]  [dim]{jid[:8]}[/dim]  [italic]{job_type}[/italic]"
+                )
+                console.print(f"[dim]  Track:    assetgen jobs status {jid[:8]}[/dim]")
+                console.print(f"[dim]  Wait:     assetgen jobs wait {jid[:8]}[/dim]")
+                console.print(f"[dim]  Download: assetgen jobs download {jid[:8]}[/dim]")
+        return
+
+    # --- Wait for all N jobs ---
+    dest_dir: Path | None = None
+    if output_path:
+        dest_dir = Path(output_path)
+    elif cfg.get("output_dir"):
+        dest_dir = Path(cfg["output_dir"])
+
+    completed_results: list[tuple[dict[str, Any], list[Path]]] = []
+    any_failed = False
+    for jid in job_ids:
+        with get_client() as client:
+            try:
+                completed = wait_for_job(client, jid)
+            except TimeoutError as e:
+                abort_with_error(str(e))
+            except APIError as e:
+                abort_with_error(str(e))
+
+        saved: list[Path] = []
+        if completed["status"] == "COMPLETED":
+            with get_client() as client:
+                saved = download_job_output(client, completed, dest_dir=dest_dir)
+        else:
+            any_failed = True
+        completed_results.append((completed, saved))
+
+    # --- Render output ---
+    if yaml_mode:
+        import yaml
+
+        if n_variants == 1:
+            job, saved = completed_results[0]
+            print_job_yaml(job, saved)
+        else:
+            items = [job_to_dict(j, s) for j, s in completed_results]
+            print(
+                yaml.dump({"jobs": items}, default_flow_style=False, sort_keys=False),
+                end="",
+                flush=True,
+            )
+    elif json_mode:
+        if n_variants == 1:
+            job, saved = completed_results[0]
+            print_job_json(job, saved)
+        else:
+            items = [job_to_dict(j, s) for j, s in completed_results]
+            print(json.dumps({"jobs": items}), flush=True)
+    else:
+        for job, saved in completed_results:
+            print_job_summary(job, saved_files=saved)
+
+    raise typer.Exit(1 if any_failed else 0)

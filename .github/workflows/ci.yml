@@ -109,7 +109,7 @@ jobs:
           file: docker/Dockerfile.server
           push: false
           build-args: VERSION=0.0.0.dev0
-          tags: assgen-server:ci
+          tags: assetgen-server:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -120,6 +120,6 @@ jobs:
           file: docker/Dockerfile.client
           push: false
           build-args: VERSION=0.0.0.dev0
-          tags: assgen-client:ci
+          tags: assetgen-client:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max

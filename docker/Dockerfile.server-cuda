@@ -1,4 +1,4 @@
-# assgen server — GPU-accelerated image (CUDA 12.1 + PyTorch 2.3)
+# assetgen server — GPU-accelerated image (CUDA 12.1 + PyTorch 2.3)
 #
 # Use this for actual ML inference on an NVIDIA GPU.
 # Requires NVIDIA Container Toolkit: https://docs.nvidia.com/datacenter/cloud-native/
@@ -6,14 +6,14 @@
 # Build:
 #   docker build -f docker/Dockerfile.server-cuda \
 #                --build-arg VERSION=$(git describe --tags --abbrev=0) \
-#                -t assgen-server-cuda .
+#                -t assetgen-server-cuda .
 #
 # Run:
 #   docker run --gpus all \
 #              -p 8432:8432 \
-#              -v assgen-data:/root/.local/share/assgen \
+#              -v assetgen-data:/root/.local/share/assetgen \
 #              -e ASSGEN_DEVICE=cuda \
-#              assgen-server-cuda
+#              assetgen-server-cuda
 
 # pytorch/pytorch already ships Python 3.11, CUDA 12.1, and PyTorch 2.3
 FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime AS builder
@@ -33,8 +33,8 @@ RUN hatch build -t wheel
 # ── runtime stage ─────────────────────────────────────────────────────────────
 FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
 
-LABEL org.opencontainers.image.source="https://github.com/aallbrig/assgen"
-LABEL org.opencontainers.image.description="assgen server (GPU) — AI game asset generation pipeline"
+LABEL org.opencontainers.image.source="https://github.com/aallbrig/assetgen"
+LABEL org.opencontainers.image.description="assetgen server (GPU) — AI game asset generation pipeline"
 LABEL org.opencontainers.image.licenses="MIT"
 
 RUN apt-get update \
@@ -49,11 +49,11 @@ RUN pip install --no-cache-dir /tmp/*.whl && rm /tmp/*.whl \
         "diffusers>=0.28" \
         "accelerate>=0.30"
 
-VOLUME ["/root/.local/share/assgen"]
+VOLUME ["/root/.local/share/assetgen"]
 
 EXPOSE 8432
 
 ENV ASSGEN_DEVICE=cuda
 
-ENTRYPOINT ["assgen-server"]
+ENTRYPOINT ["assetgen-server"]
 CMD ["start", "--host", "0.0.0.0", "--port", "8432", "--json-logs"]

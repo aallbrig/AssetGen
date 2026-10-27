@@ -9,7 +9,7 @@ Usage:
     python scripts/smoke_test_inference.py --device cuda
     python scripts/smoke_test_inference.py --handler visual.concept.generate
 
-Requires: pip install "assgen[inference]"
+Requires: pip install "assetgen[inference]"
 """
 from __future__ import annotations
 
@@ -84,7 +84,7 @@ def _assert_any_file(output_dir: Path) -> None:
 
 def _load_and_run(job_type: str, test: dict, device: str) -> bool:
     """Import the handler module and run it in a temp directory."""
-    module_name = "assgen.server.handlers." + job_type.replace(".", "_")
+    module_name = "assetgen.server.handlers." + job_type.replace(".", "_")
     try:
         import importlib
         mod = importlib.import_module(module_name)
@@ -92,7 +92,7 @@ def _load_and_run(job_type: str, test: dict, device: str) -> bool:
         print(f"  SKIP — handler module {module_name} not found")
         return True
 
-    with tempfile.TemporaryDirectory(prefix=f"assgen_smoke_{job_type}_") as tmpdir:
+    with tempfile.TemporaryDirectory(prefix=f"assetgen_smoke_{job_type}_") as tmpdir:
         output_dir = Path(tmpdir)
         try:
             result = mod.run(
@@ -130,7 +130,7 @@ def _load_and_run(job_type: str, test: dict, device: str) -> bool:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Smoke test assgen inference handlers")
+    parser = argparse.ArgumentParser(description="Smoke test assetgen inference handlers")
     parser.add_argument("--device", default="cpu", help="Inference device: cpu, cuda, mps")
     parser.add_argument("--handler", help="Run only this handler (e.g., visual.concept.generate)")
     args = parser.parse_args()

@@ -1,4 +1,4 @@
-"""Tests for assgen.server.validation — allow-list and model/task compatibility."""
+"""Tests for assetgen.server.validation — allow-list and model/task compatibility."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from assgen.server.validation import (
+from assetgen.server.validation import (
     TASK_COMPATIBLE_TAGS,
     check_allow_list,
     validate_job_model,
@@ -70,7 +70,7 @@ class TestValidateModelTaskCompatibility:
         assert "no compatibility rules" in reason
 
     def test_allows_when_hf_api_unreachable(self) -> None:
-        with patch("assgen.server.validation.fetch_hf_pipeline_tag", return_value=None):
+        with patch("assetgen.server.validation.fetch_hf_pipeline_tag", return_value=None):
             ok, reason = validate_model_task_compatibility(
                 "org/model", "text-to-image", self._cfg()
             )
@@ -79,7 +79,7 @@ class TestValidateModelTaskCompatibility:
 
     def test_accepts_compatible_model(self) -> None:
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-image",
         ):
             ok, _ = validate_model_task_compatibility(
@@ -89,7 +89,7 @@ class TestValidateModelTaskCompatibility:
 
     def test_rejects_incompatible_model(self) -> None:
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-speech",  # wrong for image-to-3d
         ):
             ok, reason = validate_model_task_compatibility(
@@ -101,7 +101,7 @@ class TestValidateModelTaskCompatibility:
 
     def test_rejects_text_to_speech_for_image_task(self) -> None:
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-speech",
         ):
             ok, reason = validate_model_task_compatibility(
@@ -111,7 +111,7 @@ class TestValidateModelTaskCompatibility:
 
     def test_accepts_audio_model_for_audio_task(self) -> None:
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-audio",
         ):
             ok, _ = validate_model_task_compatibility(
@@ -129,7 +129,7 @@ class TestValidateJobModel:
     def test_passes_open_server(self) -> None:
         cfg: dict = {}
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-image",
         ):
             validate_job_model("stabilityai/sdxl", "text-to-image", cfg)
@@ -142,7 +142,7 @@ class TestValidateJobModel:
     def test_raises_on_incompatible_model(self) -> None:
         cfg: dict = {}
         with patch(
-            "assgen.server.validation.fetch_hf_pipeline_tag",
+            "assetgen.server.validation.fetch_hf_pipeline_tag",
             return_value="text-to-speech",
         ):
             with pytest.raises(ValueError, match="pipeline_tag"):

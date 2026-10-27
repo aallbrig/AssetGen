@@ -19,7 +19,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from typer.testing import CliRunner
 
-from assgen.client.cli import app
+from assetgen.client.cli import app
 
 runner = CliRunner()
 
@@ -63,7 +63,7 @@ class TestVersionCommand:
 
     def test_version_prints_version_string(self) -> None:
         result = invoke("version")
-        assert "assgen" in result.output
+        assert "assetgen" in result.output
         assert any(c.isdigit() for c in result.output)
 
     def test_version_flag_exits_0(self) -> None:
@@ -76,7 +76,7 @@ class TestVersionCommand:
 
     def test_version_flag_prints_name_and_number(self) -> None:
         result = invoke("--version")
-        assert "assgen" in result.output
+        assert "assetgen" in result.output
         assert any(c.isdigit() for c in result.output)
 
     def test_help_exits_0(self) -> None:
@@ -90,7 +90,7 @@ class TestVersionCommand:
 
 
 # ---------------------------------------------------------------------------
-# assgen tasks
+# assetgen tasks
 # ---------------------------------------------------------------------------
 
 
@@ -119,7 +119,7 @@ class TestTasksCommand:
 
 
 # ---------------------------------------------------------------------------
-# assgen server config
+# assetgen server config
 # ---------------------------------------------------------------------------
 
 
@@ -134,8 +134,8 @@ class TestServerConfigCommand:
 
     def test_server_config_set_and_reset(self, tmp_path, monkeypatch) -> None:
         """Set a key then verify it appears in 'show', then reset."""
-        monkeypatch.setenv("ASSGEN_CONFIG_DIR", str(tmp_path))
-        with patch("assgen.config.get_config_dir", return_value=tmp_path):
+        monkeypatch.setenv("ASSETGEN_CONFIG_DIR", str(tmp_path))
+        with patch("assetgen.config.get_config_dir", return_value=tmp_path):
             r1 = invoke("server", "config", "set", "log_level", "DEBUG")
             assert r1.exit_code == 0
             r2 = invoke("server", "config", "show")
@@ -144,7 +144,7 @@ class TestServerConfigCommand:
 
 
 # ---------------------------------------------------------------------------
-# assgen client config
+# assetgen client config
 # ---------------------------------------------------------------------------
 
 
@@ -154,14 +154,14 @@ class TestClientConfigCommand:
         assert result.exit_code == 0
 
     def test_client_config_set_server_url(self, tmp_path, monkeypatch) -> None:
-        monkeypatch.setenv("ASSGEN_CONFIG_DIR", str(tmp_path))
-        with patch("assgen.config.get_config_dir", return_value=tmp_path):
+        monkeypatch.setenv("ASSETGEN_CONFIG_DIR", str(tmp_path))
+        with patch("assetgen.config.get_config_dir", return_value=tmp_path):
             r = invoke("client", "config", "set-server", "http://localhost:9999")
             assert r.exit_code == 0
 
 
 # ---------------------------------------------------------------------------
-# assgen config (catalog overrides)
+# assetgen config (catalog overrides)
 # ---------------------------------------------------------------------------
 
 
@@ -176,7 +176,7 @@ class TestConfigCommand:
 
 
 # ---------------------------------------------------------------------------
-# assgen upgrade --check (mocked)
+# assetgen upgrade --check (mocked)
 # ---------------------------------------------------------------------------
 
 
@@ -195,7 +195,7 @@ class TestUpgradeCommand:
         mock_resp.status_code = 200
         mock_resp.json.return_value = {
             "tag_name": "v99.0.0",
-            "html_url": "https://github.com/aallbrig/assgen/releases/tag/v99.0.0",
+            "html_url": "https://github.com/aallbrig/assetgen/releases/tag/v99.0.0",
             "body": "",
         }
 
@@ -215,7 +215,7 @@ class TestUpgradeCommand:
 
 
 # ---------------------------------------------------------------------------
-# assgen models (mocked API)
+# assetgen models (mocked API)
 # ---------------------------------------------------------------------------
 
 
@@ -235,7 +235,9 @@ class TestModelsCommand:
                 "job_types": ["visual.model.create"],
             },
         ]
-        with patch("assgen.client.api.APIClient", return_value=self._mock_api_client(mock_models)):
+        with patch(
+            "assetgen.client.api.APIClient", return_value=self._mock_api_client(mock_models)
+        ):
             result = invoke("models", "list")
         assert result.exit_code in (0, 1)  # may fail to connect — must not crash
 
@@ -266,10 +268,10 @@ class TestJsonFlag:
     def test_json_flag_emits_valid_json(self) -> None:
         import json as _json
 
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
-        with patch("assgen.client.commands.submit.get_client", return_value=self._enqueue_mock()):
+        with patch("assetgen.client.commands.submit.get_client", return_value=self._enqueue_mock()):
             result = invoke("--json", "gen", "audio", "sfx", "generate", "laser gun")
         context.reset()
         assert result.exit_code == 0
@@ -279,10 +281,10 @@ class TestJsonFlag:
         assert "job_id" in parsed
 
     def test_json_flag_no_rich_markup(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
-        with patch("assgen.client.commands.submit.get_client", return_value=self._enqueue_mock()):
+        with patch("assetgen.client.commands.submit.get_client", return_value=self._enqueue_mock()):
             result = invoke("--json", "gen", "audio", "sfx", "generate", "laser gun")
         context.reset()
         # Rich markup / decorations must not appear in JSON output
@@ -314,11 +316,11 @@ class TestVariantsFlag:
         assert "--variants" in strip_ansi(result.output)
 
     def test_variants_submits_n_jobs(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         mock_client = self._enqueue_mock(3)
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke("--variants", "3", "gen", "audio", "sfx", "generate", "explosion")
         context.reset()
         assert result.exit_code == 0
@@ -327,11 +329,11 @@ class TestVariantsFlag:
     def test_variants_json_emits_array(self) -> None:
         import json as _json
 
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         mock_client = self._enqueue_mock(2)
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke("--json", "--variants", "2", "gen", "audio", "sfx", "generate", "wind")
         context.reset()
         assert result.exit_code == 0
@@ -366,11 +368,11 @@ class TestQualityFlag:
         assert "--quality" in strip_ansi(result.output)
 
     def test_quality_draft_sets_param(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         mock_client = self._enqueue_mock()
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke("--quality", "draft", "gen", "audio", "music", "compose", "battle")
         context.reset()
         assert result.exit_code == 0
@@ -380,11 +382,11 @@ class TestQualityFlag:
 
     def test_quality_standard_omits_param(self) -> None:
         """standard is the default — should NOT inject _quality (saves bandwidth)."""
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         mock_client = self._enqueue_mock()
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke("gen", "audio", "music", "compose", "battle")
         context.reset()
         assert result.exit_code == 0
@@ -395,11 +397,11 @@ class TestQualityFlag:
     def test_quality_high_sets_param(self) -> None:
         import json as _json
 
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         mock_client = self._enqueue_mock()
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke(
                 "--json", "--quality", "high", "gen", "audio", "music", "compose", "epic"
             )
@@ -441,12 +443,12 @@ class TestFromJobFlag:
         assert "--from-job" in strip_ansi(result.output)
 
     def test_from_job_injects_upstream_info(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         upstream_id = "upstream0000001"
         mock_client = self._make_clients(upstream_id)
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke(
                 "--from-job",
                 upstream_id,
@@ -470,7 +472,7 @@ class TestFromJobFlag:
 
 
 class TestJobsRerun:
-    """assgen jobs rerun re-submits with the original user params."""
+    """assetgen jobs rerun re-submits with the original user params."""
 
     def _make_job(self, job_id: str, job_type: str, params: dict) -> MagicMock:
         mc = MagicMock()
@@ -499,7 +501,7 @@ class TestJobsRerun:
     def test_rerun_dry_run_shows_job_type(self) -> None:
         job_id = "original001"
         mc = self._make_job(job_id, "visual.concept.generate", {"prompt": "castle"})
-        with patch("assgen.client.commands.jobs.get_client", return_value=mc):
+        with patch("assetgen.client.commands.jobs.get_client", return_value=mc):
             result = invoke("jobs", "rerun", job_id, "--dry-run")
         assert result.exit_code == 0
         out = strip_ansi(result.output)
@@ -507,7 +509,7 @@ class TestJobsRerun:
         assert "castle" in out
 
     def test_rerun_enqueues_fresh_job(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         job_id = "original002"
@@ -519,8 +521,8 @@ class TestJobsRerun:
         }
         mc = self._make_job(job_id, "visual.concept.generate", original_params)
         with (
-            patch("assgen.client.commands.jobs.get_client", return_value=mc),
-            patch("assgen.client.commands.submit.get_client", return_value=mc),
+            patch("assetgen.client.commands.jobs.get_client", return_value=mc),
+            patch("assetgen.client.commands.submit.get_client", return_value=mc),
         ):
             result = invoke("jobs", "rerun", job_id)
         context.reset()
@@ -546,31 +548,31 @@ class TestHandlerImportFallback:
         """Module must import cleanly even without audiocraft installed."""
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.audio_sfx_generate")
+        mod = importlib.import_module("assetgen.server.handlers.audio_sfx_generate")
         assert hasattr(mod, "run")
 
     def test_audio_music_compose_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.audio_music_compose")
+        mod = importlib.import_module("assetgen.server.handlers.audio_music_compose")
         assert hasattr(mod, "run")
 
     def test_audio_music_loop_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.audio_music_loop")
+        mod = importlib.import_module("assetgen.server.handlers.audio_music_loop")
         assert hasattr(mod, "run")
 
     def test_narrative_dialogue_npc_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.narrative_dialogue_npc")
+        mod = importlib.import_module("assetgen.server.handlers.narrative_dialogue_npc")
         assert hasattr(mod, "run")
 
     def test_visual_texture_pbr_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.visual_texture_pbr")
+        mod = importlib.import_module("assetgen.server.handlers.visual_texture_pbr")
         assert hasattr(mod, "run")
 
 
@@ -583,38 +585,38 @@ class TestCatalogQualityVariants:
     """get_model_for_job_quality resolves tier variants correctly."""
 
     def test_draft_resolves_to_small(self) -> None:
-        from assgen.catalog import get_model_for_job_quality
+        from assetgen.catalog import get_model_for_job_quality
 
         mid = get_model_for_job_quality("audio.music.compose", "draft")
         assert mid == "facebook/musicgen-small"
 
     def test_high_resolves_to_large(self) -> None:
-        from assgen.catalog import get_model_for_job_quality
+        from assetgen.catalog import get_model_for_job_quality
 
         mid = get_model_for_job_quality("audio.music.compose", "high")
         assert mid == "facebook/musicgen-large"
 
     def test_standard_resolves_to_medium(self) -> None:
-        from assgen.catalog import get_model_for_job_quality
+        from assetgen.catalog import get_model_for_job_quality
 
         mid = get_model_for_job_quality("audio.music.compose", "standard")
         assert mid == "facebook/musicgen-medium"
 
     def test_no_variants_returns_default(self) -> None:
-        from assgen.catalog import get_model_for_job_quality
+        from assetgen.catalog import get_model_for_job_quality
 
         mid = get_model_for_job_quality("visual.model.create", "draft")
         # Hunyuan3D-2 has no quality_variants — should return the default model_id
         assert mid == "tencent/Hunyuan3D-2"
 
     def test_loop_draft_resolves_stereo_small(self) -> None:
-        from assgen.catalog import get_model_for_job_quality
+        from assetgen.catalog import get_model_for_job_quality
 
         mid = get_model_for_job_quality("audio.music.loop", "draft")
         assert mid == "facebook/musicgen-stereo-small"
 
     def test_pbr_entry_in_catalog(self) -> None:
-        from assgen.catalog import get_model_for_job
+        from assetgen.catalog import get_model_for_job
 
         entry = get_model_for_job("visual.texture.pbr")
         assert entry is not None
@@ -658,12 +660,12 @@ class TestContextFlag:
         assert "--context" in strip_ansi(result.output)
 
     def test_context_resolves_to_param(self) -> None:
-        from assgen.client import context
+        from assetgen.client import context
 
         context.reset()
         lore_id = "lorejob00000001"
         mock_client = self._make_client(lore_id)
-        with patch("assgen.client.commands.submit.get_client", return_value=mock_client):
+        with patch("assetgen.client.commands.submit.get_client", return_value=mock_client):
             result = invoke(
                 "--context",
                 f"lore={lore_id}",
@@ -681,7 +683,7 @@ class TestContextFlag:
         assert "empire" in params_sent["context_map"]["lore"]
 
     def test_context_bad_format_raises(self) -> None:
-        from assgen.client import context as ctx_mod
+        from assetgen.client import context as ctx_mod
 
         ctx_mod.reset()
         with pytest.raises(ValueError, match="key=job_id"):
@@ -689,7 +691,7 @@ class TestContextFlag:
         ctx_mod.reset()
 
     def test_multiple_context_entries(self) -> None:
-        from assgen.client import context as ctx_mod
+        from assetgen.client import context as ctx_mod
 
         ctx_mod.reset()
         ctx_mod.set_context_map(["lore=job1", "scene=job2"])
@@ -709,34 +711,34 @@ class TestEasyWinHandlers:
     def test_audio_ambient_generate_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.audio_ambient_generate")
+        mod = importlib.import_module("assetgen.server.handlers.audio_ambient_generate")
         assert hasattr(mod, "run")
 
     def test_audio_music_adaptive_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.audio_music_adaptive")
+        mod = importlib.import_module("assetgen.server.handlers.audio_music_adaptive")
         assert hasattr(mod, "run")
 
     def test_narrative_lore_generate_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.narrative_lore_generate")
+        mod = importlib.import_module("assetgen.server.handlers.narrative_lore_generate")
         assert hasattr(mod, "run")
 
     def test_narrative_quest_design_importable(self) -> None:
         import importlib
 
-        mod = importlib.import_module("assgen.server.handlers.narrative_quest_design")
+        mod = importlib.import_module("assetgen.server.handlers.narrative_quest_design")
         assert hasattr(mod, "run")
 
     def test_handler_coverage_reached_29_percent(self) -> None:
         """Retained for historical reference — originally verified 9/31 handlers."""
-        from assgen.catalog import load_catalog
+        from assetgen.catalog import load_catalog
 
         catalog = load_catalog()
         real = sum(
-            1 for jt in catalog if _try_import("assgen.server.handlers." + jt.replace(".", "_"))
+            1 for jt in catalog if _try_import("assetgen.server.handlers." + jt.replace(".", "_"))
         )
         assert real >= 9, f"Expected ≥9 real handlers, got {real}"
 
@@ -752,7 +754,7 @@ class TestAlgorithmicHandlers:
     def _assert_handler(self, name: str) -> None:
         import importlib
 
-        mod = importlib.import_module(f"assgen.server.handlers.{name}")
+        mod = importlib.import_module(f"assetgen.server.handlers.{name}")
         assert hasattr(mod, "run"), f"{name} missing run()"
 
     # visual mesh
@@ -967,12 +969,12 @@ class TestAlgorithmicHandlers:
         """All 79 catalog entries have real handlers (100% coverage)."""
         import importlib
 
-        from assgen.catalog import load_catalog
+        from assetgen.catalog import load_catalog
 
         catalog = load_catalog()
         missing = []
         for jt in catalog:
-            mod_name = "assgen.server.handlers." + jt.replace(".", "_")
+            mod_name = "assetgen.server.handlers." + jt.replace(".", "_")
             try:
                 importlib.import_module(mod_name)
             except ModuleNotFoundError:
@@ -1095,7 +1097,7 @@ class TestButtonHandlerHelpers:
     """Unit tests for pure-Python helpers in visual_ui_button — no GPU needed."""
 
     def _import_helpers(self):
-        from assgen.server.handlers.visual_ui_button import (
+        from assetgen.server.handlers.visual_ui_button import (
             _STATE_MODIFIERS,
             _nine_slice_insets,
             _parse_dpi_scales,
@@ -1164,7 +1166,7 @@ class TestProceduralHandlers:
 
     @_pil_required
     def test_proc_level_dungeon_run(self, tmp_path) -> None:
-        from assgen.server.handlers.procedural_level_dungeon import run
+        from assetgen.server.handlers.procedural_level_dungeon import run
 
         result = run(
             "proc.level.dungeon",
@@ -1180,7 +1182,7 @@ class TestProceduralHandlers:
 
     @_pil_required
     def test_proc_level_voronoi_run(self, tmp_path) -> None:
-        from assgen.server.handlers.procedural_level_voronoi import run
+        from assetgen.server.handlers.procedural_level_voronoi import run
 
         result = run(
             "proc.level.voronoi",
@@ -1195,7 +1197,7 @@ class TestProceduralHandlers:
         assert any("regions.json" in f for f in result["files"])
 
     def test_proc_plant_lsystem_run(self, tmp_path) -> None:
-        from assgen.server.handlers.procedural_plant_lsystem import run
+        from assetgen.server.handlers.procedural_plant_lsystem import run
 
         result = run(
             "proc.plant.lsystem",
@@ -1210,7 +1212,7 @@ class TestProceduralHandlers:
         assert result["metadata"]["branch_count"] > 0
 
     def test_pipeline_asset_manifest_run(self, tmp_path) -> None:
-        from assgen.server.handlers.pipeline_asset_manifest import run
+        from assetgen.server.handlers.pipeline_asset_manifest import run
 
         # Create a dummy file
         (tmp_path / "test.png").write_bytes(b"\x89PNG")
@@ -1231,7 +1233,7 @@ class TestProceduralHandlers:
         assert manifest["file_count"] >= 1
 
     def test_pipeline_asset_rename_dry_run(self, tmp_path) -> None:
-        from assgen.server.handlers.pipeline_asset_rename import run
+        from assetgen.server.handlers.pipeline_asset_rename import run
 
         (tmp_path / "MyAsset.png").write_bytes(b"")
         (tmp_path / "AnotherAsset.glb").write_bytes(b"")
@@ -1254,7 +1256,7 @@ class TestProceduralHandlers:
         assert renames.get("MyAsset.png") == "my_asset.png"
 
     def test_pipeline_git_lfs_rules_run(self, tmp_path) -> None:
-        from assgen.server.handlers.pipeline_git_lfs_rules import run
+        from assetgen.server.handlers.pipeline_git_lfs_rules import run
 
         (tmp_path / "model.glb").write_bytes(b"")
         (tmp_path / "texture.png").write_bytes(b"")
@@ -1275,7 +1277,7 @@ class TestProceduralHandlers:
     def test_narrative_dialogue_validate_run(self, tmp_path) -> None:
         import json
 
-        from assgen.server.handlers.narrative_dialogue_validate import run
+        from assetgen.server.handlers.narrative_dialogue_validate import run
 
         dialogue = {
             "nodes": [
@@ -1302,7 +1304,7 @@ class TestProceduralHandlers:
     def test_narrative_quest_validate_run(self, tmp_path) -> None:
         import json
 
-        from assgen.server.handlers.narrative_quest_validate import run
+        from assetgen.server.handlers.narrative_quest_validate import run
 
         quest = {
             "start": "q1",
@@ -1330,7 +1332,7 @@ class TestProceduralHandlers:
     def test_narrative_i18n_extract_run(self, tmp_path) -> None:
         import json
 
-        from assgen.server.handlers.narrative_i18n_extract import run
+        from assetgen.server.handlers.narrative_i18n_extract import run
 
         (tmp_path / "dialogue.json").write_text(
             json.dumps(
@@ -1363,7 +1365,7 @@ class TestCriticalHandlerImports:
     def _assert_importable(self, module_name: str) -> None:
         import importlib
 
-        mod = importlib.import_module(f"assgen.server.handlers.{module_name}")
+        mod = importlib.import_module(f"assetgen.server.handlers.{module_name}")
         assert hasattr(mod, "run"), f"{module_name} missing run()"
 
     def test_visual_uv_auto_importable(self):
@@ -1380,7 +1382,7 @@ class TestCriticalHandlerImports:
 
     def test_visual_concept_generate_covers_texture(self):
         """visual_concept_generate should also handle texture/icon/blockout/vfx job types."""
-        from assgen.server.handlers.visual_concept_generate import _JOB_PREFIXES
+        from assetgen.server.handlers.visual_concept_generate import _JOB_PREFIXES
 
         for jt in [
             "visual.texture.generate",
@@ -1399,7 +1401,7 @@ class TestCriticalHandlerImports:
         try:
             import importlib
 
-            import assgen.server.handlers.visual_uv_auto as mod
+            import assetgen.server.handlers.visual_uv_auto as mod
 
             importlib.reload(mod)
             assert not mod._XATLAS_AVAILABLE

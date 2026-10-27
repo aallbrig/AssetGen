@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "assgen"
+name = "assetgen"
 dynamic = ["version"]
 description = "Game asset generation CLI — client/server pipeline for AI-driven 3D game asset production"
 readme = "README.md"
@@ -78,23 +78,23 @@ docs = [
 ]
 
 [project.scripts]
-assgen = "assgen.client.cli:app"
-assgen-server = "assgen.server.cli:app"
+assetgen = "assetgen.client.cli:app"
+assetgen-server = "assetgen.server.cli:app"
 
 [tool.hatch.version]
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/assgen/_version.py"
+version-file = "src/assetgen/_version.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/assgen"]
+packages = ["src/assetgen"]
 
 [tool.ruff]
 src = ["src"]
 line-length = 100
 target-version = "py311"
-exclude = ["src/assgen/_version.py"]
+exclude = ["src/assetgen/_version.py"]
 
 [tool.ruff.lint]
 select = [
@@ -127,7 +127,7 @@ markers = [
 addopts = "--tb=short"
 
 [tool.coverage.run]
-source = ["src/assgen"]
+source = ["src/assetgen"]
 omit = ["*/tests/*", "*/_version.py"]
 
 [tool.coverage.report]

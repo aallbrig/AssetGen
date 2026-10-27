@@ -17,7 +17,7 @@ to the SDK module design, missing dependencies, and local testing instructions.
 
 The handler will silently use its internal default (30 steps) regardless of the UI slider value.
 
-**Fix:** In `spaces/assgen.concept.generate/app.py`, change:
+**Fix:** In `spaces/AssetGen.concept.generate/app.py`, change:
 ```python
 # WRONG
 {"prompt": prompt, "negative_prompt": negative, "num_inference_steps": steps, ...}
@@ -26,7 +26,7 @@ The handler will silently use its internal default (30 steps) regardless of the 
 {"prompt": prompt, "negative_prompt": negative, "steps": steps, ...}
 ```
 
-Same fix applies to `assgen.texture.generate` — same handler pattern.
+Same fix applies to `AssetGen.texture.generate` — same handler pattern.
 
 ---
 
@@ -123,12 +123,12 @@ Check the full handler return contract before finalising the output component.
 
 ---
 
-## 2. Bug in `assgen.sdk` Module Spec
+## 2. Bug in `AssetGen.sdk` Module Spec
 
 The SDK spec in `20260411_120400_UTC_hf_spaces_packaging_and_sdk.md` contains:
 ```python
 # WRONG — function does not exist
-from assgen.catalog import get_catalog
+from AssetGen.catalog import get_catalog
 entry = get_catalog().get(job_type, {})
 model_id = entry.get("model_id")
 ```
@@ -136,19 +136,19 @@ model_id = entry.get("model_id")
 **The actual catalog API is:**
 ```python
 # CORRECT
-from assgen.catalog import get_model_for_job
+from AssetGen.catalog import get_model_for_job
 entry = get_model_for_job(job_type) or {}
 model_id = entry.get("model_id")
 ```
 
-`assgen.catalog` exposes: `load_catalog()`, `get_model_for_job(job_type)`,
+`AssetGen.catalog` exposes: `load_catalog()`, `get_model_for_job(job_type)`,
 `get_model_for_job_quality(job_type, quality)`, `all_job_types()`, `all_model_ids()`.
 There is no `get_catalog()`. The corrected `sdk.py` block:
 
 ```python
 if model_id is None:
     try:
-        from assgen.catalog import get_model_for_job
+        from AssetGen.catalog import get_model_for_job
         entry = get_model_for_job(job_type) or {}
         model_id = entry.get("model_id")
     except Exception:
@@ -159,7 +159,7 @@ if model_id is None:
 
 ## 3. Missing Dependency: `opencv-python-headless`
 
-The `visual.texture.upscale` handler imports `cv2`. This is not covered by `assgen[spaces]`.
+The `visual.texture.upscale` handler imports `cv2`. This is not covered by `AssetGen[spaces]`.
 
 **Fix:** Add to `pyproject.toml` in the `spaces` extra:
 ```toml
@@ -271,7 +271,7 @@ without any HF infrastructure. This enables the full local test cycle:
 
 ```bash
 # Local testing workflow
-cd spaces/assgen.audio.sfx.generate
+cd spaces/AssetGen.audio.sfx.generate
 pip install -e "../../.[spaces]"
 python app.py
 # Opens Gradio dev server at http://127.0.0.1:7860
@@ -309,7 +309,7 @@ def sync_space(space_name: str, version: str) -> None:
                 folder_path=str(tmp_path),
                 repo_id=space_name,
                 repo_type="space",
-                commit_message=f"assgen {version}",
+                commit_message=f"AssetGen {version}",
             )
             print(f"  OK    {space_name}")
         except Exception as exc:
@@ -323,23 +323,23 @@ def sync_space(space_name: str, version: str) -> None:
 ## 8. The Space Name ≠ Job Type String
 
 The HF Space naming convention drops the `visual.` and `support.` prefixes.
-The `assgen.sdk.run()` job_type string does NOT follow the same convention —
+The `AssetGen.sdk.run()` job_type string does NOT follow the same convention —
 it matches the handler module name and catalog key exactly.
 
 | Space repo name | `run()` job_type argument |
 |----------------|--------------------------|
-| `assgen.concept.generate` | `"visual.concept.generate"` |
-| `assgen.texture.generate` | `"visual.texture.generate"` |
-| `assgen.rig.auto` | `"visual.rig.auto"` |
-| `assgen.model.create` | `"visual.model.create"` |
-| `assgen.narrative.dialogue.npc` | `"narrative.dialogue.npc"` |
-| `assgen.audio.sfx.generate` | `"audio.sfx.generate"` |
-| `assgen.scene.depth.estimate` | `"scene.depth.estimate"` |
-| `assgen.procedural.terrain.heightmap` | `"procedural.terrain.heightmap"` |
+| `AssetGen.concept.generate` | `"visual.concept.generate"` |
+| `AssetGen.texture.generate` | `"visual.texture.generate"` |
+| `AssetGen.rig.auto` | `"visual.rig.auto"` |
+| `AssetGen.model.create` | `"visual.model.create"` |
+| `AssetGen.narrative.dialogue.npc` | `"narrative.dialogue.npc"` |
+| `AssetGen.audio.sfx.generate` | `"audio.sfx.generate"` |
+| `AssetGen.scene.depth.estimate` | `"scene.depth.estimate"` |
+| `AssetGen.procedural.terrain.heightmap` | `"procedural.terrain.heightmap"` |
 
 **Verify any new job_type string before using it:**
 ```python
-python -c "from assgen.catalog import all_job_types; print('\n'.join(all_job_types()))"
+python -c "from AssetGen.catalog import all_job_types; print('\n'.join(all_job_types()))"
 ```
 If a job_type is not in this list it will still dispatch (to a handler file if one exists)
 but will have no catalog model_id, so `model_id=None` is passed to the handler. Most handlers
@@ -354,7 +354,7 @@ Before writing a single Space `app.py`, run this locally:
 ```bash
 # 1. Confirm catalog contains the job_type
 python -c "
-from assgen.catalog import get_model_for_job
+from AssetGen.catalog import get_model_for_job
 jt = 'audio.sfx.generate'  # ← change per Space
 entry = get_model_for_job(jt)
 print(entry)
@@ -362,21 +362,21 @@ print(entry)
 
 # 2. Confirm handler module exists
 python -c "
-from assgen.server.worker import _load_handler
+from AssetGen.server.worker import _load_handler
 h = _load_handler('audio.sfx.generate')  # ← change per Space
 print(h)
 "
 
 # 3. Smoke-test the handler with correct params (CPU, no model download)
 python -c "
-from assgen.sdk import run
+from AssetGen.sdk import run
 import tempfile, json
 with tempfile.TemporaryDirectory() as d:
     # This will try to load the model — only use with [inference] installed
     # For a no-model smoke test, patch: result = run.__wrapped__(...)
     pass
 print('SDK import OK')
-from assgen.sdk import run; print('run() callable:', run)
+from AssetGen.sdk import run; print('run() callable:', run)
 "
 
 # 4. Confirm spaces shim works
@@ -397,16 +397,16 @@ print(test())
 
 ```
 1. Merge: add [spaces] extra + opencv-headless to pyproject.toml
-2. Merge: create src/assgen/sdk.py (corrected catalog import)
-3. Verify: python -c "from assgen.sdk import run; print('ok')"
+2. Merge: create src/AssetGen/sdk.py (corrected catalog import)
+3. Verify: python -c "from AssetGen.sdk import run; print('ok')"
 4. Merge: add PyPI publish step to release.yml
 5. One-time: configure PyPI Trusted Publisher on pypi.org
 6. Tag: git tag v0.X.Y && git push --tags
 7. Watch: release.yml → PyPI publish job passes
-8. Verify: pip install "assgen[spaces]==0.X.Y" succeeds
+8. Verify: pip install "AssetGen[spaces]==0.X.Y" succeeds
 9. Create HF Space repos (batch script from Tier 1 spec)
-10. Implement + test 1 Space locally (assgen.audio.sfx.generate — simplest)
-11. Manual sync: python scripts/sync_spaces.py --version 0.X.Y --space assgen.audio.sfx.generate
+10. Implement + test 1 Space locally (AssetGen.audio.sfx.generate — simplest)
+11. Manual sync: python scripts/sync_spaces.py --version 0.X.Y --space AssetGen.audio.sfx.generate
 12. Verify Space builds green on HF Hub
 13. Implement remaining Tier 1 Spaces
 14. Full sync: python scripts/sync_spaces.py --version 0.X.Y

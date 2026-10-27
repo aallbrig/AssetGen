@@ -1,9 +1,9 @@
 # docker/otel-collector-config.yml
 #
-# OpenTelemetry Collector configuration for the assgen local observability stack.
+# OpenTelemetry Collector configuration for the assetgen local observability stack.
 #
 # Pipeline:
-#   assgen-server (OTLP HTTP :4318)
+#   assetgen-server (OTLP HTTP :4318)
 #     → OTel Collector
 #       ├─ traces  → Tempo   (OTLP gRPC :4317)
 #       ├─ metrics → Prometheus exporter (:8889, scraped by Prometheus)

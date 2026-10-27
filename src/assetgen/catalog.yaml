@@ -1,0 +1,572 @@
+# Default model catalog for assetgen.
+#
+# Maps job_type → HuggingFace model ID and metadata.
+# Users can override / extend this by adding entries to
+# ~/.config/assetgen/models.yaml under the same `catalog` key.
+#
+# Fields:
+#   model_id  — HuggingFace repo ID (org/repo)
+#   name      — human-readable display name
+#   task      — HF pipeline task tag (used during inference dispatch)
+#   notes     — optional freeform description
+
+catalog:
+
+  # ── Visual / Concept ──────────────────────────────────────────────────────
+  visual.concept.generate:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Ungated, 7 500+ likes; excellent prompt-to-concept generation; widely supported by diffusers"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  visual.concept.style:
+    model_id: "h94/IP-Adapter"
+    name: "IP-Adapter"
+    task: "text-to-image"
+    notes: "Reference-image style guidance via image prompts alongside SDXL backbone; HF tag is text-to-image"
+
+  # ── Visual / Blockout ─────────────────────────────────────────────────────
+  visual.blockout.create:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Generates a 2D layout sketch / greybox reference image — NOT a 3D mesh. Use the output as a visual reference when manually building 3D blockout geometry in your engine."
+
+  # ── Visual / Model (3D mesh) ──────────────────────────────────────────────
+  visual.model.create:
+    model_id: "tencent/Hunyuan3D-2"
+    name: "Hunyuan3D-2"
+    task: "image-to-3d"
+    notes: "State-of-the-art image-to-3D; 1 700+ likes; ungated; high-quality textured mesh output (.glb)"
+
+  visual.model.splat:
+    model_id: "stabilityai/TripoSR"
+    name: "TripoSR"
+    task: "image-to-3d"
+    notes: "Produces a triangle mesh (PLY/GLB) from multi-view images — NOT a Gaussian Splat (3DGS). True 3DGS training requires a separate pipeline (nerfstudio, gaussian-splatting). Output mesh can feed into a downstream GS trainer."
+
+  visual.model.multiview:
+    model_id: "sudo-ai/zero123plus"
+    name: "Zero123++"
+    task: "image-to-image"
+    notes: "Generates 6 surrounding camera views from a single concept image; feed the 6-view output into visual.model.splat for dramatically improved mesh quality vs. single-image reconstruction."
+
+  visual.model.retopo:
+    model_id: null
+    name: "Mesh Retopologiser (algorithmic)"
+    task: "mesh-retopology"
+    notes: "Algorithmic — use Instant Meshes or Blender Remesh; no ML model required"
+
+  # ── Visual / UV ──────────────────────────────────────────────────────────
+  visual.uv.auto:
+    model_id: null
+    name: "UV Unwrapper (algorithmic)"
+    task: "uv-unwrap"
+    notes: "Algorithmic — xatlas or Blender Smart UV Project; no ML model required"
+
+  # ── Visual / Texture ─────────────────────────────────────────────────────
+  visual.texture.generate:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Outputs an albedo/diffuse texture image only. Full PBR maps (normal, roughness, metallic) require post-processing in Materialize / Substance or a ControlNet Normal+Depth pipeline."
+
+  visual.texture.bake:
+    model_id: null
+    name: "Texture Baker (algorithmic)"
+    task: "texture-bake"
+    notes: "Rasterisation-based ray-cast bake — no ML model required"
+
+  visual.texture.pbr:
+    model_id: null
+    name: "PBR Map Generator (algorithmic)"
+    task: "texture-generation"
+    notes: "Derives a full PBR set (normal, roughness, metallic, AO, height) from an albedo image using gradient and luminance analysis. No ML model — fully algorithmic; fast on CPU. Works best with tileable, high-contrast albedo inputs."
+
+  visual.texture.from_concept:
+    model_id: "h94/IP-Adapter"
+    name: "IP-Adapter SDXL"
+    task: "image-to-image"
+    notes: "Concept-art-guided UV texture generation. Takes a concept image (upstream) and UV-unwrapped mesh renders; uses IP-Adapter style transfer on SDXL to paint textures that match the concept art style; outputs albedo map (PNG). Chain after visual.uv.auto."
+
+  # ── Visual / Rig ─────────────────────────────────────────────────────────
+  visual.rig.auto:
+    model_id: "VAST-AI/UniRig"
+    name: "UniRig"
+    task: "auto-rig"
+    notes: "No HF pipeline_tag (validation auto-skipped); best open auto-rigging model available"
+
+  # ── Visual / Animate ─────────────────────────────────────────────────────
+  visual.animate.keyframe:
+    model_id: "guoyww/animatediff-motion-adapter-v1-5-2"
+    name: "AnimateDiff"
+    task: "text-to-video"
+    notes: "Outputs a short 2D animation video / sprite preview — NOT a skeletal animation (BVH/FBX). Use as a visual reference or sprite-sheet source. No open model can generate 3D keyframe animation data yet."
+
+  visual.animate.mocap:
+    model_id: "facebook/sapiens-pose-0.3b"
+    name: "Sapiens Pose 0.3B"
+    task: "keypoint-detection"
+    notes: "Meta Sapiens 0.3B; state-of-the-art body keypoint detection; fits in 12 GB fp16"
+
+  visual.animate.retarget:
+    model_id: null
+    name: "CMU Mocap Bundle"
+    task: "retargeting"
+    notes: "No HF pipeline_tag (validation auto-skipped); Retargets bundled CMU Mocap BVH clips (idle, walk, run, turn, talk, attack, death, jump) onto a generated character skeleton via bone-name remapping. CMU Mocap database is free for commercial use."
+
+  # ── Visual / VFX ─────────────────────────────────────────────────────────
+  visual.vfx.particle:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Generates particle texture sheets; prompt for 'sprite sheet, transparent background'"
+
+  # ── Visual / UI ──────────────────────────────────────────────────────────
+  visual.ui.icon:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Game UI icons and HUD elements; prompt for 'flat icon, isolated, game HUD element'"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  visual.ui.button:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Styled game buttons and interactive controls; generates isolated PNG with transparent background"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  visual.ui.panel:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Dialog boxes, inventory frames, tooltip panels, and chrome elements for game UIs"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  visual.ui.widget:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Individual UI controls (sliders, toggles, checkboxes, progress bars) matching a given visual style"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  visual.ui.mockup:
+    model_id: "diffusers/controlnet-canny-sdxl-1.0"
+    name: "ControlNet Canny SDXL"
+    task: "image-to-image"
+    notes: "Full-screen UI mockups (main menu, pause screen, inventory layout) guided by a canny edge reference sketch; falls back to SDXL text-to-image if no reference provided"
+
+  visual.ui.layout:
+    model_id: "diffusers/controlnet-depth-sdxl-1.0"
+    name: "ControlNet Depth SDXL"
+    task: "image-to-image"
+    notes: "Grid-based UI layout generation from a depth/structural reference; use for HUD compositions and menu grids; falls back to SDXL if no reference"
+
+  visual.ui.iconset:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Generates a themed set of 4–24 icons in a consistent visual language using IP-Adapter style lock; requires a style_image reference for coherence"
+
+  visual.ui.theme:
+    model_id: "h94/IP-Adapter"
+    name: "IP-Adapter SDXL"
+    task: "image-to-image"
+    notes: "Generates a coordinated UI theme kit (icons + buttons + panels) derived from a reference image using IP-Adapter style transfer on SDXL"
+
+  visual.ui.screen:
+    model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+    name: "Stable Diffusion XL"
+    task: "text-to-image"
+    notes: "Complete game screen composition (HUD + gameplay + UI chrome) at high resolution; prompt should describe screen type (gameplay, main menu, cutscene, loading)"
+    quality_variants:
+      draft: "stabilityai/sdxl-turbo"
+      standard: "stabilityai/stable-diffusion-xl-base-1.0"
+      high: "stabilityai/stable-diffusion-xl-base-1.0"
+
+  # ── Visual / Texture (advanced) ──────────────────────────────────────────
+  visual.texture.inpaint:
+    model_id: "diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
+    name: "SDXL Inpainting"
+    task: "text-to-image"
+    notes: "Fill seams, holes, or damaged regions in a texture; pass --input + --mask; 359 likes, ungated"
+
+  visual.texture.upscale:
+    model_id: "stabilityai/stable-diffusion-x4-upscaler"
+    name: "Stable Diffusion x4 Upscaler"
+    task: "image-to-image"
+    notes: "4× texture upscaling via SD x4 Upscaler; accepts an optional text prompt as a style hint. Replaces ai-forever/Real-ESRGAN (basicsr/realesrgan broken with torchvision >= 0.16). Requires diffusers (already in assetgen[spaces])."
+
+  # ── Audio / SFX ──────────────────────────────────────────────────────────
+  audio.sfx.generate:
+    model_id: "cvssp/audioldm2"
+    name: "AudioLDM2"
+    task: "text-to-audio"
+    notes: "AudioLDM2 — trained on general audio and sound effects via latent diffusion. Replaces facebook/audiogen-medium (removed from transformers 5.x; audiocraft broken on Python 3.13+). Requires diffusers."
+
+  # ── Audio / Music ────────────────────────────────────────────────────────
+  audio.music.compose:
+    model_id: "facebook/musicgen-large"
+    name: "MusicGen Large"
+    task: "text-to-audio"
+    notes: "3.3B params (~6.6 GB fp16); best single-stem music quality that fits in 12 GB"
+    quality_variants:
+      draft: "facebook/musicgen-small"
+      standard: "facebook/musicgen-medium"
+      high: "facebook/musicgen-large"
+
+  audio.music.loop:
+    model_id: "facebook/musicgen-stereo-medium"
+    name: "MusicGen Stereo Medium"
+    task: "text-to-audio"
+    notes: "Stereo output essential for loop playback; 1.5B params; prompt for 'seamless loop'"
+    quality_variants:
+      draft: "facebook/musicgen-stereo-small"
+      standard: "facebook/musicgen-stereo-medium"
+      high: "facebook/musicgen-stereo-large"
+
+  audio.music.adaptive:
+    model_id: "facebook/musicgen-stereo-large"
+    name: "MusicGen Stereo Large"
+    task: "text-to-audio"
+    notes: "Best quality stereo; use continuation mode to generate adaptive stinger/transition layers"
+    quality_variants:
+      draft: "facebook/musicgen-stereo-small"
+      standard: "facebook/musicgen-stereo-medium"
+      high: "facebook/musicgen-stereo-large"
+
+  # ── Audio / Ambient ──────────────────────────────────────────────────────
+  audio.ambient.generate:
+    model_id: "facebook/musicgen-stereo-large"
+    name: "MusicGen Stereo Large"
+    task: "text-to-audio"
+    notes: "Ambient soundscapes; prompt for 'atmospheric, ambient, no melody, looping, {biome}'; same model as adaptive but distinct intent"
+    quality_variants:
+      draft: "facebook/musicgen-small"
+      standard: "facebook/musicgen-stereo-medium"
+      high: "facebook/musicgen-stereo-large"
+
+  # ── Audio / Voice ────────────────────────────────────────────────────────
+  audio.voice.tts:
+    model_id: "suno/bark"
+    name: "Bark"
+    task: "text-to-speech"
+    notes: "Highly expressive TTS with non-verbal sounds (laughs, sighs); fits in 12 GB fp16"
+
+  audio.voice.clone:
+    model_id: "coqui-ai/XTTS-v2"
+    name: "XTTS-v2"
+    task: "text-to-speech"
+    notes: "Coqui XTTS-v2 — voice cloning from a 6-second reference clip; 17 languages; actively maintained; better voice quality for game character voices than OpenVoice. Requires coqui-tts package."
+
+  # ── Scene / Physics ──────────────────────────────────────────────────────
+  scene.physics.collider:
+    model_id: null
+    name: "Collision Mesh Generator (algorithmic)"
+    task: "collision-mesh"
+    notes: "Algorithmic convex decomposition — use V-HACD or CoACD; no ML model required"
+
+  # ── Scene / Lighting ────────────────────────────────────────────────────
+  scene.lighting.hdri:
+    model_id: "Intel/ldm3d-pano"
+    name: "LDM3D Panorama"
+    task: "text-to-3d"
+    notes: "Generates equirectangular 360° RGB+depth panoramas from text; HF pipeline_tag is text-to-3d"
+
+  # ── Scene / Depth ────────────────────────────────────────────────────────
+  scene.depth.estimate:
+    model_id: "Intel/dpt-large"
+    name: "DPT-Large (Depth Estimation)"
+    task: "depth-estimation"
+    notes: "Monocular depth estimation from a reference photo; useful for parallax, fog-of-war, and heightmap hints; Apache 2.0; 202 likes"
+
+  # ── Pipeline / Integrate ─────────────────────────────────────────────────
+  pipeline.integrate.export:
+    model_id: null
+    name: "Engine Exporter"
+    task: "mesh-export"
+    notes: "Format conversion — no AI model required"
+
+  # ── Visual / Mesh (algorithmic) ───────────────────────────────────────────
+  visual.mesh.validate:
+    model_id: null
+    name: "Mesh Validator (algorithmic)"
+    task: "algorithmic"
+    notes: "trimesh-based manifold check, hole detection, duplicate verts, non-manifold edges. No model required."
+
+  visual.mesh.convert:
+    model_id: null
+    name: "Mesh Format Converter (algorithmic)"
+    task: "algorithmic"
+    notes: "trimesh-based format conversion: glb↔obj↔ply↔stl. No model required."
+
+  visual.mesh.merge:
+    model_id: null
+    name: "Mesh Merger (algorithmic)"
+    task: "algorithmic"
+    notes: "Combine N meshes into one using trimesh. No model required."
+
+  visual.mesh.bounds:
+    model_id: null
+    name: "Mesh Bounds (algorithmic)"
+    task: "algorithmic"
+    notes: "Compute AABB, OBB, and bounding sphere via trimesh. No model required."
+
+  visual.mesh.flipnormals:
+    model_id: null
+    name: "Mesh Flip Normals (algorithmic)"
+    task: "algorithmic"
+    notes: "Flip face winding order via trimesh. No model required."
+
+  visual.mesh.weld:
+    model_id: null
+    name: "Mesh Weld (algorithmic)"
+    task: "algorithmic"
+    notes: "Merge near-duplicate vertices via trimesh. No model required."
+
+  visual.mesh.center:
+    model_id: null
+    name: "Mesh Center (algorithmic)"
+    task: "algorithmic"
+    notes: "Reposition mesh pivot to origin or bbox center via trimesh. No model required."
+
+  visual.mesh.scale:
+    model_id: null
+    name: "Mesh Scale (algorithmic)"
+    task: "algorithmic"
+    notes: "Scale mesh by factor or unit conversion via trimesh. No model required."
+
+  # ── Visual / LOD (algorithmic) ────────────────────────────────────────────
+  visual.lod.generate:
+    model_id: null
+    name: "LOD Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Generate N LOD meshes via QEM decimation (pyfqmr or trimesh fallback). No model required."
+
+  # ── Visual / Texture (algorithmic) ───────────────────────────────────────
+  visual.texture.channel_pack:
+    model_id: null
+    name: "Texture Channel Pack (algorithmic)"
+    task: "algorithmic"
+    notes: "Pack separate R/G/B/A channel images into a single RGBA texture via Pillow. No model required."
+
+  visual.texture.convert:
+    model_id: null
+    name: "Texture Format Converter (algorithmic)"
+    task: "algorithmic"
+    notes: "Convert PNG/TGA/JPG/EXR to WebP/PNG/TGA/JPG via Pillow. No model required."
+
+  visual.texture.atlas_pack:
+    model_id: null
+    name: "Texture Atlas Packer (algorithmic)"
+    task: "algorithmic"
+    notes: "Pack N images into a texture atlas + UV manifest JSON. Uses rectpack if installed, else row packing."
+
+  visual.texture.mipmap:
+    model_id: null
+    name: "Mipmap Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Generate a full mipmap chain from an image via Pillow. No model required."
+
+  visual.texture.normalmap_convert:
+    model_id: null
+    name: "Normal Map Converter DX↔GL (algorithmic)"
+    task: "algorithmic"
+    notes: "Flip G channel to convert between DirectX and OpenGL normal map conventions. No model required."
+
+  visual.texture.seamless:
+    model_id: null
+    name: "Seamless Texture Fixer (algorithmic)"
+    task: "algorithmic"
+    notes: "Fix tile seams via offset-blend using Pillow + numpy. No model required."
+
+  visual.texture.resize:
+    model_id: null
+    name: "Texture Resizer (algorithmic)"
+    task: "algorithmic"
+    notes: "Resize a texture to specified dimensions; optionally snap to power-of-2 via Pillow."
+
+  visual.texture.report:
+    model_id: null
+    name: "Texture Report (algorithmic)"
+    task: "algorithmic"
+    notes: "Report texture format, dimensions, and estimated GPU memory for one or more images. No model required."
+
+  # ── Visual / Sprite (algorithmic) ────────────────────────────────────────
+  visual.sprite.pack:
+    model_id: null
+    name: "Sprite Sheet Packer (algorithmic)"
+    task: "algorithmic"
+    notes: "Pack animation frame images into a sprite sheet grid + manifest JSON via Pillow. No model required."
+
+  # ── Audio / Process (algorithmic) ────────────────────────────────────────
+  audio.process.normalize:
+    model_id: null
+    name: "Audio Normalizer (algorithmic)"
+    task: "algorithmic"
+    notes: "LUFS or peak normalization via pydub + pyloudnorm. No model required."
+
+  audio.process.trim_silence:
+    model_id: null
+    name: "Silence Trimmer (algorithmic)"
+    task: "algorithmic"
+    notes: "Strip leading/trailing silence from audio via pydub. No model required."
+
+  audio.process.loop_optimize:
+    model_id: null
+    name: "Loop Point Optimizer (algorithmic)"
+    task: "algorithmic"
+    notes: "Find zero-crossing loop points for seamless looping via pydub. No model required."
+
+  audio.process.convert:
+    model_id: null
+    name: "Audio Format Converter (algorithmic)"
+    task: "algorithmic"
+    notes: "Convert WAV↔OGG↔MP3↔FLAC via pydub. No model required."
+
+  audio.process.downmix:
+    model_id: null
+    name: "Audio Downmix (algorithmic)"
+    task: "algorithmic"
+    notes: "Downmix stereo to mono (or upmix) via pydub. No model required."
+
+  audio.process.resample:
+    model_id: null
+    name: "Audio Resampler (algorithmic)"
+    task: "algorithmic"
+    notes: "Change audio sample rate via pydub. No model required."
+
+  audio.process.waveform:
+    model_id: null
+    name: "Waveform Renderer (algorithmic)"
+    task: "algorithmic"
+    notes: "Generate a waveform PNG preview via pydub + Pillow. No model required."
+
+  # ── Proc / Terrain (algorithmic) ─────────────────────────────────────────
+  procedural.terrain.heightmap:
+    model_id: null
+    name: "Heightmap Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Perlin/fractal/ridged heightmap PNG via noise library (numpy fallback). No model required."
+
+  procedural.texture.noise:
+    model_id: null
+    name: "Noise Texture Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Tileable noise texture (perlin/voronoi/fBm) via noise+scipy (numpy fallback). No model required."
+
+  procedural.level.dungeon:
+    model_id: null
+    name: "Dungeon Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "BSP or cellular automata dungeon layout. Pure Python. Outputs PNG + JSON."
+
+  procedural.level.voronoi:
+    model_id: null
+    name: "Voronoi Region Map (algorithmic)"
+    task: "algorithmic"
+    notes: "Voronoi region map via scipy (numpy fallback). Outputs colour PNG + regions JSON."
+
+  procedural.foliage.scatter:
+    model_id: null
+    name: "Foliage Scatter (algorithmic)"
+    task: "algorithmic"
+    notes: "Poisson disk foliage scatter from a density map. Uses scipy or pure Python fallback."
+
+  procedural.tileset.wfc:
+    model_id: null
+    name: "Wave Function Collapse (algorithmic)"
+    task: "algorithmic"
+    notes: "Overlapping WFC tileset synthesis from a sample image. Pure Python + Pillow."
+
+  procedural.plant.lsystem:
+    model_id: null
+    name: "L-System Plant Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "L-system plant skeleton with turtle renderer. Pure Python. Outputs SVG + branches JSON."
+
+  # ── Pipeline / Asset (algorithmic) ───────────────────────────────────────
+  pipeline.asset.manifest:
+    model_id: null
+    name: "Asset Manifest Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Walk directory → manifest.json with path, size, sha256, type, dimensions. Pure Python."
+
+  pipeline.asset.validate:
+    model_id: null
+    name: "Asset Validator (algorithmic)"
+    task: "algorithmic"
+    notes: "Check oversized textures, non-pow2, high-poly meshes. Uses PIL + trimesh (optional)."
+
+  pipeline.asset.rename:
+    model_id: null
+    name: "Asset Batch Rename (algorithmic)"
+    task: "algorithmic"
+    notes: "Batch rename to snake_case/PascalCase/kebab-case with dry-run support. Pure Python."
+
+  pipeline.asset.report:
+    model_id: null
+    name: "Asset Budget Report (algorithmic)"
+    task: "algorithmic"
+    notes: "Size budget by type (meshes/textures/audio/other). Pure Python. Outputs JSON."
+
+  pipeline.git.lfs_rules:
+    model_id: null
+    name: "Git LFS Rules Generator (algorithmic)"
+    task: "algorithmic"
+    notes: "Scan asset types → .gitattributes LFS rules. Pure Python."
+
+  # ── Narrative / Validation (algorithmic) ─────────────────────────────────
+  narrative.dialogue.validate:
+    model_id: null
+    name: "Dialogue Validator (algorithmic)"
+    task: "algorithmic"
+    notes: "Lint assetgen dialogue JSON: orphan nodes, dead ends, missing keys. Pure Python."
+
+  narrative.quest.validate:
+    model_id: null
+    name: "Quest Graph Validator (algorithmic)"
+    task: "algorithmic"
+    notes: "Check quest JSON graph for cycles and unreachable nodes. Uses networkx (DFS fallback)."
+
+  narrative.i18n.extract:
+    model_id: null
+    name: "i18n String Extractor (algorithmic)"
+    task: "algorithmic"
+    notes: "Extract localisation string keys from JSON files. Pure Python. Outputs JSON + CSV."
+
+  # ── Narrative ─────────────────────────────────────────────────────────────
+  narrative.dialogue.npc:
+    model_id: "microsoft/Phi-3.5-mini-instruct"
+    name: "Phi-3.5 Mini Instruct"
+    task: "text-generation"
+    notes: "3.8B params; fits in ~2 GB VRAM at 4-bit; MIT license; ungated; excellent for NPC branching dialogue"
+
+  narrative.lore.generate:
+    model_id: "microsoft/Phi-3.5-mini-instruct"
+    name: "Phi-3.5 Mini Instruct"
+    task: "text-generation"
+    notes: "Same model as dialogue; system prompt adjusted for lore/codex/quest formats"
+
+  narrative.quest.design:
+    model_id: "microsoft/Phi-3.5-mini-instruct"
+    name: "Phi-3.5 Mini Instruct"
+    task: "text-generation"
+    notes: "Generates quest objectives, rewards, and NPC motivations from a brief premise"

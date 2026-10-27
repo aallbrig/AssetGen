@@ -1,6 +1,6 @@
-# assgen — User Experience Design
+# AssetGen — User Experience Design
 
-This document describes how `assgen` is meant to feel from the user's perspective across the three modes of operation and documents the design decisions behind the client/server architecture.
+This document describes how `AssetGen` is meant to feel from the user's perspective across the three modes of operation and documents the design decisions behind the client/server architecture.
 
 ---
 
@@ -8,28 +8,28 @@ This document describes how `assgen` is meant to feel from the user's perspectiv
 
 ### Mode 1 — Solo (no server configured)
 
-The most common starting point. The user has just installed assgen on their machine and wants to try it out without any configuration.
+The most common starting point. The user has just installed AssetGen on their machine and wants to try it out without any configuration.
 
 ```
-$ assgen gen audio sfx generate "laser gun firing"
+$ AssetGen gen audio sfx generate "laser gun firing"
 
-⚡ No server detected — starting local assgen-server on http://127.0.0.1:8432
-   (It will stay running between commands. Stop with: assgen server stop)
+⚡ No server detected — starting local AssetGen-server on http://127.0.0.1:8432
+   (It will stay running between commands. Stop with: AssetGen server stop)
 
 ✓ Server ready
 
 Job enqueued  id=a1b2c3d4  type=audio.sfx.generate
-Track with: assgen jobs status a1b2c3d4
-Or wait  with: assgen jobs wait a1b2c3d4
+Track with: AssetGen jobs status a1b2c3d4
+Or wait  with: AssetGen jobs wait a1b2c3d4
 ```
 
 Or with `--wait`:
 
 ```
-$ assgen gen audio sfx generate "laser gun firing" --wait
+$ AssetGen gen audio sfx generate "laser gun firing" --wait
 
-⚡ No server detected — starting local assgen-server on http://127.0.0.1:8432
-   (It will stay running between commands. Stop with: assgen server stop)
+⚡ No server detected — starting local AssetGen-server on http://127.0.0.1:8432
+   (It will stay running between commands. Stop with: AssetGen server stop)
 
 ✓ Server ready
 
@@ -40,19 +40,19 @@ $ assgen gen audio sfx generate "laser gun firing" --wait
 
 ✓  Job a1b2c3d4 completed in 1m 33s
 
-  Output file: ~/assgen-outputs/a1b2c3d4/laser_gun_firing.wav
+  Output file: ~/AssetGen-outputs/a1b2c3d4/laser_gun_firing.wav
   Duration:    2.0s  |  Sample rate: 44100 Hz
 
-  To play:   afplay ~/assgen-outputs/a1b2c3d4/laser_gun_firing.wav
-  Or open:   assgen jobs open a1b2c3d4
+  To play:   afplay ~/AssetGen-outputs/a1b2c3d4/laser_gun_firing.wav
+  Or open:   AssetGen jobs open a1b2c3d4
 ```
 
 **Key behaviours in solo mode:**
 
-- The server starts the first time and **stays running** between commands (via PID file). The second `assgen gen …` in the same terminal session is instant — no re-start.
-- Models are downloaded to a shared OS-level location (`~/.local/share/assgen/models` on Linux, `%LOCALAPPDATA%\assgen\assgen\models` on Windows) so re-runs skip the download entirely.
-- Output files are written to `~/assgen-outputs/<job-id>/` by default, or overridden with `--output`.
-- The server is **not** killed when the command exits. It stays alive so the next command is faster. Use `assgen server stop` to shut it down explicitly.
+- The server starts the first time and **stays running** between commands (via PID file). The second `AssetGen gen …` in the same terminal session is instant — no re-start.
+- Models are downloaded to a shared OS-level location (`~/.local/share/AssetGen/models` on Linux, `%LOCALAPPDATA%\AssetGen\AssetGen\models` on Windows) so re-runs skip the download entirely.
+- Output files are written to `~/AssetGen-outputs/<job-id>/` by default, or overridden with `--output`.
+- The server is **not** killed when the command exits. It stays alive so the next command is faster. Use `AssetGen server stop` to shut it down explicitly.
 
 ---
 
@@ -62,7 +62,7 @@ For users who want the server running as a background service on their machine r
 
 ```bash
 # Terminal A — start server with visible logs
-$ assgen-server start
+$ AssetGen-server start
 [2024-03-07 10:00:00] INFO  Server listening on http://127.0.0.1:8432
 [2024-03-07 10:00:00] INFO  Worker thread started (device=cuda)
 [2024-03-07 10:05:23] INFO  Job a1b2c3d4 QUEUED  type=visual.model.create
@@ -71,7 +71,7 @@ $ assgen-server start
 [2024-03-07 10:07:45] INFO  Job a1b2c3d4 COMPLETED
 
 # Terminal B — use it normally
-$ assgen gen visual model create --prompt "low-poly sword" --wait
+$ AssetGen gen visual model create --prompt "low-poly sword" --wait
 ⠸ Downloading TencentARC/InstantMesh (8/24 files)…    12%  0:00:55
 ...
 ```
@@ -88,33 +88,33 @@ The primary production use case: your beefy desktop runs the server and your lap
 
 ```powershell
 # Install
-pip install assgen
+pip install AssetGen
 
 # Configure to accept connections from the network (not just localhost)
-assgen-server config set host 0.0.0.0
-assgen-server config set port 8432
+AssetGen-server config set host 0.0.0.0
+AssetGen-server config set port 8432
 
 # Start the server (keep this terminal open, or use --daemon)
-assgen-server start
+AssetGen-server start
 # Or as a background Windows service:
-assgen-server start --daemon
+AssetGen-server start --daemon
 ```
 
 **One-time setup on the laptop:**
 
 ```bash
 # Point the client at the desktop
-assgen client config set-server http://MY-DESKTOP-IP:8432
+AssetGen client config set-server http://MY-DESKTOP-IP:8432
 
 # Verify connection
-assgen server status
-# → Connected to http://MY-DESKTOP-IP:8432 (assgen 0.0.1, device=cuda, model=...)
+AssetGen server status
+# → Connected to http://MY-DESKTOP-IP:8432 (AssetGen 0.0.1, device=cuda, model=...)
 ```
 
 **Then just use it normally:**
 
 ```bash
-$ assgen gen visual model create --prompt "low-poly sword" --wait
+$ AssetGen gen visual model create --prompt "low-poly sword" --wait
 
 ⠸ Model TencentARC/InstantMesh already cached ✓         15%  0:00:01
 ⠼ Generating mesh from prompt…                          40%  0:00:45
@@ -147,10 +147,10 @@ The laptop user gets the generated file locally even though all computation happ
 | No `server_url` configured, PID file exists, process alive, health OK | Reuse existing server — instant |
 | No `server_url` configured, PID file exists, process dead | Clean up stale PID, start fresh |
 | `server_url` configured (remote or manual) | Connect directly, no auto-start logic |
-| `assgen server stop` | Send SIGTERM to PID, remove PID file |
+| `AssetGen server stop` | Send SIGTERM to PID, remove PID file |
 | Machine reboots | PID file becomes stale, auto-start cleans it up on next command |
 
-**Why does the server persist between commands?** The biggest cost for most AI workflows is loading model weights into GPU VRAM — this can take 30–120 seconds for large models. Keeping the server alive means the second `assgen gen ...` call skips that cost entirely.
+**Why does the server persist between commands?** The biggest cost for most AI workflows is loading model weights into GPU VRAM — this can take 30–120 seconds for large models. Keeping the server alive means the second `AssetGen gen ...` call skips that cost entirely.
 
 ---
 
@@ -161,7 +161,7 @@ Server side                        Client side
 ──────────────────────────────     ──────────────────────────────
 Job runs inference
   → writes output file(s) to        (polling GET /jobs/{id})
-    ~/.local/share/assgen/
+    ~/.local/share/AssetGen/
       outputs/{job_id}/
         output.glb
         output_preview.png
@@ -183,17 +183,17 @@ For **remote** server use, the client always downloads the file.
 
 ## Configuration Reference
 
-### Client config (`~/.config/assgen/client.yaml`)
+### Client config (`~/.config/AssetGen/client.yaml`)
 
 ```yaml
 server_url: null          # null = auto-start; or "http://MY-DESKTOP:8432"
 default_wait: false       # true = always block and show progress bar
 default_timeout: 300      # seconds before --wait gives up
 poll_interval: 2.0        # seconds between status polls
-output_dir: null          # null = current dir; or "/home/user/assgen-outputs"
+output_dir: null          # null = current dir; or "/home/user/AssetGen-outputs"
 ```
 
-### Server config (`~/.config/assgen/server.yaml`)
+### Server config (`~/.config/AssetGen/server.yaml`)
 
 ```yaml
 host: "127.0.0.1"         # change to "0.0.0.0" for network access
@@ -213,47 +213,47 @@ skip_model_validation: false
 ## Command Summary
 
 ```
-assgen gen <domain> <subdomain> <action> [OPTIONS]
+AssetGen gen <domain> <subdomain> <action> [OPTIONS]
   Submit a job to the server (auto-starting it if needed)
 
   --wait / --no-wait   Block and show progress bar until done
   --output PATH        Where to save output file(s)
   --model-id TEXT      Override the catalog model (validated by server)
 
-assgen jobs list [-s STATUS] [--limit N]
+AssetGen jobs list [-s STATUS] [--limit N]
   Show recent jobs
 
-assgen jobs status <id>
+AssetGen jobs status <id>
   Show full details for a single job
 
-assgen jobs wait <id> [--timeout N]
+AssetGen jobs wait <id> [--timeout N]
   Block until a job completes (attach to a running job)
 
-assgen jobs download <id> [--output DIR]
+AssetGen jobs download <id> [--output DIR]
   Download output files for a completed job
 
-assgen server status
+AssetGen server status
   Check if a server is reachable and show its config
 
-assgen server start
+AssetGen server start
   Start a local server in the foreground (for development)
 
-assgen server stop
+AssetGen server stop
   Stop the local auto-started server
 
-assgen client config set-server <URL>
+AssetGen client config set-server <URL>
   Point this client at a specific server
 
-assgen client config unset-server
+AssetGen client config unset-server
   Revert to auto-start mode
 
-assgen tasks [--domain DOMAIN]
+AssetGen tasks [--domain DOMAIN]
   Browse all supported game-dev tasks and their assigned models
 
-assgen config list
+AssetGen config list
   Show all job-type → model mappings
 
-assgen config set <job-type> <model-id>
+AssetGen config set <job-type> <model-id>
   Override the model for a job type on this server
 ```
 
@@ -261,7 +261,7 @@ assgen config set <job-type> <model-id>
 
 ## Design Principles
 
-1. **Zero configuration required.** `pip install assgen && assgen gen audio sfx generate "explosion"` works on first run. The server starts itself, downloads the model, and runs inference.
+1. **Zero configuration required.** `pip install AssetGen && AssetGen gen audio sfx generate "explosion"` works on first run. The server starts itself, downloads the model, and runs inference.
 
 2. **The client is always talking to a server** — even if it's a server the client started itself. This means all commands are thin HTTP wrappers; there is no inference code in the client package at all.
 
@@ -269,6 +269,6 @@ assgen config set <job-type> <model-id>
 
 4. **The server is stateless enough to restart cleanly.** Jobs are persisted in SQLite. If the server crashes, jobs in RUNNING state are re-queued on next start.
 
-5. **Model weights are cached, not re-downloaded.** The first run downloads a model; every subsequent run uses the local cache. `assgen models list` shows what's cached.
+5. **Model weights are cached, not re-downloaded.** The first run downloads a model; every subsequent run uses the local cache. `AssetGen models list` shows what's cached.
 
 6. **Output files belong to the user, not the server.** Jobs complete with file paths; clients download them. Files are never ephemeral.

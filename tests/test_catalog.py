@@ -1,10 +1,10 @@
-"""Tests for assgen.catalog — built-in catalog loading and model resolution."""
+"""Tests for assetgen.catalog — built-in catalog loading and model resolution."""
 
 from __future__ import annotations
 
 
 def test_load_catalog_returns_nonempty_dict() -> None:
-    from assgen.catalog import load_catalog
+    from assetgen.catalog import load_catalog
 
     catalog = load_catalog()
     assert isinstance(catalog, dict)
@@ -12,7 +12,7 @@ def test_load_catalog_returns_nonempty_dict() -> None:
 
 
 def test_known_job_types_present() -> None:
-    from assgen.catalog import load_catalog
+    from assetgen.catalog import load_catalog
 
     catalog = load_catalog()
     required = [
@@ -28,7 +28,7 @@ def test_known_job_types_present() -> None:
 
 
 def test_each_entry_has_required_fields() -> None:
-    from assgen.catalog import load_catalog
+    from assetgen.catalog import load_catalog
 
     catalog = load_catalog()
     for job_type, entry in catalog.items():
@@ -39,7 +39,7 @@ def test_each_entry_has_required_fields() -> None:
 
 
 def test_get_model_for_known_job() -> None:
-    from assgen.catalog import get_model_for_job
+    from assetgen.catalog import get_model_for_job
 
     entry = get_model_for_job("visual.model.create")
     assert entry is not None
@@ -48,14 +48,14 @@ def test_get_model_for_known_job() -> None:
 
 
 def test_get_model_for_unknown_job_returns_none() -> None:
-    from assgen.catalog import get_model_for_job
+    from assetgen.catalog import get_model_for_job
 
     assert get_model_for_job("nonexistent.job.type") is None
 
 
 def test_catalog_task_field_values() -> None:
     """task field should be a non-empty string or absent."""
-    from assgen.catalog import load_catalog
+    from assetgen.catalog import load_catalog
 
     catalog = load_catalog()
     for job_type, entry in catalog.items():
@@ -68,7 +68,7 @@ def test_catalog_task_field_values() -> None:
 
 def test_model_ids_are_org_slash_repo() -> None:
     """All non-null model_ids must be in 'org/repo' format."""
-    from assgen.catalog import load_catalog
+    from assetgen.catalog import load_catalog
 
     catalog = load_catalog()
     for job_type, entry in catalog.items():

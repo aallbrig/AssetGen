@@ -1,4 +1,4 @@
-"""Tests for the compose pipeline engine (assgen.client.compose).
+"""Tests for the compose pipeline engine (assetgen.client.compose).
 
 Uses mock API client + mock wait to test:
   - Sequential step execution with file chaining
@@ -13,7 +13,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from assgen.client.compose import run_pipeline
+from assetgen.client.compose import run_pipeline
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -63,8 +63,8 @@ class TestPipelineExecution:
             return jobs[job_id]
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -91,8 +91,8 @@ class TestPipelineExecution:
             return jobs[job_id]
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -126,8 +126,8 @@ class TestPipelineExecution:
             return jobs[job_id]
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -152,8 +152,8 @@ class TestPipelineExecution:
             return jobs[job_id]
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -179,8 +179,8 @@ class TestPipelineExecution:
             callback_calls.append((step_id, status))
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -203,7 +203,7 @@ class TestPipelineErrors:
         jobs: dict[str, dict] = {}
         mock_client = _make_mock_client(jobs)
 
-        with patch("assgen.client.compose.get_client") as gc:
+        with patch("assetgen.client.compose.get_client") as gc:
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
 
@@ -228,8 +228,8 @@ class TestPipelineErrors:
             return job
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
@@ -250,12 +250,12 @@ class TestPipelineErrors:
         assert mock_client.enqueue_job.call_count == 1
 
     def test_enqueue_failure_raises(self) -> None:
-        from assgen.client.api import APIError
+        from assetgen.client.api import APIError
 
         mock_client = MagicMock()
         mock_client.enqueue_job.side_effect = APIError(422, "Unknown job_type")
 
-        with patch("assgen.client.compose.get_client") as gc:
+        with patch("assetgen.client.compose.get_client") as gc:
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None
 
@@ -274,8 +274,8 @@ class TestPipelineErrors:
             raise TimeoutError("timed out")
 
         with (
-            patch("assgen.client.compose.get_client") as gc,
-            patch("assgen.client.compose.wait_for_job", side_effect=fake_wait),
+            patch("assetgen.client.compose.get_client") as gc,
+            patch("assetgen.client.compose.wait_for_job", side_effect=fake_wait),
         ):
             gc.return_value.__enter__ = lambda s: mock_client
             gc.return_value.__exit__ = lambda s, *a: None

@@ -1,4 +1,4 @@
-"""Tests for assgen.db — schema, CRUD helpers, and crash-recovery utilities."""
+"""Tests for assetgen.db — schema, CRUD helpers, and crash-recovery utilities."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import pytest
 
 
 def test_init_creates_all_tables(tmp_path: Path) -> None:
-    from assgen.db import init_db
+    from assetgen.db import init_db
 
     conn = init_db(tmp_path / "test.db")
     tables = {
@@ -23,7 +23,7 @@ def test_init_creates_all_tables(tmp_path: Path) -> None:
 
 
 def test_schema_version_is_two(tmp_path: Path) -> None:
-    from assgen.db import init_db
+    from assetgen.db import init_db
 
     conn = init_db(tmp_path / "test.db")
     version = conn.execute("SELECT version FROM schema_version").fetchone()["version"]
@@ -32,7 +32,7 @@ def test_schema_version_is_two(tmp_path: Path) -> None:
 
 def test_idempotent_init(tmp_path: Path) -> None:
     """Calling init_db twice on the same file should not raise."""
-    from assgen.db import init_db
+    from assetgen.db import init_db
 
     db = tmp_path / "test.db"
     init_db(db)
@@ -45,7 +45,7 @@ def test_idempotent_init(tmp_path: Path) -> None:
 
 
 def test_create_job_returns_uuid(tmp_path: Path) -> None:
-    from assgen.db import create_job, init_db
+    from assetgen.db import create_job, init_db
 
     conn = init_db(tmp_path / "test.db")
     jid = create_job(conn, job_type="visual.model.create", params={"prompt": "sword"})
@@ -54,7 +54,7 @@ def test_create_job_returns_uuid(tmp_path: Path) -> None:
 
 
 def test_get_job_by_full_id(tmp_path: Path) -> None:
-    from assgen.db import JobStatus, create_job, get_job, init_db
+    from assetgen.db import JobStatus, create_job, get_job, init_db
 
     conn = init_db(tmp_path / "test.db")
     jid = create_job(conn, job_type="audio.sfx.generate", params={"prompt": "laser"})
@@ -67,7 +67,7 @@ def test_get_job_by_full_id(tmp_path: Path) -> None:
 
 def test_get_job_by_prefix(tmp_path: Path) -> None:
     """8-char prefix lookup should resolve to the correct job."""
-    from assgen.db import create_job, get_job, init_db
+    from assetgen.db import create_job, get_job, init_db
 
     conn = init_db(tmp_path / "test.db")
     jid = create_job(conn, job_type="visual.model.create", params={})
@@ -79,7 +79,7 @@ def test_get_job_by_prefix(tmp_path: Path) -> None:
 
 
 def test_get_job_prefix_no_match(tmp_path: Path) -> None:
-    from assgen.db import get_job, init_db
+    from assetgen.db import get_job, init_db
 
     conn = init_db(tmp_path / "test.db")
     assert get_job(conn, "00000000") is None
@@ -87,7 +87,7 @@ def test_get_job_prefix_no_match(tmp_path: Path) -> None:
 
 def test_get_job_prefix_ambiguous_returns_none(tmp_path: Path) -> None:
     """When multiple jobs share the prefix, get_job must not guess."""
-    from assgen.db import get_job, init_db
+    from assetgen.db import get_job, init_db
 
     conn = init_db(tmp_path / "test.db")
     # Force two UUIDs that share the same 8-char prefix by patching uuid4
@@ -112,14 +112,14 @@ def test_get_job_prefix_ambiguous_returns_none(tmp_path: Path) -> None:
 
 
 def test_list_jobs_empty(tmp_path: Path) -> None:
-    from assgen.db import init_db, list_jobs
+    from assetgen.db import init_db, list_jobs
 
     conn = init_db(tmp_path / "test.db")
     assert list_jobs(conn) == []
 
 
 def test_list_jobs_status_filter(tmp_path: Path) -> None:
-    from assgen.db import JobStatus, create_job, init_db, list_jobs, update_job_status
+    from assetgen.db import JobStatus, create_job, init_db, list_jobs, update_job_status
 
     conn = init_db(tmp_path / "test.db")
     jid1 = create_job(conn, "visual.model.create", {})
@@ -136,7 +136,7 @@ def test_list_jobs_status_filter(tmp_path: Path) -> None:
 
 
 def test_update_job_status_progress(tmp_path: Path) -> None:
-    from assgen.db import JobStatus, create_job, get_job, init_db, update_job_status
+    from assetgen.db import JobStatus, create_job, get_job, init_db, update_job_status
 
     conn = init_db(tmp_path / "test.db")
     jid = create_job(conn, "visual.model.create", {})
@@ -150,7 +150,7 @@ def test_update_job_status_progress(tmp_path: Path) -> None:
 
 
 def test_terminal_state_sets_completed_at(tmp_path: Path) -> None:
-    from assgen.db import JobStatus, create_job, get_job, init_db, update_job_status
+    from assetgen.db import JobStatus, create_job, get_job, init_db, update_job_status
 
     conn = init_db(tmp_path / "test.db")
     jid = create_job(conn, "visual.model.create", {})
@@ -168,7 +168,7 @@ def test_terminal_state_sets_completed_at(tmp_path: Path) -> None:
 
 
 def test_reset_stale_running_jobs(tmp_path: Path) -> None:
-    from assgen.db import (
+    from assetgen.db import (
         JobStatus,
         create_job,
         get_job,
@@ -190,7 +190,7 @@ def test_reset_stale_running_jobs(tmp_path: Path) -> None:
 
 
 def test_reset_stale_leaves_terminal_jobs(tmp_path: Path) -> None:
-    from assgen.db import (
+    from assetgen.db import (
         JobStatus,
         create_job,
         get_job,
@@ -216,7 +216,7 @@ def test_reset_stale_leaves_terminal_jobs(tmp_path: Path) -> None:
 
 
 def test_upsert_model_insert_and_update(tmp_path: Path) -> None:
-    from assgen.db import init_db, upsert_model
+    from assetgen.db import init_db, upsert_model
 
     conn = init_db(tmp_path / "test.db")
     upsert_model(conn, "stabilityai/TripoSR", name="TripoSR", local_path="/models/triposr")
