@@ -2,7 +2,7 @@
 
 _Generated: 2026-04-11 12:03:00 UTC_
 
-This document lists cheap, high-impact improvements to the assgen repo. Each item is
+This document lists cheap, high-impact improvements to the AssetGen repo. Each item is
 self-contained — an implementing agent can execute it without reading the rest.
 Items are ordered by impact-to-effort ratio.
 
@@ -14,11 +14,11 @@ Items are ordered by impact-to-effort ratio.
 
 **Problem:** `release.yml` builds the wheel/sdist with `hatch build` and attaches them to the
 GitHub Release, but **never uploads to PyPI**. The release notes in the same file already
-advertise `pip install assgen==<version>` — but that command fails for users.
+advertise `pip install AssetGen==<version>` — but that command fails for users.
 Homebrew, Chocolatey, Docker, and PyInstaller binaries all work. PyPI does not.
 
 This is a blocker for HuggingFace Spaces: each Space's `requirements.txt` needs
-`assgen[spaces]==<version>` from PyPI. Without a published package, Spaces cannot install.
+`AssetGen[spaces]==<version>` from PyPI. Without a published package, Spaces cannot install.
 
 **Fix:** In `.github/workflows/release.yml`, add one step to the `release` job
 **after** the `Build distribution packages` step and **before** `Build docs site`:
@@ -35,8 +35,8 @@ The `id-token: write` permission is already present. This uses OIDC Trusted Publ
 
 **One-time manual PyPI setup (do before merging this change):**
 1. pypi.org → Account Settings → Publishing → Add a new pending publisher
-2. Owner: `aallbrig` | Repository: `assgen` | Workflow: `release.yml` | Environment: (blank)
-3. The project name `assgen` must match `[project] name` in `pyproject.toml` exactly
+2. Owner: `aallbrig` | Repository: `AssetGen` | Workflow: `release.yml` | Environment: (blank)
+3. The project name `AssetGen` must match `[project] name` in `pyproject.toml` exactly
 
 **Full spec:** See `20260411_120400_UTC_hf_spaces_packaging_and_sdk.md` Section 1.
 
@@ -71,13 +71,13 @@ spaces = [
 install in their generated `requirements.txt`. See `sync_spaces.py` in Section 5 of
 `20260411_120400_UTC_hf_spaces_packaging_and_sdk.md`.
 
-### 0.3 Create `assgen.sdk` module
+### 0.3 Create `AssetGen.sdk` module
 
 **Problem:** No public Python API exists for calling handlers programmatically. HF Spaces
-would have to import from `assgen.server.worker` (an internal module) and know the full
+would have to import from `AssetGen.server.worker` (an internal module) and know the full
 handler calling convention. This needs a stable, public entry point.
 
-**Fix:** Create `src/assgen/sdk.py` per the spec in Section 2 of
+**Fix:** Create `src/AssetGen/sdk.py` per the spec in Section 2 of
 `20260411_120400_UTC_hf_spaces_packaging_and_sdk.md`. (~85 lines)
 
 ---
@@ -86,7 +86,7 @@ handler calling convention. This needs a stable, public entry point.
 
 ### 1.1 Add "Development Setup" section to README.md
 
-**Problem:** The README explains how to `pip install assgen` (user install) but gives zero
+**Problem:** The README explains how to `pip install AssetGen` (user install) but gives zero
 instructions for contributors or anyone who cloned the repo and wants to run from source.
 There is a `.venv/` directory in the repo, implying this is the expected workflow, but it is
 never mentioned. First-time contributors will be confused.
@@ -100,8 +100,8 @@ never mentioned. First-time contributors will be confused.
 Clone and run from source:
 
 ```bash
-git clone https://github.com/aallbrig/assgen.git
-cd assgen
+git clone https://github.com/aallbrig/AssetGen.git
+cd AssetGen
 
 # Create and activate a virtual environment
 python -m venv .venv
@@ -115,8 +115,8 @@ pip install -e ".[dev]"
 pip install -e ".[dev,inference]"
 
 # Verify the install
-assgen version
-assgen-server --help
+AssetGen version
+AssetGen-server --help
 ```
 
 Run tests:
@@ -138,7 +138,7 @@ pip install -e ".[docs]"
 mkdocs serve          # opens http://localhost:8000
 ```
 
-> **Version note:** assgen uses `hatch-vcs` to derive its version from git tags.
+> **Version note:** AssetGen uses `hatch-vcs` to derive its version from git tags.
 > If you install without a git tag (fresh clone, no tags), the version will appear as `0.1.dev0`.
 > Run `git tag v0.1.0` to set a version, or ignore the warning — it does not affect functionality.
 ```
@@ -150,7 +150,7 @@ mkdocs serve          # opens http://localhost:8000
 **Problem:** The project targets Python 3.11+ (per pyproject.toml), but there is no `.python-version`
 file. Developers using `pyenv`, `asdf`, or `uv` will not get automatic Python version selection.
 
-**Fix:** Create `/home/aallbright/src/assgen/.python-version` with this exact content:
+**Fix:** Create `/home/aallbright/src/AssetGen/.python-version` with this exact content:
 ```
 3.11
 ```
@@ -162,7 +162,7 @@ file. Developers using `pyenv`, `asdf`, or `uv` will not get automatic Python ve
 **Problem:** Contributors have to remember multiple commands (`pytest`, `ruff check src/ tests/`,
 `mkdocs serve`). A Makefile lowers the friction to contribution.
 
-**Fix:** Create `/home/aallbright/src/assgen/Makefile` with the following content:
+**Fix:** Create `/home/aallbright/src/AssetGen/Makefile` with the following content:
 
 ```makefile
 .PHONY: dev test lint docs clean
@@ -177,7 +177,7 @@ test:
 
 # Run the full test suite with coverage
 test-cov:
-	pytest -v --cov=src/assgen --cov-report=term-missing --cov-report=html
+	pytest -v --cov=src/AssetGen --cov-report=term-missing --cov-report=html
 
 # Lint and auto-fix
 lint:
@@ -198,7 +198,7 @@ docs-build:
 
 # Run the server locally (foreground, auto-device)
 serve:
-	assgen-server start --log-level debug
+	AssetGen-server start --log-level debug
 
 # Remove build artifacts and caches
 clean:
@@ -243,7 +243,7 @@ dev = [
 Then add at the end of `pyproject.toml`:
 ```toml
 [tool.coverage.run]
-source = ["src/assgen"]
+source = ["src/AssetGen"]
 omit = ["*/tests/*", "*/_version.py"]
 
 [tool.coverage.report]
@@ -253,25 +253,25 @@ skip_covered = false
 
 ---
 
-### 1.5 Document the `assgen-server` vs `assgen server` distinction in README
+### 1.5 Document the `AssetGen-server` vs `AssetGen server` distinction in README
 
-**Problem:** The README Quick Start uses `assgen-server start --daemon`, but the CLI tree
-shows `assgen server` as a subcommand. These are two different things:
-- `assgen-server` — the standalone server entry point (direct process)
-- `assgen server` — client-side commands to manage a server process (start/stop/status via the client)
+**Problem:** The README Quick Start uses `AssetGen-server start --daemon`, but the CLI tree
+shows `AssetGen server` as a subcommand. These are two different things:
+- `AssetGen-server` — the standalone server entry point (direct process)
+- `AssetGen server` — client-side commands to manage a server process (start/stop/status via the client)
 
 This is confusing. The README should clarify this.
 
 **Fix:** Add this note below the Quick Start code block in README.md:
 
 ```markdown
-> **`assgen-server` vs `assgen server`:**
-> - `assgen-server start` — runs the inference server directly (the process itself)
-> - `assgen server start` — tells the client to launch a local `assgen-server` process for you
-> - `assgen server status` / `assgen server stop` — manage the locally auto-started server
+> **`AssetGen-server` vs `AssetGen server`:**
+> - `AssetGen-server start` — runs the inference server directly (the process itself)
+> - `AssetGen server start` — tells the client to launch a local `AssetGen-server` process for you
+> - `AssetGen server status` / `AssetGen server stop` — manage the locally auto-started server
 >
-> For a remote GPU machine, run `assgen-server start --daemon` there, then on your laptop:
-> `assgen client config set-server http://<gpu-machine>:8432`
+> For a remote GPU machine, run `AssetGen-server start --daemon` there, then on your laptop:
+> `AssetGen client config set-server http://<gpu-machine>:8432`
 ```
 
 ---
@@ -313,7 +313,7 @@ A clear description of what went wrong.
 **To Reproduce**
 ```bash
 # exact command that failed
-assgen gen audio sfx generate "example prompt"
+AssetGen gen audio sfx generate "example prompt"
 ```
 
 **Expected behavior**
@@ -327,7 +327,7 @@ paste full error / traceback here
 **Environment**
 - OS: [e.g. Ubuntu 22.04]
 - Python: [e.g. 3.11.9]
-- assgen version: [output of `assgen version`]
+- AssetGen version: [output of `AssetGen version`]
 - Install type: [pip / source / docker]
 - GPU: [e.g. RTX 4070 12 GB, or "CPU only"]
 - CUDA version (if GPU): [e.g. 12.4]
@@ -345,7 +345,7 @@ labels: enhancement
 
 **Describe the proposed command**
 ```bash
-assgen gen <domain> <command> --example-flag value
+AssetGen gen <domain> <command> --example-flag value
 ```
 
 **What model or algorithm would power it?**
@@ -362,11 +362,11 @@ Link to the HuggingFace model or algorithm paper if applicable.
 
 **Problem:** There is no changelog. Contributors and users cannot see what changed between versions.
 
-**Fix:** Create `/home/aallbright/src/assgen/CHANGELOG.md`:
+**Fix:** Create `/home/aallbright/src/AssetGen/CHANGELOG.md`:
 ```markdown
 # Changelog
 
-All notable changes to assgen are documented here.
+All notable changes to AssetGen are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
@@ -439,18 +439,18 @@ markers = [
 
 ### 2.5 Clarify the `[inference]` extra in README
 
-**Problem:** The README shows `pip install "assgen[inference]"` but doesn't explain what it adds
+**Problem:** The README shows `pip install "AssetGen[inference]"` but doesn't explain what it adds
 or when you need it. A user might install without it and be surprised that generation commands
 return stubs.
 
 **Fix:** Below the Installation section, add:
 ```markdown
 > **`[inference]` extra:** Installs `torch`, `transformers`, `diffusers`, `accelerate`, and
-> `trimesh` for local GPU inference. Without it, assgen is a fully functional client that can
-> talk to a remote `assgen-server`, but a local server will return stub outputs instead of
+> `trimesh` for local GPU inference. Without it, AssetGen is a fully functional client that can
+> talk to a remote `AssetGen-server`, but a local server will return stub outputs instead of
 > running real models.
 >
-> For CI environments or machines without a GPU, `pip install assgen` (without `[inference]`)
+> For CI environments or machines without a GPU, `pip install AssetGen` (without `[inference]`)
 > is the right choice.
 ```
 
@@ -478,7 +478,7 @@ configured. Type errors can slip through ruff linting.
 3. Add `make typecheck` target to Makefile:
    ```makefile
    typecheck:
-       mypy src/assgen/
+       mypy src/AssetGen/
    ```
 4. Optionally add `mypy` to the CI workflow after ruff passes.
 
@@ -492,7 +492,7 @@ configured. Type errors can slip through ruff linting.
 1. In `.github/workflows/ci.yml`, add a coverage step:
    ```yaml
    - name: Run tests with coverage
-     run: pytest -v --cov=src/assgen --cov-report=xml --cov-fail-under=60
+     run: pytest -v --cov=src/AssetGen --cov-report=xml --cov-fail-under=60
    ```
 2. Upload to codecov.io (free for open source) or use the GitHub Actions summary.
 3. Add a coverage badge to README.md.
@@ -538,8 +538,8 @@ Contributors wanting to run the full stack (client + server + GPU) locally need 
    ```bash
    docker compose -f docker/docker-compose.yml up server
    # then in another terminal:
-   assgen client config set-server http://localhost:8432
-   assgen audio sfx generate "test sound"
+   AssetGen client config set-server http://localhost:8432
+   AssetGen audio sfx generate "test sound"
    ```
 
 ---

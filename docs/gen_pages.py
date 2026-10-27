@@ -1,7 +1,7 @@
 """Auto-generate per-domain command reference pages at mkdocs build time.
 
 This script is executed by the ``gen-files`` mkdocs plugin.  It walks every
-``assgen gen <domain> ...`` leaf command, extracts help text / params / examples,
+``AssetGen gen <domain> ...`` leaf command, extracts help text / params / examples,
 looks up the catalog model assignment, and writes one Markdown page per domain
 under ``docs/commands/``.
 
@@ -13,8 +13,8 @@ section to its Typer command function docstring::
         \"\"\"Generate something from a prompt.
 
         Examples:
-            assgen gen domain sub generate "my prompt"
-            assgen gen domain sub generate "my prompt" --wait
+            AssetGen gen domain sub generate "my prompt"
+            AssetGen gen domain sub generate "my prompt" --wait
         \"\"\"
 """
 from __future__ import annotations
@@ -259,7 +259,7 @@ def _build_index_page(domain_summaries: dict[str, list[dict]], catalog: dict) ->
     lines = [
         "# Command Reference",
         "",
-        "All `assgen gen` commands — auto-generated from source code annotations.",
+        "All `AssetGen gen` commands — auto-generated from source code annotations.",
         "Parameters, model assignments, and examples are pulled directly from the CLI.",
         "",
         "---",
@@ -313,9 +313,9 @@ def main() -> None:
 
         cmds_for_domain: list[dict] = []
         for path, leaf in _iter_leaf_commands(
-            domain_cmd, ["assgen", "gen", domain_name]
+            domain_cmd, ["AssetGen", "gen", domain_name]
         ):
-            # path = ["assgen", "gen", "visual", "concept", "generate"]
+            # path = ["AssetGen", "gen", "visual", "concept", "generate"]
             # job_type = "visual.concept.generate"
             sub_parts = path[3:]
             job_type = f"{domain_name}.{'.'.join(sub_parts)}"

@@ -1,8 +1,8 @@
-site_name: assgen
+site_name: AssetGen
 site_description: AI-driven game asset generation pipeline — CLI + server for 3D game development
-site_url: https://aallbrig.github.io/assgen/
-repo_url: https://github.com/aallbrig/assgen
-repo_name: aallbrig/assgen
+site_url: https://aallbrig.github.io/AssetGen/
+repo_url: https://github.com/aallbrig/AssetGen
+repo_name: aallbrig/AssetGen
 edit_uri: edit/main/docs/
 
 theme:
@@ -45,7 +45,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/aallbrig/assgen
+      link: https://github.com/aallbrig/AssetGen
 
 extra_css:
   - stylesheets/extra.css

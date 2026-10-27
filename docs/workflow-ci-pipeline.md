@@ -1,35 +1,35 @@
 # Workflow: CI/CD Pipeline Integration
 
 > **Persona: Casey** — technical artist / pipeline TD at a 100+ person studio.
-> Runs assgen from GitHub Actions, not interactively. Every command must be
+> Runs AssetGen from GitHub Actions, not interactively. Every command must be
 > scriptable, exit-code correct, and produce parseable output.
 
 ---
 
 ## Key requirements
 
-| Requirement | How assgen addresses it |
+| Requirement | How AssetGen addresses it |
 |---|---|
 | No interactive prompts | All config via env vars or YAML; no TTY needed |
 | Predictable exit codes | `0` = success, non-zero = failure, always |
-| Remote GPU, no client GPU in CI | `ASSGEN_SERVER_URL` env var points at GPU runner |
+| Remote GPU, no client GPU in CI | `ASSETGEN_SERVER_URL` env var points at GPU runner |
 | Model allow-list | `server.yaml allow_list` blocks unapproved downloads |
-| Asset validation | `assgen gen qa validate` command |
+| Asset validation | `AssetGen gen qa validate` command |
 | Machine-readable output | `--json` flag *(roadmap — see below)* |
 
 ---
 
 ## Environment variables
 
-All assgen configuration can be driven by environment variables — no file editing required in CI:
+All AssetGen configuration can be driven by environment variables — no file editing required in CI:
 
 | Variable | Purpose | Example |
 |---|---|---|
-| `ASSGEN_SERVER_URL` | Point client at a remote server | `http://gpu-runner:8432` |
-| `ASSGEN_CONFIG_DIR` | Override config directory | `/opt/assgen-ci-config` |
-| `ASSGEN_DATA_DIR` | Override model cache root | `/mnt/models` |
-| `ASSGEN_LOG_LEVEL` | Log verbosity | `INFO` or `DEBUG` |
-| `ASSGEN_DEVICE` | Inference device on the server | `cuda` or `cpu` |
+| `ASSETGEN_SERVER_URL` | Point client at a remote server | `http://gpu-runner:8432` |
+| `ASSETGEN_CONFIG_DIR` | Override config directory | `/opt/AssetGen-ci-config` |
+| `ASSETGEN_DATA_DIR` | Override model cache root | `/mnt/models` |
+| `ASSETGEN_LOG_LEVEL` | Log verbosity | `INFO` or `DEBUG` |
+| `ASSETGEN_DEVICE` | Inference device on the server | `cuda` or `cpu` |
 
 Set them as GitHub Actions secrets / environment variables, never in committed config files.
 
@@ -52,18 +52,18 @@ on:
 
 jobs:
   validate:
-    runs-on: self-hosted        # requires a runner with GPU + assgen-server
+    runs-on: self-hosted        # requires a runner with GPU + AssetGen-server
     env:
-      ASSGEN_SERVER_URL: http://localhost:8432
-      ASSGEN_LOG_LEVEL: INFO
+      ASSETGEN_SERVER_URL: http://localhost:8432
+      ASSETGEN_LOG_LEVEL: INFO
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start assgen server
+      - name: Start AssetGen server
         run: |
-          assgen-server start --daemon --device cuda
-          assgen server status   # blocks until healthy
+          AssetGen-server start --daemon --device cuda
+          AssetGen server status   # blocks until healthy
 
       - name: Validate changed assets
         run: |
@@ -74,7 +74,7 @@ jobs:
           if [ -s changed_assets.txt ]; then
             while IFS= read -r asset; do
               echo "Validating: $asset"
-              assgen gen qa validate "$asset" \
+              AssetGen gen qa validate "$asset" \
                 --checks normals,uvs,manifold \
                 --strict
             done < changed_assets.txt
@@ -82,9 +82,9 @@ jobs:
             echo "No GLB assets changed."
           fi
 
-      - name: Stop assgen server
+      - name: Stop AssetGen server
         if: always()
-        run: assgen server stop
+        run: AssetGen server stop
 ```
 
 `--strict` makes the command exit non-zero on any warning, not just errors —
@@ -98,7 +98,7 @@ In CI, unapproved multi-GB model downloads are a showstopper.
 The `allow_list` in `server.yaml` is your control plane:
 
 ```yaml
-# /opt/assgen-ci-config/server.yaml
+# /opt/AssetGen-ci-config/server.yaml
 host: "0.0.0.0"
 port: 8432
 device: "cuda"
@@ -115,10 +115,10 @@ allow_list:
   - "Intel/dpt-large"
 ```
 
-Set `ASSGEN_CONFIG_DIR` to point at this locked-down config in your CI runner setup:
+Set `ASSETGEN_CONFIG_DIR` to point at this locked-down config in your CI runner setup:
 
 ```bash
-export ASSGEN_CONFIG_DIR=/opt/assgen-ci-config
+export ASSETGEN_CONFIG_DIR=/opt/AssetGen-ci-config
 ```
 
 If a developer's PR tries to use a model not in the allow_list, the server returns
@@ -132,14 +132,14 @@ Generate localisation-ready NPC dialogue and lore entries as part of a content p
 
 ```bash
 # Generate NPC dialogue for a quest
-assgen gen support narrative dialog "grizzled blacksmith" \
+AssetGen gen support narrative dialog "grizzled blacksmith" \
   --context "player has just saved the village from bandits" \
   --lines 8 \
   --branching \
   --wait
 
 # Generate codex lore for a new region
-assgen gen support narrative lore "The Ashfield Wastes" \
+AssetGen gen support narrative lore "The Ashfield Wastes" \
   --format codex \
   --length 400 \
   --wait
@@ -154,7 +154,7 @@ via the job output files.
 
 ```bash
 # Convert a directory of .glb files to Unreal-compatible format
-assgen gen pipeline integrate export \
+AssetGen gen pipeline integrate export \
   --input assets/props/ \
   --engine unreal \
   --wait
@@ -168,16 +168,16 @@ Outputs `.fbx` files with Unreal naming conventions, ready for batch import.
 
 ```bash
 # Validate mesh geometry
-assgen gen qa validate mesh.glb --checks normals,uvs,manifold --strict
+AssetGen gen qa validate mesh.glb --checks normals,uvs,manifold --strict
 
 # Performance check (polycount, texture memory)
-assgen gen qa perf mesh.glb --budget mobile
+AssetGen gen qa perf mesh.glb --budget mobile
 
 # Style consistency check against a reference
-assgen gen qa style mesh.glb --reference reference_prop.glb
+AssetGen gen qa style mesh.glb --reference reference_prop.glb
 
 # Generate QA report for a directory
-assgen gen qa report assets/ --output-dir reports/ --format json
+AssetGen gen qa report assets/ --output-dir reports/ --format json
 ```
 
 ---
@@ -190,7 +190,7 @@ assgen gen qa report assets/ --output-dir reports/ --format json
 | `1` | Command failed (job error, validation failure) |
 | `2` | Usage error (bad flag, missing argument) |
 
-Every assgen command follows this contract — safe to use in `set -e` scripts
+Every AssetGen command follows this contract — safe to use in `set -e` scripts
 and GitHub Actions `if: failure()` conditionals.
 
 ---
@@ -198,7 +198,7 @@ and GitHub Actions `if: failure()` conditionals.
 ## Machine-readable output (`--json`)
 
 !!! note "Roadmap"
-    `--json` structured output is on the assgen roadmap.  When shipped, all
+    `--json` structured output is on the AssetGen roadmap.  When shipped, all
     commands will accept `--json` and emit a JSON object to stdout:
     ```json
     {
@@ -210,13 +210,13 @@ and GitHub Actions `if: failure()` conditionals.
     ```
     This will make pipeline integration via `jq` trivial.
 
-Until `--json` ships, parse the job ID from `assgen jobs list` output and poll
-with `assgen jobs status <id>` to build your own scripted wait loop:
+Until `--json` ships, parse the job ID from `AssetGen jobs list` output and poll
+with `AssetGen jobs status <id>` to build your own scripted wait loop:
 
 ```bash
-JOB_ID=$(assgen gen visual model create --prompt "barrel" | grep "Job" | awk '{print $2}')
+JOB_ID=$(AssetGen gen visual model create --prompt "barrel" | grep "Job" | awk '{print $2}')
 while true; do
-  STATUS=$(assgen jobs status "$JOB_ID" | grep "status:" | awk '{print $2}')
+  STATUS=$(AssetGen jobs status "$JOB_ID" | grep "status:" | awk '{print $2}')
   [ "$STATUS" = "completed" ] && break
   [ "$STATUS" = "failed" ] && { echo "Job failed"; exit 1; }
   sleep 5
@@ -232,16 +232,16 @@ Pre-bake the cache during runner setup so jobs start immediately:
 
 ```bash
 # In your runner AMI / Docker image build script:
-assgen models install stabilityai/TripoSR
-assgen models install cvssp/audioldm2
-assgen models install suno/bark
+AssetGen models install stabilityai/TripoSR
+AssetGen models install cvssp/audioldm2
+AssetGen models install suno/bark
 ```
 
 Check cache status:
 
 ```bash
-assgen models list         # shows all catalog models and installed status
-assgen models status TripoSR   # size, path, last used
+AssetGen models list         # shows all catalog models and installed status
+AssetGen models status TripoSR   # size, path, last used
 ```
 
 ---
@@ -251,14 +251,14 @@ assgen models status TripoSR   # size, path, last used
 ```yaml
 # docker-compose.ci.yml
 services:
-  assgen-server:
-    image: ghcr.io/aallbrig/assgen-server:latest
+  AssetGen-server:
+    image: ghcr.io/aallbrig/AssetGen-server:latest
     environment:
-      ASSGEN_DEVICE: cuda
-      ASSGEN_CONFIG_DIR: /config
+      ASSETGEN_DEVICE: cuda
+      ASSETGEN_CONFIG_DIR: /config
     volumes:
       - ./ci-config:/config:ro
-      - model-cache:/root/.local/share/assgen
+      - model-cache:/root/.local/share/AssetGen
     ports:
       - "8432:8432"
     deploy:
@@ -275,8 +275,8 @@ volumes:
 
 ```bash
 docker compose -f docker-compose.ci.yml up -d
-export ASSGEN_SERVER_URL=http://localhost:8432
-assgen server status   # confirm healthy
+export ASSETGEN_SERVER_URL=http://localhost:8432
+AssetGen server status   # confirm healthy
 ```
 
 ---

@@ -39,16 +39,16 @@ reading order above wins. Specifically:
 ## 3. Current Repo State (as of 2026-04-11)
 
 What **already exists:**
-- All handler modules at `src/assgen/server/handlers/*.py` (80 handlers, stubs or real)
-- `src/assgen/catalog.py` with `get_model_for_job()`, `get_model_for_job_quality()`, `all_job_types()`, `all_model_ids()`
-- `src/assgen/server/worker.py` with `_load_handler(job_type)` (returns stub if handler has no inference dep)
+- All handler modules at `src/AssetGen/server/handlers/*.py` (80 handlers, stubs or real)
+- `src/AssetGen/catalog.py` with `get_model_for_job()`, `get_model_for_job_quality()`, `all_job_types()`, `all_model_ids()`
+- `src/AssetGen/server/worker.py` with `_load_handler(job_type)` (returns stub if handler has no inference dep)
 - `.github/workflows/release.yml` — builds wheel/sdist and attaches to GitHub Release, but **no PyPI publish step yet**
 - `scripts/` directory exists (`smoke_test_inference.py`, `export_openapi.py`, etc.)
 - `pyproject.toml` with `[inference]` and `[dev]` extras, but **no `[spaces]` extra yet**
-- `.venv/` with editable install of assgen
+- `.venv/` with editable install of AssetGen
 
 What **does not yet exist:**
-- `src/assgen/sdk.py` (must be created — see packaging doc Section 2)
+- `src/AssetGen/sdk.py` (must be created — see packaging doc Section 2)
 - `spaces/` directory (must be created — each Space gets a subdirectory)
 - `scripts/sync_spaces.py` (must be created — see packaging doc Section 5)
 - PyPI publish step in `release.yml` (must be added — see packaging doc Section 1)
@@ -64,22 +64,22 @@ module paths via `job_type.replace(".", "_")`:
 
 | CLI command | `job_type` string | Handler module file |
 |-------------|-------------------|---------------------|
-| `assgen gen audio sfx generate` | `audio.sfx.generate` | `audio_sfx_generate.py` |
-| `assgen gen visual concept generate` | `visual.concept.generate` | `visual_concept_generate.py` |
-| `assgen gen scene depth estimate` | `scene.depth.estimate` | `scene_depth_estimate.py` |
+| `AssetGen gen audio sfx generate` | `audio.sfx.generate` | `audio_sfx_generate.py` |
+| `AssetGen gen visual concept generate` | `visual.concept.generate` | `visual_concept_generate.py` |
+| `AssetGen gen scene depth estimate` | `scene.depth.estimate` | `scene_depth_estimate.py` |
 
 **To verify a handler exists:**
 ```bash
-python -c "from assgen.catalog import all_job_types; print('\n'.join(all_job_types()))"
+python -c "from AssetGen.catalog import all_job_types; print('\n'.join(all_job_types()))"
 ```
 
 **To read a handler's params contract before writing an app.py (required for all Tier 2/3):**
 ```bash
 # Step 1: check the module docstring
-head -30 src/assgen/server/handlers/audio_ambient_generate.py
+head -30 src/AssetGen/server/handlers/audio_ambient_generate.py
 
 # Step 2: list every params.get() call
-grep -n "params.get" src/assgen/server/handlers/audio_ambient_generate.py
+grep -n "params.get" src/AssetGen/server/handlers/audio_ambient_generate.py
 ```
 
 ---
@@ -95,10 +95,10 @@ Complete these phases in order. Each phase depends on the previous.
 | 0.1 Add PyPI publish step | `.github/workflows/release.yml` | After `hatch build`, before `Build docs site`. One-time PyPI Trusted Publisher setup required — see below |
 | 0.2 Add `[spaces]` extra | `pyproject.toml` | Per repo health doc P0.2 |
 | 0.3 Add `opencv-python-headless` to `[spaces]` extra | `pyproject.toml` | Required by `visual.texture.upscale` handler |
-| 0.4 Create `src/assgen/sdk.py` | New file | Per packaging doc Section 2 — ~85 lines. Use `get_model_for_job()`, not `get_catalog()` |
+| 0.4 Create `src/AssetGen/sdk.py` | New file | Per packaging doc Section 2 — ~85 lines. Use `get_model_for_job()`, not `get_catalog()` |
 | 0.5 Create `scripts/sync_spaces.py` | New file | Per packaging doc Section 5 — use `HfApi.upload_folder()`, not subprocess |
 | 0.6 Add repo health P0/P1 items | Various | Per `20260411_120300_UTC_repo_health_improvements.md`, items 1.1–1.6 |
-| 0.7 Verify SDK works | Terminal | `python -c "from assgen.sdk import run; print('OK')"` |
+| 0.7 Verify SDK works | Terminal | `python -c "from AssetGen.sdk import run; print('OK')"` |
 | 0.8 Create `scripts/generate_run_configs.py` | New file | Per `20260411_131500_UTC_pycharm_run_configs.md` Section 7 — 72 PyCharm run configurations for all feasible Spaces, grouped by domain. The XMLs are already generated and tracked in `.idea/runConfigurations/`. This script regenerates them if the Space list changes. |
 
 ### Phase 1 — spaces/ Directory Setup
@@ -112,28 +112,28 @@ Complete these phases in order. Each phase depends on the previous.
 
 Implement in this order (simplest to most complex):
 
-1. `assgen.procedural.terrain.heightmap` — CPU-only, no GPU decorator, simplest possible
-2. `assgen.audio.sfx.generate` — AudioGen, ZeroGPU, confirmed params
-3. `assgen.audio.music.compose` — same pattern as sfx
-4. `assgen.audio.voice.tts` — Bark, voice preset dropdown
-5. `assgen.texture.upscale` — Real-ESRGAN, image input, key is `"input"` not `"input_path"`
-6. `assgen.concept.generate` — SDXL, key is `"steps"` not `"num_inference_steps"`
-7. `assgen.texture.generate` — same SDXL fix as above
-8. `assgen.scene.depth.estimate` — no colormap dropdown; `"colormap": "true"` hardcoded
-9. `assgen.model.create` — Hunyuan3D-2, key is `"image"` not `"image_path"`
-10. `assgen.narrative.dialogue.npc` — Phi-3.5, keys `"character"/"context"/"lines"`, read output from JSON file
+1. `AssetGen.procedural.terrain.heightmap` — CPU-only, no GPU decorator, simplest possible
+2. `AssetGen.audio.sfx.generate` — AudioGen, ZeroGPU, confirmed params
+3. `AssetGen.audio.music.compose` — same pattern as sfx
+4. `AssetGen.audio.voice.tts` — Bark, voice preset dropdown
+5. `AssetGen.texture.upscale` — Real-ESRGAN, image input, key is `"input"` not `"input_path"`
+6. `AssetGen.concept.generate` — SDXL, key is `"steps"` not `"num_inference_steps"`
+7. `AssetGen.texture.generate` — same SDXL fix as above
+8. `AssetGen.scene.depth.estimate` — no colormap dropdown; `"colormap": "true"` hardcoded
+9. `AssetGen.model.create` — Hunyuan3D-2, key is `"image"` not `"image_path"`
+10. `AssetGen.narrative.dialogue.npc` — Phi-3.5, keys `"character"/"context"/"lines"`, read output from JSON file
 
 Full `app.py` + `README.md` for all 10 are in `_spec_tier1`. Use the corrected param keys
 from `_implementation_risks` Section 4 (verified table), not the raw code examples in `_spec_tier1`
 where they conflict.
 
-> **PyCharm:** As soon as `spaces/assgen.X/app.py` is written, the corresponding run config in
-> `.idea/runConfigurations/space_assgen_X.xml` is already tracked in git and shows up immediately
+> **PyCharm:** As soon as `spaces/AssetGen.X/app.py` is written, the corresponding run config in
+> `.idea/runConfigurations/space_AssetGen_X.xml` is already tracked in git and shows up immediately
 > in PyCharm's Run dropdown under its domain folder. No manual IDE setup needed.
 
-**After implementing Space #2 (`assgen.audio.sfx.generate`) — stop and verify locally:**
+**After implementing Space #2 (`AssetGen.audio.sfx.generate`) — stop and verify locally:**
 ```bash
-cd spaces/assgen.audio.sfx.generate
+cd spaces/AssetGen.audio.sfx.generate
 pip install -e "../../.[spaces]"
 python app.py
 # Gradio should open at http://127.0.0.1:7860
@@ -144,14 +144,14 @@ Only proceed to the remaining Tier 1 Spaces after this local test passes.
 ### Phase 3 — First Deployment
 
 Follow the 15-step sequence in `_implementation_risks` Section 10 exactly. Key gates:
-- Step 8: `pip install "assgen[spaces]==0.X.Y"` must succeed before creating Space repos
+- Step 8: `pip install "AssetGen[spaces]==0.X.Y"` must succeed before creating Space repos
 - Step 12: One Space (audio.sfx.generate) must build green on HF Hub before syncing all 10
 
 ### Phase 4 — Tier 2 Spaces (17 Spaces)
 
 For each Tier 2 Space:
 1. Read the abbreviated spec in `_spec_tier2_tier3`
-2. Run `grep -n "params.get" src/assgen/server/handlers/<handler_module>.py` to confirm all param keys
+2. Run `grep -n "params.get" src/AssetGen/server/handlers/<handler_module>.py` to confirm all param keys
 3. Write `app.py` + `README.md` using the Tier 1 pattern
 4. Local test before syncing
 
@@ -170,7 +170,7 @@ These require human action in a browser. Do them before Phase 3.
 
 ### 6a. PyPI Trusted Publisher setup (one-time)
 1. Log into pypi.org → Your Account → Publishing → "Add a new pending publisher"
-2. Set: Owner=`aallbrig`, Repository=`assgen`, Workflow=`release.yml`, Environment=(leave blank)
+2. Set: Owner=`aallbrig`, Repository=`AssetGen`, Workflow=`release.yml`, Environment=(leave blank)
 3. This must be done **before** a version tag is pushed — otherwise the first publish step fails
 
 ### 6b. HF_TOKEN GitHub secret
@@ -184,8 +184,8 @@ These require human action in a browser. Do them before Phase 3.
 Run the `hf repo create ...` commands from each Space's spec before first sync.
 All 10 Tier 1 creation commands are in `_spec_tier1`. Batch example:
 ```bash
-hf repo create assgen.audio.sfx.generate --repo-type space --space-sdk gradio
-hf repo create assgen.audio.music.compose --repo-type space --space-sdk gradio
+hf repo create AssetGen.audio.sfx.generate --repo-type space --space-sdk gradio
+hf repo create AssetGen.audio.music.compose --repo-type space --space-sdk gradio
 # ... (one per Space)
 ```
 
@@ -199,7 +199,7 @@ The first HF Spaces deployment requires a published PyPI package. Steps:
 2. Choose the next version: look at `git tag --list` — if latest is `v0.1.x`, tag `v0.2.0`
 3. `git tag v0.2.0 && git push --tags`
 4. Watch release.yml — PyPI publish job must pass before proceeding
-5. Verify: `pip index versions assgen` should show `0.2.0`
+5. Verify: `pip index versions AssetGen` should show `0.2.0`
 6. Then create the HF Space repos and run the sync
 
 Do **not** create HF Space repos pointing at a version that isn't yet on PyPI.
@@ -212,9 +212,9 @@ Use this cycle for every Space before pushing to HF Hub:
 
 ```bash
 # 1. Navigate to the Space directory
-cd spaces/assgen.<name>
+cd spaces/AssetGen.<name>
 
-# 2. Install assgen with spaces extra (from repo root)
+# 2. Install AssetGen with spaces extra (from repo root)
 pip install -e "../../.[spaces]"
 
 # 3. For audio spaces: install audiocraft (not on PyPI)
@@ -272,24 +272,24 @@ does NOT use the same convention — it matches the catalog key exactly.
 
 | Space repo name | `run()` job_type |
 |----------------|-----------------|
-| `assgen.concept.generate` | `"visual.concept.generate"` |
-| `assgen.texture.generate` | `"visual.texture.generate"` |
-| `assgen.texture.upscale` | `"visual.texture.upscale"` |
-| `assgen.model.create` | `"visual.model.create"` |
-| `assgen.rig.auto` | `"visual.rig.auto"` |
-| `assgen.animate.keyframe` | `"visual.animate.keyframe"` |
-| `assgen.animate.mocap` | `"visual.animate.mocap"` |
-| `assgen.narrative.dialogue.npc` | `"narrative.dialogue.npc"` |
-| `assgen.narrative.lore.generate` | `"narrative.lore.generate"` |
-| `assgen.narrative.quest.design` | `"narrative.quest.design"` |
-| `assgen.audio.sfx.generate` | `"audio.sfx.generate"` |
-| `assgen.scene.depth.estimate` | `"scene.depth.estimate"` |
-| `assgen.procedural.terrain.heightmap` | `"procedural.terrain.heightmap"` |
+| `AssetGen.concept.generate` | `"visual.concept.generate"` |
+| `AssetGen.texture.generate` | `"visual.texture.generate"` |
+| `AssetGen.texture.upscale` | `"visual.texture.upscale"` |
+| `AssetGen.model.create` | `"visual.model.create"` |
+| `AssetGen.rig.auto` | `"visual.rig.auto"` |
+| `AssetGen.animate.keyframe` | `"visual.animate.keyframe"` |
+| `AssetGen.animate.mocap` | `"visual.animate.mocap"` |
+| `AssetGen.narrative.dialogue.npc` | `"narrative.dialogue.npc"` |
+| `AssetGen.narrative.lore.generate` | `"narrative.lore.generate"` |
+| `AssetGen.narrative.quest.design` | `"narrative.quest.design"` |
+| `AssetGen.audio.sfx.generate` | `"audio.sfx.generate"` |
+| `AssetGen.scene.depth.estimate` | `"scene.depth.estimate"` |
+| `AssetGen.procedural.terrain.heightmap` | `"procedural.terrain.heightmap"` |
 
 For domains that keep their prefix (`audio`, `scene`, `procedural`, `pipeline`, `qa`, `data`),
 the Space name equals the job_type string exactly.
 
 **Verify any job_type before using it:**
 ```bash
-python -c "from assgen.catalog import all_job_types; print('\n'.join(all_job_types()))"
+python -c "from AssetGen.catalog import all_job_types; print('\n'.join(all_job_types()))"
 ```

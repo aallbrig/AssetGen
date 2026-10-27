@@ -1,6 +1,6 @@
 # API Reference
 
-All public Python APIs in `assgen` are documented here, auto-generated from
+All public Python APIs in `AssetGen` are documented here, auto-generated from
 source-code docstrings using [mkdocstrings](https://mkdocstrings.github.io/).
 Every function, class, and attribute shown below includes its type signature,
 parameter descriptions, and return/raises information derived directly from the
@@ -11,9 +11,9 @@ code — no separate doc-maintenance required.
 ## Catalog
 
 Job-type → HuggingFace model ID mapping.  Users can override entries in
-`~/.config/assgen/models.yaml`.
+`~/.config/AssetGen/models.yaml`.
 
-::: assgen.catalog
+::: AssetGen.catalog
     options:
       members:
         - load_catalog
@@ -27,7 +27,7 @@ Job-type → HuggingFace model ID mapping.  Users can override entries in
 
 SQLite persistence layer for jobs, models, and usage records.
 
-::: assgen.db
+::: AssetGen.db
     options:
       members:
         - JobStatus
@@ -48,7 +48,7 @@ SQLite persistence layer for jobs, models, and usage records.
 
 Platform-aware config directory resolution and YAML load/save helpers.
 
-::: assgen.config
+::: AssetGen.config
     options:
       members:
         - get_config_dir
@@ -65,7 +65,7 @@ Platform-aware config directory resolution and YAML load/save helpers.
 
 Downloads, caches, and tracks HuggingFace models on the server side.
 
-::: assgen.server.model_manager
+::: AssetGen.server.model_manager
     options:
       members:
         - ModelManager
@@ -77,7 +77,7 @@ Downloads, caches, and tracks HuggingFace models on the server side.
 
 Allow-list enforcement and model↔task compatibility checks.
 
-::: assgen.server.validation
+::: AssetGen.server.validation
     options:
       members:
         - TASK_COMPATIBLE_TAGS
@@ -90,7 +90,7 @@ Allow-list enforcement and model↔task compatibility checks.
 
 ## Version
 
-::: assgen.version
+::: AssetGen.version
     options:
       members:
         - get_version_info

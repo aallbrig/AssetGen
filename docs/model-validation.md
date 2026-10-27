@@ -1,6 +1,6 @@
 # Model Validation
 
-`assgen` validates model–task compatibility at **job-submission time** before
+`AssetGen` validates model–task compatibility at **job-submission time** before
 any model is downloaded.  There are two independent checks:
 
 1. **Allow-list** — the server admin can restrict which models may be used.
@@ -29,10 +29,10 @@ all models.
 
 ```bash
 # Add a model to the allow-list
-assgen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
+AssetGen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
 
 # Check current list
-assgen server config show
+AssetGen server config show
 ```
 
 ---
@@ -50,12 +50,12 @@ in the allowable set for the requested catalog task (e.g. `music-generation`
 allows `text-to-audio`, `audio-generation`, `music-generation`).
 
 The full task → allowed-tags map lives in
-[`assgen.server.validation.TASK_COMPATIBLE_TAGS`](api-reference.md#server-validation).
+[`AssetGen.server.validation.TASK_COMPATIBLE_TAGS`](api-reference.md#server-validation).
 
 ### Failure example
 
 ```bash
-$ assgen visual model create --prompt "sword" --model-id "cvssp/audioldm2"
+$ AssetGen visual model create --prompt "sword" --model-id "cvssp/audioldm2"
 Error 422: Model 'cvssp/audioldm2' has pipeline_tag='text-to-audio'
 which is not compatible with task 'image-to-3d'.
 Expected one of: ['image-to-3d', 'text-to-3d'].
@@ -65,7 +65,7 @@ Set skip_model_validation: true in server.yaml to override.
 ### Disabling the check
 
 ```bash
-assgen server config set skip_model_validation true
+AssetGen server config set skip_model_validation true
 ```
 
 !!! warning

@@ -48,8 +48,8 @@ needed with Gradio 5.x.
 
 ## Correction 2: Drop audiocraft entirely — use transformers pipeline
 
-**Spec said:** `assgen.audio.sfx.generate`, `assgen.audio.music.compose`, `assgen.audio.music.loop`,
-and `assgen.audio.ambient.generate` need:
+**Spec said:** `AssetGen.audio.sfx.generate`, `AssetGen.audio.music.compose`, `AssetGen.audio.music.loop`,
+and `AssetGen.audio.ambient.generate` need:
 ```
 audiocraft @ git+https://github.com/facebookresearch/audiocraft.git
 ```
@@ -110,29 +110,29 @@ audio = np.array(result["audio"]).squeeze().T  # (samples, 2) for stereo WAV
 in torchvision ≥ 0.16. The pip install fails during Docker build. This was already a known issue
 (moved to EXTRA_PIP to isolate the failure), but the underlying package is broken with current deps.
 
-**Fix:** Rewrote `assgen.texture.upscale/app.py` to use `diffusers.StableDiffusionUpscalePipeline`
-with `stabilityai/stable-diffusion-x4-upscaler`. `diffusers` is already in `assgen[spaces]`.
+**Fix:** Rewrote `AssetGen.texture.upscale/app.py` to use `diffusers.StableDiffusionUpscalePipeline`
+with `stabilityai/stable-diffusion-x4-upscaler`. `diffusers` is already in `AssetGen[spaces]`.
 No extra pip packages needed for this Space.
 
 The tradeoff: SD x4 upscaler takes a text style-hint and is slower than ESRGAN, but it is a real
 AI upscaler that produces good results for texture work.
 
-**`assgen.texture.upscale` no longer appears in EXTRA_PIP.**
+**`AssetGen.texture.upscale` no longer appears in EXTRA_PIP.**
 
 ---
 
 ## Correction 4: audio.voice.tts does NOT need Coqui TTS
 
-**Spec said:** `assgen.audio.voice.tts` requires `TTS>=0.22` (Coqui TTS) in EXTRA_PIP.
+**Spec said:** `AssetGen.audio.voice.tts` requires `TTS>=0.22` (Coqui TTS) in EXTRA_PIP.
 
 **What happened:** The `audio_voice_tts.py` handler already uses `transformers.BarkModel`
 (suno/bark) — not Coqui TTS. The `TTS>=0.22` in EXTRA_PIP was a mistake.
 Coqui TTS is a large and partially abandoned package (~1.5 GB) that would cause the build to fail.
 
-**Fix:** Removed `assgen.audio.voice.tts` from EXTRA_PIP. `transformers` (already in
-`assgen[spaces]`) provides everything the handler needs.
+**Fix:** Removed `AssetGen.audio.voice.tts` from EXTRA_PIP. `transformers` (already in
+`AssetGen[spaces]`) provides everything the handler needs.
 
-**`assgen.audio.voice.clone` still needs `TTS>=0.22`** — that handler genuinely uses XTTS-v2.
+**`AssetGen.audio.voice.clone` still needs `TTS>=0.22`** — that handler genuinely uses XTTS-v2.
 It is a Tier 2 Space, not yet deployed.
 
 ---
@@ -199,29 +199,29 @@ while moderation is pending.
 ```python
 EXTRA_PIP: dict[str, list[str]] = {
     # voice.clone uses XTTS-v2 via Coqui TTS (Tier 2 Space, not yet deployed)
-    "assgen.audio.voice.clone": ["TTS>=0.22"],
+    "AssetGen.audio.voice.clone": ["TTS>=0.22"],
     # LOD generation — pyfqmr is a C extension, build may fail on some platforms
-    "assgen.lod.generate": ["pyfqmr>=0.2"],
+    "AssetGen.lod.generate": ["pyfqmr>=0.2"],
     # UV unwrapping — xatlas Python bindings
-    "assgen.uv.auto": ["xatlas>=0.0.9"],
+    "AssetGen.uv.auto": ["xatlas>=0.0.9"],
     # TripoSR — image-to-3D (git install, not on PyPI)
-    "assgen.model.splat": [
+    "AssetGen.model.splat": [
         "tsr @ git+https://github.com/VAST-AI-Research/TripoSR.git",
         "rembg>=2.0.57",
     ],
     # AnimateDiff needs imageio for GIF/MP4 export
-    "assgen.animate.keyframe": [
+    "AssetGen.animate.keyframe": [
         "imageio>=2.34.0",
         "imageio-ffmpeg>=0.4.9",
     ],
     # UI mockup uses ControlNet auxiliary preprocessors
-    "assgen.ui.mockup": ["controlnet-aux>=0.0.7"],
+    "AssetGen.ui.mockup": ["controlnet-aux>=0.0.7"],
 }
 ```
 
 Packages removed from EXTRA_PIP vs original spec:
-- `assgen.texture.upscale`: `opencv-python-headless`, `basicsr`, `realesrgan` — removed (broken, replaced with diffusers)
-- `assgen.audio.voice.tts`: `TTS>=0.22` — removed (handler doesn't use Coqui TTS)
+- `AssetGen.texture.upscale`: `opencv-python-headless`, `basicsr`, `realesrgan` — removed (broken, replaced with diffusers)
+- `AssetGen.audio.voice.tts`: `TTS>=0.22` — removed (handler doesn't use Coqui TTS)
 
 ---
 
@@ -242,16 +242,16 @@ All 10 Tier 1 Spaces are RUNNING on HF Hub (v0.3.3):
 
 | Space | Model | Status |
 |-------|-------|--------|
-| assgen.concept.generate | stabilityai/stable-diffusion-xl-base-1.0 | ✓ RUNNING |
-| assgen.audio.sfx.generate | cvssp/audioldm2 (AudioLDM2 via diffusers) | ✓ RUNNING |
-| assgen.audio.music.compose | facebook/musicgen-medium (via pipeline) | ✓ RUNNING |
-| assgen.audio.voice.tts | suno/bark (via transformers BarkModel) | ✓ RUNNING |
-| assgen.texture.upscale | stabilityai/stable-diffusion-x4-upscaler | ✓ RUNNING |
-| assgen.model.create | tencent/Hunyuan3D-2 | ✓ RUNNING |
-| assgen.narrative.dialogue.npc | microsoft/Phi-3.5-mini-instruct | ✓ RUNNING |
-| assgen.procedural.terrain.heightmap | (CPU, fractal Perlin noise) | ✓ RUNNING |
-| assgen.scene.depth.estimate | Intel/dpt-large | ✓ RUNNING |
-| assgen.texture.generate | stabilityai/stable-diffusion-xl-base-1.0 | ✓ RUNNING |
+| AssetGen.concept.generate | stabilityai/stable-diffusion-xl-base-1.0 | ✓ RUNNING |
+| AssetGen.audio.sfx.generate | cvssp/audioldm2 (AudioLDM2 via diffusers) | ✓ RUNNING |
+| AssetGen.audio.music.compose | facebook/musicgen-medium (via pipeline) | ✓ RUNNING |
+| AssetGen.audio.voice.tts | suno/bark (via transformers BarkModel) | ✓ RUNNING |
+| AssetGen.texture.upscale | stabilityai/stable-diffusion-x4-upscaler | ✓ RUNNING |
+| AssetGen.model.create | tencent/Hunyuan3D-2 | ✓ RUNNING |
+| AssetGen.narrative.dialogue.npc | microsoft/Phi-3.5-mini-instruct | ✓ RUNNING |
+| AssetGen.procedural.terrain.heightmap | (CPU, fractal Perlin noise) | ✓ RUNNING |
+| AssetGen.scene.depth.estimate | Intel/dpt-large | ✓ RUNNING |
+| AssetGen.texture.generate | stabilityai/stable-diffusion-xl-base-1.0 | ✓ RUNNING |
 
 ---
 
@@ -263,7 +263,7 @@ All 10 Tier 1 Spaces are RUNNING on HF Hub (v0.3.3):
 4. **Do NOT use `basicsr` or `realesrgan`** — they break with torchvision ≥ 0.16.
 5. **Import model classes via `pipeline()`** not by class name — class names change between
    transformers versions; the pipeline task string is stable.
-6. **Prefer `assgen.sdk.run()` for spaces that map 1:1 to a handler** — it's DRY and testable.
+6. **Prefer `AssetGen.sdk.run()` for spaces that map 1:1 to a handler** — it's DRY and testable.
    **Use standalone transformers code** when the handler requires a broken pip package.
 7. **Test EXTRA_PIP packages on HF before adding** — run a scratch Space with just the pip
    package in requirements.txt to confirm it installs in the HF Docker environment.

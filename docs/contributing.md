@@ -3,8 +3,8 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/aallbrig/assgen.git
-cd assgen
+git clone https://github.com/aallbrig/AssetGen.git
+cd AssetGen
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev,docs]"
@@ -26,7 +26,7 @@ ruff check src tests
 
 ## Adding a New Inference Handler
 
-Handlers live under `src/assgen/server/handlers/`.  Each handler is a module
+Handlers live under `src/AssetGen/server/handlers/`.  Each handler is a module
 that exposes a single async function:
 
 ```python
@@ -37,8 +37,8 @@ async def run(params: dict, model_path: str, device: str) -> dict:
 
 Steps:
 
-1. Create `src/assgen/server/handlers/my_task.py` implementing `run()`.
-2. Add an entry to `src/assgen/catalog.yaml`:
+1. Create `src/AssetGen/server/handlers/my_task.py` implementing `run()`.
+2. Add an entry to `src/AssetGen/catalog.yaml`:
    ```yaml
    catalog:
      my.domain.task:
@@ -47,11 +47,11 @@ Steps:
        task: "text-to-image"   # HF pipeline_tag category
        notes: "Optional notes"
    ```
-3. Add the task to `src/assgen/tasks.py` in the appropriate domain.
-4. Add a client sub-command under `src/assgen/client/commands/`.
+3. Add the task to `src/AssetGen/tasks.py` in the appropriate domain.
+4. Add a client sub-command under `src/AssetGen/client/commands/`.
 5. Wire the sub-command into the parent Typer app.
 6. Add compatibility tags in `TASK_COMPATIBLE_TAGS`
-   (`src/assgen/server/validation.py`) if introducing a new task category.
+   (`src/AssetGen/server/validation.py`) if introducing a new task category.
 7. Write tests in `tests/`.
 
 ### Google-style Docstrings
@@ -106,7 +106,7 @@ as separate `.tape` files, then stitched into one video with `ffmpeg`.
 
 - [VHS](https://github.com/charmbracelet/vhs) (`go install github.com/charmbracelet/vhs@latest`)
 - `ffmpeg` (bundled with VHS, or install separately)
-- `assgen` installed and on `$PATH` (`pip install -e .`)
+- `AssetGen` installed and on `$PATH` (`pip install -e .`)
 
 ### Recording
 

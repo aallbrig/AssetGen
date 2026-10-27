@@ -12,7 +12,7 @@ in one command, use `compose environment`:
 
 ```bash
 # 5 biome props + ground material + audio (Unreal export)
-assgen compose environment "overgrown highway, post-apocalyptic" \
+AssetGen compose environment "overgrown highway, post-apocalyptic" \
     --count 5 --engine unreal --wait
 ```
 
@@ -25,7 +25,7 @@ This runs ~20 sequential ML steps and produces:
 For finer control over what props are generated:
 
 ```bash
-assgen compose environment "overgrown highway, post-apocalyptic" \
+AssetGen compose environment "overgrown highway, post-apocalyptic" \
     --items "cracked concrete barrier,rusted car wreck,overgrown billboard,chain-link fence,abandoned oil drum" \
     --engine unreal --wait
 ```
@@ -33,22 +33,22 @@ assgen compose environment "overgrown highway, post-apocalyptic" \
 Preview the full step plan before committing GPU time:
 
 ```bash
-assgen compose environment "post-apocalyptic highway" --count 5 --dry-run
+AssetGen compose environment "post-apocalyptic highway" --count 5 --dry-run
 ```
 
 !!! warning "Runtime expectations on an RTX 3060/3070"
     5 props + ground + audio ≈ **40 min**. Use `--quality low` to prototype the
     kit direction first (~15 min), then re-run at default quality for the keeper:
     ```bash
-    assgen compose environment "overgrown highway" --count 5 --quality low --wait
+    AssetGen compose environment "overgrown highway" --count 5 --quality low --wait
     ```
 
 For PBR material sets only (no props, no audio):
 
 ```bash
-assgen compose material "cracked asphalt, post-apocalyptic, road surface" \
+AssetGen compose material "cracked asphalt, post-apocalyptic, road surface" \
     --resolution 2048 --upscale --engine unreal --wait
-assgen compose material "dead grass and gravel, dry wasteland" \
+AssetGen compose material "dead grass and gravel, dry wasteland" \
     --resolution 2048 --engine unreal --wait
 ```
 
@@ -59,7 +59,7 @@ See the [Compose Pipelines guide](compose-pipelines.md) for all options.
 ## Manual step-by-step (more control)
 
 For finer iteration — e.g. approving concept art before the mesh step — run
-individual `assgen gen` commands:
+individual `AssetGen gen` commands:
 
 ---
 
@@ -76,8 +76,8 @@ individual `assgen gen` commands:
 ## Prerequisites
 
 ```bash
-pip install "assgen[inference]"
-assgen server status   # confirm GPU is visible
+pip install "AssetGen[inference]"
+AssetGen server status   # confirm GPU is visible
 ```
 
 ---
@@ -89,7 +89,7 @@ assgen server status   # confirm GPU is visible
 Before generating any textures, lock down the visual language with a concept:
 
 ```bash
-assgen gen visual concept generate \
+AssetGen gen visual concept generate \
   --prompt "overgrown highway, post-apocalyptic, foggy morning, cracked asphalt, vines, desolate" \
   --wait
 ```
@@ -103,13 +103,13 @@ Adjust the prompt until the palette and mood match your target biome.
 
 ```bash
 # Cracked asphalt — primary road surface
-assgen gen visual texture generate \
+AssetGen gen visual texture generate \
   --prompt "cracked asphalt, post-apocalyptic, seamless tile, 4K, PBR" \
   --resolution 2048 \
   --wait
 
 # Overgrown verge
-assgen gen visual texture generate \
+AssetGen gen visual texture generate \
   --prompt "cracked concrete with weeds, seamless tile, 4K, PBR" \
   --resolution 2048 \
   --wait
@@ -130,7 +130,7 @@ If a generated texture has visible tiling artefacts:
 3. Run inpaint:
 
 ```bash
-assgen gen visual texture inpaint \
+AssetGen gen visual texture inpaint \
   --input asphalt_texture.png \
   --mask seam_mask.png \
   --prompt "cracked asphalt, seamless, match surrounding texture" \
@@ -144,7 +144,7 @@ Repeat with a smaller mask if the first pass is still visible.
 ### 4 — HDRI sky generation
 
 ```bash
-assgen gen scene lighting hdri \
+AssetGen gen scene lighting hdri \
   --prompt "stormy industrial skyline at dusk, post-apocalyptic, heavy clouds, orange haze" \
   --wait
 ```
@@ -159,7 +159,7 @@ Output: `hdri_<id>.exr` — a 16-bit equirectangular HDR image.
 4. Adjust **Intensity** and **Sky Distance Threshold** to taste
 
 !!! note "Equirectangular = Unreal-ready"
-    assgen outputs standard equirectangular `.exr`.  No conversion or
+    AssetGen outputs standard equirectangular `.exr`.  No conversion or
     `HDRIBackdrop` plugin required — UE5 consumes it natively.
 
 ---
@@ -169,7 +169,7 @@ Output: `hdri_<id>.exr` — a 16-bit equirectangular HDR image.
 If you have a reference photo of a real location and want to sculpt terrain from it:
 
 ```bash
-assgen gen scene depth estimate \
+AssetGen gen scene depth estimate \
   --input reference_highway.jpg \
   --wait
 ```
@@ -199,10 +199,10 @@ PROMPTS=(
 )
 
 for PROMPT in "${PROMPTS[@]}"; do
-  assgen gen visual texture generate --prompt "$PROMPT" --resolution 2048 &
+  AssetGen gen visual texture generate --prompt "$PROMPT" --resolution 2048 &
 done
 wait
-echo "✓ All variants queued — check: assgen jobs list"
+echo "✓ All variants queued — check: AssetGen jobs list"
 ```
 
 This submits all jobs concurrently.  The server processes them serially (one GPU),

@@ -2,7 +2,7 @@
 
 _Generated: 2026-04-11 12:04:00 UTC_
 
-This document records the technical decisions that enable HuggingFace Spaces to use assgen
+This document records the technical decisions that enable HuggingFace Spaces to use AssetGen
 as a dependency rather than duplicating inference logic. Read this before touching the
 Tier 1 or Tier 2/3 spec documents.
 
@@ -15,7 +15,7 @@ Tier 1 or Tier 2/3 spec documents.
 `release.yml` correctly builds the Python wheel and sdist using `hatch build`, and attaches
 those artifacts to the GitHub Release. However, there is **no step that publishes to PyPI**.
 
-The release notes in `release.yml` already read `pip install assgen==<version>` — but without
+The release notes in `release.yml` already read `pip install AssetGen==<version>` — but without
 a publish step, that command fails for users unless someone manually uploaded an artifact
 previously.
 
@@ -29,7 +29,7 @@ Homebrew, Chocolatey, Docker, and PyInstaller binaries all work on tag. PyPI doe
         with:
           # Uses Trusted Publishing (OIDC) — no API token needed.
           # One-time setup: go to pypi.org → your project → Publishing → add GitHub publisher:
-          #   Owner: aallbrig   Repo: assgen   Workflow: release.yml   Environment: (leave blank)
+          #   Owner: aallbrig   Repo: AssetGen   Workflow: release.yml   Environment: (leave blank)
           skip-existing: true
 ```
 
@@ -38,55 +38,55 @@ in the `release` job. The `id-token: write` permission is already present in the
 `permissions` block.
 
 **One-time manual setup (do this before merging):**
-1. Log into pypi.org → Manage → Your projects → `assgen` (create it if it doesn't exist) →
+1. Log into pypi.org → Manage → Your projects → `AssetGen` (create it if it doesn't exist) →
    Publishing → Add a new publisher
-2. Set: Owner=`aallbrig`, Repository=`assgen`, Workflow=`release.yml`, Environment=(blank)
+2. Set: Owner=`aallbrig`, Repository=`AssetGen`, Workflow=`release.yml`, Environment=(blank)
 3. Trusted Publishing (OIDC) means no `PYPI_API_TOKEN` secret is needed
 
 ### Why PyPI is a prerequisite for Spaces
 
 HuggingFace Spaces build their Python environment from `requirements.txt` at Space startup.
-If assgen is not on PyPI, the Space has two bad alternatives:
-- `assgen @ git+https://github.com/aallbrig/assgen.git` — slow, fragile (pulls main HEAD)
+If AssetGen is not on PyPI, the Space has two bad alternatives:
+- `AssetGen @ git+https://github.com/aallbrig/AssetGen.git` — slow, fragile (pulls main HEAD)
 - Bundling all handler code directly — duplicates logic, defeats the purpose
 
 Once the PyPI step is merged, every Space's `requirements.txt` is simply:
 ```
-assgen[spaces]
+AssetGen[spaces]
 ```
 
 ---
 
-## 2. `assgen.sdk` — The Clean Python API for Spaces
+## 2. `AssetGen.sdk` — The Clean Python API for Spaces
 
 ### Why this module needs to exist
 
-The handlers in `assgen.server.handlers.*` already contain all the inference logic.
+The handlers in `AssetGen.server.handlers.*` already contain all the inference logic.
 The `_load_handler(job_type)` function in `worker.py` already does dynamic dispatch.
 But both are internal APIs tied to the server context.
 
 HuggingFace Spaces (and any other programmatic consumer) should not have to:
-- Import from `assgen.server.worker` (internal module)
+- Import from `AssetGen.server.worker` (internal module)
 - Know the handler calling convention (`job_type, params, model_id, model_path, device, progress_cb, output_dir`)
 - Manage output directories manually
 - Deal with the stub handler silently returning a placeholder
 
-`assgen.sdk` is a **25-line public wrapper** that exposes exactly what Spaces need.
+`AssetGen.sdk` is a **25-line public wrapper** that exposes exactly what Spaces need.
 
 ### Module location and spec
 
-**File to create:** `src/assgen/sdk.py`
+**File to create:** `src/AssetGen/sdk.py`
 
 ```python
 """
-assgen.sdk — public Python API for running assgen generation without the server.
+AssetGen.sdk — public Python API for running AssetGen generation without the server.
 
 Intended for HuggingFace Spaces, notebooks, and any programmatic consumer that
 wants inference without the client-server HTTP stack.
 
 Example::
 
-    from assgen.sdk import run
+    from AssetGen.sdk import run
     result = run("audio.sfx.generate", {"prompt": "sword clash", "duration": 2.0})
     print(result["files"])   # ['/tmp/abc123/sfx.wav']
 """
@@ -105,7 +105,7 @@ def run(
     output_dir: Path | str | None = None,
     model_id: str | None = None,
 ) -> dict[str, Any]:
-    """Run any assgen generation task as a pure Python call.
+    """Run any AssetGen generation task as a pure Python call.
 
     No server process, no SQLite, no HTTP. Loads models on demand via HuggingFace Hub.
 
@@ -115,7 +115,7 @@ def run(
         Dot-separated task identifier, e.g. ``"audio.sfx.generate"``,
         ``"visual.texture.generate"``, ``"narrative.dialogue.npc"``.
         Must match a key in ``catalog.yaml`` and a handler module in
-        ``assgen.server.handlers``.
+        ``AssetGen.server.handlers``.
     params:
         Task-specific parameter dict. Keys match what the CLI passes internally.
         See the handler module's docstring for the full parameter spec.
@@ -162,7 +162,7 @@ def run(
     if model_id is None:
         try:
             # get_catalog() does not exist — use get_model_for_job() instead.
-            from assgen.catalog import get_model_for_job
+            from AssetGen.catalog import get_model_for_job
             entry = get_model_for_job(job_type) or {}
             model_id = entry.get("model_id")
         except Exception:
@@ -194,7 +194,7 @@ def _load_handler(job_type: str):
     Unlike the server's ``_load_handler``, this raises ``NotImplementedError``
     rather than silently returning a stub — callers should know if a handler is missing.
     """
-    module_name = "assgen.server.handlers." + job_type.replace(".", "_")
+    module_name = "AssetGen.server.handlers." + job_type.replace(".", "_")
     try:
         mod = importlib.import_module(module_name)
         return mod.run  # type: ignore[attr-defined]
@@ -214,11 +214,11 @@ and duplicate the catalog. A Space that needs `generate_sfx` behavior just calls
 
 ### Export from package root (optional but nice)
 
-Add to `src/assgen/__init__.py`:
+Add to `src/AssetGen/__init__.py`:
 ```python
-from assgen.sdk import run as generate  # noqa: F401
+from AssetGen.sdk import run as generate  # noqa: F401
 ```
-This lets power users do `from assgen import generate` but is not required for Spaces.
+This lets power users do `from AssetGen import generate` but is not required for Spaces.
 
 ---
 
@@ -263,16 +263,16 @@ used in the README for GPU server setup. Changing it would be a breaking change.
 ### audiocraft — the pip gap
 
 `audiocraft` (AudioGen, MusicGen, MusicGen Stereo) is **not on PyPI**. Meta distributes it
-only via git. This means three Spaces — `assgen.audio.sfx.generate`,
-`assgen.audio.music.compose`, `assgen.audio.ambient.generate`, `assgen.audio.music.loop` —
-cannot rely solely on `assgen[spaces]`.
+only via git. This means three Spaces — `AssetGen.audio.sfx.generate`,
+`AssetGen.audio.music.compose`, `AssetGen.audio.ambient.generate`, `AssetGen.audio.music.loop` —
+cannot rely solely on `AssetGen[spaces]`.
 
 Their `requirements.txt` needs an additional line:
 ```
 audiocraft @ git+https://github.com/facebookresearch/audiocraft.git
 ```
 
-This is unavoidable until Meta publishes to PyPI. All other Spaces use `assgen[spaces]` only.
+This is unavoidable until Meta publishes to PyPI. All other Spaces use `AssetGen[spaces]` only.
 
 ---
 
@@ -280,8 +280,8 @@ This is unavoidable until Meta publishes to PyPI. All other Spaces use `assgen[s
 
 ### Decision: yes, keep Space source in this repo
 
-Each Space is a ~35-line Gradio `app.py` that calls `assgen.sdk.run()` + a `README.md`
-Space card. These belong in the assgen repo because:
+Each Space is a ~35-line Gradio `app.py` that calls `AssetGen.sdk.run()` + a `README.md`
+Space card. These belong in the AssetGen repo because:
 - The `app.py` UI code is tested alongside the handlers it wraps
 - A single `git tag vX.Y.Z` triggers both PyPI publish AND Space sync
 - The Space always tracks the same version as the published package
@@ -293,16 +293,16 @@ spaces/
 ├── _template/
 │   ├── app.py            # Template for new Spaces (copy and modify)
 │   └── README.md         # Template for HF Space card
-├── assgen.audio.sfx.generate/
+├── AssetGen.audio.sfx.generate/
 │   ├── app.py
 │   └── README.md
-├── assgen.audio.music.compose/
+├── AssetGen.audio.music.compose/
 │   ├── app.py
 │   └── README.md
-├── assgen.audio.voice.tts/
+├── AssetGen.audio.voice.tts/
 │   ├── app.py
 │   └── README.md
-├── assgen.concept.generate/
+├── AssetGen.concept.generate/
 │   ├── app.py
 │   └── README.md
 ... (one directory per Space)
@@ -319,16 +319,16 @@ dynamically by the sync workflow (see Section 5) because they differ by Space ha
 
 ```python
 """
-assgen.<domain>.<command> — HuggingFace Space
+AssetGen.<domain>.<command> — HuggingFace Space
 <one-line description>
 
-CLI equivalent: assgen gen <domain> <command> [args]
+CLI equivalent: AssetGen gen <domain> <command> [args]
 """
 from __future__ import annotations
 
 import spaces
 import gradio as gr
-from assgen.sdk import run
+from AssetGen.sdk import run
 
 JOB_TYPE = "domain.subdomain.command"   # ← change this
 
@@ -339,11 +339,11 @@ def _run(param1: str, param2: float) -> str:
     return result["files"][0]   # or result["files"] for multiple outputs
 
 
-with gr.Blocks(title="assgen · <Title>") as demo:
+with gr.Blocks(title="AssetGen · <Title>") as demo:
     gr.Markdown(
-        "# assgen · <Title>\n"
+        "# AssetGen · <Title>\n"
         "<Short description of what this Space demonstrates.>\n"
-        "Part of the [assgen](https://github.com/aallbrig/assgen) pipeline."
+        "Part of the [AssetGen](https://github.com/aallbrig/AssetGen) pipeline."
     )
     with gr.Row():
         with gr.Column():
@@ -362,7 +362,7 @@ demo.launch()
 
 ```markdown
 ---
-title: "assgen · <Title>"
+title: "AssetGen · <Title>"
 emoji: 🎮
 colorFrom: purple
 colorTo: blue
@@ -374,18 +374,18 @@ license: apache-2.0
 hardware: zero-gpu        # or: cpu-basic
 tags:
   - game-assets
-  - assgen
+  - AssetGen
 short_description: <One-line description>
 ---
 
-# assgen · <Title>
+# AssetGen · <Title>
 
 <Description of what this Space does.>
 
-Part of the [assgen](https://github.com/aallbrig/assgen) game asset generation pipeline.
+Part of the [AssetGen](https://github.com/aallbrig/AssetGen) game asset generation pipeline.
 
 **Model:** [model-org/model-name](https://huggingface.co/model-org/model-name)
-**CLI equivalent:** `assgen gen <domain> <command>`
+**CLI equivalent:** `AssetGen gen <domain> <command>`
 ```
 
 ---
@@ -457,53 +457,53 @@ SPACES_DIR = REPO_ROOT / "spaces"
 
 # Spaces that need audiocraft (not on PyPI — requires git install)
 AUDIOCRAFT_SPACES = {
-    "assgen.audio.sfx.generate",
-    "assgen.audio.music.compose",
-    "assgen.audio.music.loop",
-    "assgen.audio.ambient.generate",
+    "AssetGen.audio.sfx.generate",
+    "AssetGen.audio.music.compose",
+    "AssetGen.audio.music.loop",
+    "AssetGen.audio.ambient.generate",
 }
 
 # Spaces that are CPU-only (no ZeroGPU needed)
 CPU_SPACES = {
-    "assgen.procedural.terrain.heightmap",
-    "assgen.mesh.validate",
-    "assgen.mesh.convert",
-    "assgen.mesh.bounds",
-    "assgen.mesh.center",
-    "assgen.mesh.scale",
-    "assgen.mesh.flipnormals",
-    "assgen.mesh.weld",
-    "assgen.texture.pbr",
-    "assgen.texture.channel_pack",
-    "assgen.texture.atlas_pack",
-    "assgen.texture.mipmap",
-    "assgen.texture.normalmap_convert",
-    "assgen.texture.seamless",
-    "assgen.texture.resize",
-    "assgen.texture.report",
-    "assgen.audio.process.normalize",
-    "assgen.audio.process.trim_silence",
-    "assgen.audio.process.convert",
-    "assgen.audio.process.downmix",
-    "assgen.audio.process.resample",
-    "assgen.audio.process.loop_optimize",
-    "assgen.audio.process.waveform",
-    "assgen.procedural.level.dungeon",
-    "assgen.procedural.texture.noise",
-    "assgen.procedural.level.voronoi",
-    "assgen.procedural.foliage.scatter",
-    "assgen.procedural.plant.lsystem",
-    "assgen.procedural.tileset.wfc",
-    "assgen.scene.physics.collider",
-    "assgen.lod.generate",
-    "assgen.uv.auto",
-    "assgen.sprite.pack",
+    "AssetGen.procedural.terrain.heightmap",
+    "AssetGen.mesh.validate",
+    "AssetGen.mesh.convert",
+    "AssetGen.mesh.bounds",
+    "AssetGen.mesh.center",
+    "AssetGen.mesh.scale",
+    "AssetGen.mesh.flipnormals",
+    "AssetGen.mesh.weld",
+    "AssetGen.texture.pbr",
+    "AssetGen.texture.channel_pack",
+    "AssetGen.texture.atlas_pack",
+    "AssetGen.texture.mipmap",
+    "AssetGen.texture.normalmap_convert",
+    "AssetGen.texture.seamless",
+    "AssetGen.texture.resize",
+    "AssetGen.texture.report",
+    "AssetGen.audio.process.normalize",
+    "AssetGen.audio.process.trim_silence",
+    "AssetGen.audio.process.convert",
+    "AssetGen.audio.process.downmix",
+    "AssetGen.audio.process.resample",
+    "AssetGen.audio.process.loop_optimize",
+    "AssetGen.audio.process.waveform",
+    "AssetGen.procedural.level.dungeon",
+    "AssetGen.procedural.texture.noise",
+    "AssetGen.procedural.level.voronoi",
+    "AssetGen.procedural.foliage.scatter",
+    "AssetGen.procedural.plant.lsystem",
+    "AssetGen.procedural.tileset.wfc",
+    "AssetGen.scene.physics.collider",
+    "AssetGen.lod.generate",
+    "AssetGen.uv.auto",
+    "AssetGen.sprite.pack",
 }
 
 
 def make_requirements(space_name: str, version: str) -> str:
     """Generate requirements.txt content for a Space."""
-    lines = [f"assgen[spaces]=={version}"]
+    lines = [f"AssetGen[spaces]=={version}"]
     if space_name in AUDIOCRAFT_SPACES:
         lines.append(
             "audiocraft @ git+https://github.com/facebookresearch/audiocraft.git"
@@ -550,7 +550,7 @@ def sync_space(space_name: str, version: str) -> None:
                 folder_path=str(tmp_path),
                 repo_id=space_name,
                 repo_type="space",
-                commit_message=f"assgen {version}",
+                commit_message=f"AssetGen {version}",
             )
             print(f"  OK    {space_name}")
         except Exception as exc:
@@ -559,7 +559,7 @@ def sync_space(space_name: str, version: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", required=True, help="assgen version tag, e.g. v0.2.0")
+    parser.add_argument("--version", required=True, help="AssetGen version tag, e.g. v0.2.0")
     parser.add_argument("--space", help="sync only this space (for manual use)")
     args = parser.parse_args()
 
@@ -573,7 +573,7 @@ def main() -> None:
             if d.is_dir() and not d.name.startswith("_")
         )
 
-    print(f"Syncing {len(spaces)} space(s) — assgen {version}")
+    print(f"Syncing {len(spaces)} space(s) — AssetGen {version}")
     for space_name in spaces:
         sync_space(space_name, version)
 
@@ -587,23 +587,23 @@ if __name__ == "__main__":
 **Manual sync (for testing before a full release):**
 ```bash
 # Push a single Space without a tag
-python scripts/sync_spaces.py --version 0.2.0 --space assgen.audio.sfx.generate
+python scripts/sync_spaces.py --version 0.2.0 --space AssetGen.audio.sfx.generate
 ```
 
 ---
 
 ## 6. What Each Tier 1 Space `app.py` Now Looks Like
 
-With `assgen.sdk.run()`, every Space `app.py` follows the same ~35-line pattern.
+With `AssetGen.sdk.run()`, every Space `app.py` follows the same ~35-line pattern.
 The Tier 1 spec (`20260411_120100_UTC_hf_spaces_spec_tier1.md`) is updated to reflect this.
 
-Example — `assgen.audio.sfx.generate/app.py`:
+Example — `AssetGen.audio.sfx.generate/app.py`:
 ```python
-"""assgen.audio.sfx.generate — HuggingFace Space"""
+"""AssetGen.audio.sfx.generate — HuggingFace Space"""
 from __future__ import annotations
 import spaces
 import gradio as gr
-from assgen.sdk import run
+from AssetGen.sdk import run
 
 @spaces.GPU
 def generate_sfx(description: str, duration: float) -> str:
@@ -614,11 +614,11 @@ def generate_sfx(description: str, duration: float) -> str:
     )
     return result["files"][0]
 
-with gr.Blocks(title="assgen · Audio SFX Generator") as demo:
+with gr.Blocks(title="AssetGen · Audio SFX Generator") as demo:
     gr.Markdown(
-        "# 🔊 assgen · Audio SFX Generator\n"
+        "# 🔊 AssetGen · Audio SFX Generator\n"
         "Generate game sound effects from text. "
-        "Part of the [assgen](https://github.com/aallbrig/assgen) pipeline."
+        "Part of the [AssetGen](https://github.com/aallbrig/AssetGen) pipeline."
     )
     with gr.Row():
         with gr.Column():
@@ -643,7 +643,7 @@ demo.launch()
 
 `requirements.txt` (generated by `sync_spaces.py`, not stored in repo):
 ```
-assgen[spaces]==0.2.0
+AssetGen[spaces]==0.2.0
 audiocraft @ git+https://github.com/facebookresearch/audiocraft.git
 ```
 
@@ -656,14 +656,14 @@ In order of dependency:
 | # | Task | File(s) | Notes |
 |---|------|---------|-------|
 | 1 | Add PyPI publish step | `.github/workflows/release.yml` | After `hatch build`, before `Build docs site` |
-| 2 | Create `assgen.sdk` module | `src/assgen/sdk.py` | ~85 lines per spec above |
+| 2 | Create `AssetGen.sdk` module | `src/AssetGen/sdk.py` | ~85 lines per spec above |
 | 3 | Add `[spaces]` extra | `pyproject.toml` | New optional-dependencies section |
 | 4 | Create `spaces/` directory | `spaces/` | Copy template, then implement Tier 1 first |
 | 5 | Create `scripts/sync_spaces.py` | `scripts/sync_spaces.py` | Per spec above |
 | 6 | Add `spaces-sync` job | `.github/workflows/release.yml` | After `release` job |
 | 7 | Add `HF_TOKEN` secret | GitHub repo Settings → Secrets | Manual — cannot be automated |
-| 8 | Implement Tier 1 Spaces | `spaces/assgen.*/app.py` + `README.md` | Using SDK pattern |
-| 9 | Test single Space sync | `python scripts/sync_spaces.py --space assgen.audio.sfx.generate` | Before full release |
+| 8 | Implement Tier 1 Spaces | `spaces/AssetGen.*/app.py` + `README.md` | Using SDK pattern |
+| 9 | Test single Space sync | `python scripts/sync_spaces.py --space AssetGen.audio.sfx.generate` | Before full release |
 | 10 | Tag and release | `git tag v0.X.Y && git push --tags` | Full release pipeline fires |
 
 Tasks 1–3 are source changes that require tests and PR review before merging.

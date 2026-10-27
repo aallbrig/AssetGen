@@ -1,6 +1,6 @@
 # Configuration
 
-`assgen` uses plain YAML files stored under `~/.config/assgen/`.  All settings
+`AssetGen` uses plain YAML files stored under `~/.config/AssetGen/`.  All settings
 have sane defaults so the tool works out-of-the-box without any manual
 configuration.
 
@@ -10,9 +10,9 @@ configuration.
 
 | File | Who reads it | Purpose |
 |------|--------------|---------|
-| `~/.config/assgen/server.yaml` | `assgen-server` | Server behaviour, model allow-list |
-| `~/.config/assgen/client.yaml` | `assgen` (client) | Server URL, output preferences |
-| `~/.config/assgen/models.yaml` | Both | Override the built-in model catalog |
+| `~/.config/AssetGen/server.yaml` | `AssetGen-server` | Server behaviour, model allow-list |
+| `~/.config/AssetGen/client.yaml` | `AssetGen` (client) | Server URL, output preferences |
+| `~/.config/AssetGen/models.yaml` | Both | Override the built-in model catalog |
 
 ---
 
@@ -36,9 +36,9 @@ skip_model_validation: false
 Manage with:
 
 ```bash
-assgen server config show
-assgen server config set allow_list '["stabilityai/TripoSR"]'
-assgen server config set skip_model_validation true
+AssetGen server config show
+AssetGen server config set allow_list '["stabilityai/TripoSR"]'
+AssetGen server config set skip_model_validation true
 ```
 
 ---
@@ -53,8 +53,8 @@ output_dir: "."        # Default output directory for generated files
 Manage with:
 
 ```bash
-assgen client config show
-assgen client config set server_url "http://192.168.1.50:8742"
+AssetGen client config show
+AssetGen client config set server_url "http://192.168.1.50:8742"
 ```
 
 Setting `server_url` to a remote address means the client will never
@@ -79,7 +79,7 @@ catalog:
     task: "text-to-audio"
 ```
 
-Keys must exactly match a built-in job type (run `assgen tasks` for the full
+Keys must exactly match a built-in job type (run `AssetGen tasks` for the full
 list).  After editing, restart the server — the catalog is loaded at startup.
 
 ---
@@ -88,7 +88,7 @@ list).  After editing, restart the server — the catalog is loaded at startup.
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `ASSGEN_CONFIG_DIR` | `~/.config/assgen` | Override the config directory |
-| `ASSGEN_DATA_DIR` | `~/.local/share/assgen` | Override the model cache root |
-| `ASSGEN_SERVER_URL` | *(from client.yaml)* | Runtime server URL override |
-| `ASSGEN_LOG_LEVEL` | `INFO` | Logging verbosity |
+| `ASSETGEN_CONFIG_DIR` | `~/.config/AssetGen` | Override the config directory |
+| `ASSETGEN_DATA_DIR` | `~/.local/share/AssetGen` | Override the model cache root |
+| `ASSETGEN_SERVER_URL` | *(from client.yaml)* | Runtime server URL override |
+| `ASSETGEN_LOG_LEVEL` | `INFO` | Logging verbosity |

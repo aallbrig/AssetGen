@@ -20,8 +20,8 @@ End-to-end NPC character pipeline:
 ## Prerequisites
 
 ```bash
-pip install "assgen[inference]"
-assgen server status   # confirm CUDA device is visible
+pip install "AssetGen[inference]"
+AssetGen server status   # confirm CUDA device is visible
 ```
 
 ---
@@ -32,7 +32,7 @@ A front/back/side reference sheet gives the image-to-3D model the geometry cues 
 Do not skip this — text-to-3D for bipedal characters is unreliable.
 
 ```bash
-assgen gen visual concept generate \
+AssetGen gen visual concept generate \
   --prompt "elf ranger NPC, full body character sheet, front back side views, white background, clean line art, fantasy RPG style" \
   --wait
 ```
@@ -49,7 +49,7 @@ If unsatisfied, tweak the prompt and regenerate (takes ~1 minute).
 ## Step 2 — Image-to-3D mesh
 
 ```bash
-assgen gen visual model create \
+AssetGen gen visual model create \
   --input concept_<id>.png \
   --wait
 ```
@@ -81,7 +81,7 @@ Output: `model_<id>.glb`
 ## Step 3 — Auto-rig
 
 ```bash
-assgen gen visual rig auto \
+AssetGen gen visual rig auto \
   --input model_<id>.glb \
   --skeleton humanoid \
   --wait
@@ -111,7 +111,7 @@ Output: `rig_<id>.glb` — mesh + skeleton + skin weights.
     the rig looks plausible before investing in mocap or hand-keyed animation.
 
 ```bash
-assgen gen visual animate keyframe \
+AssetGen gen visual animate keyframe \
   --input rig_<id>.glb \
   --prompt "looping idle animation, breathing, weight shift, natural" \
   --wait
@@ -129,7 +129,7 @@ or a dedicated animation tool like Cascadeur or Mixamo.
 If you have a short reference video of the motion you want:
 
 ```bash
-assgen gen visual animate mocap \
+AssetGen gen visual animate mocap \
   --input reference_walk.mp4 \
   --wait
 ```
@@ -140,7 +140,7 @@ Output: `mocap_<id>.bvh` — a BVH motion file.
 
 1. Import the `.bvh` via the Unity Package Manager BVH importer, or use the
    **BVH Importer** asset from the Unity Asset Store (free)
-2. Set **Rig** → **Animation Type → Humanoid** and map to the assgen-generated skeleton
+2. Set **Rig** → **Animation Type → Humanoid** and map to the AssetGen-generated skeleton
 3. Drag animation clips onto your Animator Controller
 
 ---
@@ -153,20 +153,20 @@ set -e
 CHARACTER="elf ranger NPC, fantasy RPG"
 
 echo "→ Generating concept sheet..."
-CONCEPT=$(assgen gen visual concept generate \
+CONCEPT=$(AssetGen gen visual concept generate \
   --prompt "$CHARACTER, full body, front back side views, white background" \
   --wait --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Creating 3D mesh from concept..."
-MESH=$(assgen gen visual model create --input "$CONCEPT" --wait \
+MESH=$(AssetGen gen visual model create --input "$CONCEPT" --wait \
   --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Auto-rigging (humanoid)..."
-RIG=$(assgen gen visual rig auto --input "$MESH" --skeleton humanoid --wait \
+RIG=$(AssetGen gen visual rig auto --input "$MESH" --skeleton humanoid --wait \
   --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Preview animation..."
-assgen gen visual animate keyframe \
+AssetGen gen visual animate keyframe \
   --input "$RIG" --prompt "looping idle, breathing" --wait
 
 echo "✓ Done: $RIG"

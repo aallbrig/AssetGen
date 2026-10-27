@@ -17,7 +17,7 @@ spec (`20260411_120100_UTC_hf_spaces_spec_tier1.md`) — only the inference logi
 **Required for every new Space (including all Tier 2/3):** Follow the "New Space Checklist" in
 the Tier 1 spec. This includes adding a PyCharm run config by updating `SPACES` in
 `scripts/generate_run_configs.py` and running the script. Do not create a space without its
-corresponding `.idea/runConfigurations/space_assgen_<name>.xml`.
+corresponding `.idea/runConfigurations/space_AssetGen_<name>.xml`.
 
 > **`requirements.txt` blocks are for reference only — do NOT create them in the repo.**
 > Per the packaging decision in `20260411_120400_UTC_hf_spaces_packaging_and_sdk.md` Section 4,
@@ -30,10 +30,10 @@ corresponding `.idea/runConfigurations/space_assgen_<name>.xml`.
 
 ## Tier 2 Spaces (17 Spaces)
 
-### T2-1: `assgen.audio.ambient.generate`
+### T2-1: `AssetGen.audio.ambient.generate`
 
 ```
-hf repo create assgen.audio.ambient.generate --repo-type space --space-sdk gradio
+hf repo create AssetGen.audio.ambient.generate --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/musicgen-stereo-large
 Package: audiocraft (same git install as Tier 1 audio spaces)
@@ -56,10 +56,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-2: `assgen.audio.voice.clone`
+### T2-2: `AssetGen.audio.voice.clone`
 
 ```
-hf repo create assgen.audio.voice.clone --repo-type space --space-sdk gradio
+hf repo create AssetGen.audio.voice.clone --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: coqui-ai/XTTS-v2
 Package: coqui-tts (TTS on PyPI)
@@ -98,10 +98,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-3: `assgen.audio.music.loop`
+### T2-3: `AssetGen.audio.music.loop`
 
 ```
-hf repo create assgen.audio.music.loop --repo-type space --space-sdk gradio
+hf repo create AssetGen.audio.music.loop --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/musicgen-medium
 Package: audiocraft (same as other audio spaces)
@@ -131,10 +131,10 @@ numpy>=1.26.0
 
 ---
 
-### T2-4: `assgen.model.multiview`
+### T2-4: `AssetGen.model.multiview`
 
 ```
-hf repo create assgen.model.multiview --repo-type space --space-sdk gradio
+hf repo create AssetGen.model.multiview --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: sudo-ai/zero123plus
 Package: diffusers>=0.28.0
@@ -170,10 +170,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-5: `assgen.model.splat`
+### T2-5: `AssetGen.model.splat`
 
 ```
-hf repo create assgen.model.splat --repo-type space --space-sdk gradio
+hf repo create AssetGen.model.splat --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: stabilityai/TripoSR
 Package: tsr (TripoSR package from GitHub)
@@ -213,10 +213,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-6: `assgen.rig.auto`
+### T2-6: `AssetGen.rig.auto`
 
 ```
-hf repo create assgen.rig.auto --repo-type space --space-sdk gradio
+hf repo create AssetGen.rig.auto --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: VAST-AI/UniRig
 Package: unicore / unirig (custom, check model card)
@@ -228,10 +228,10 @@ Package: unicore / unirig (custom, check model card)
 **Notes:**
 - UniRig (`VAST-AI/UniRig`) is a research model. Check the model card at
   `https://huggingface.co/VAST-AI/UniRig` for the official installation and inference API.
-  The implementation details may differ from what assgen's handler assumes.
+  The implementation details may differ from what AssetGen's handler assumes.
 - If UniRig requires a custom conda environment or compiled extensions that pip cannot install,
   this Space may need to be demoted to "infeasible until packaging improves."
-- Fallback: show a note in the UI saying "UniRig requires additional setup — use assgen CLI."
+- Fallback: show a note in the UI saying "UniRig requires additional setup — use AssetGen CLI."
 - The `gr.Model3D` component can display the rigged GLB (bones are not visible in the viewer,
   but the skinned mesh will load correctly).
 
@@ -246,10 +246,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-7: `assgen.animate.keyframe`
+### T2-7: `AssetGen.animate.keyframe`
 
 ```
-hf repo create assgen.animate.keyframe --repo-type space --space-sdk gradio
+hf repo create AssetGen.animate.keyframe --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: guoyww/animatediff-motion-adapter-v1-5-2 + stabilityai/stable-diffusion-v1-5
 Package: diffusers>=0.28.0
@@ -294,10 +294,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-8: `assgen.animate.mocap`
+### T2-8: `AssetGen.animate.mocap`
 
 ```
-hf repo create assgen.animate.mocap --repo-type space --space-sdk gradio
+hf repo create AssetGen.animate.mocap --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/sapiens-pose-0.3b
 Package: transformers>=4.40.0
@@ -332,10 +332,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-9: `assgen.concept.style`
+### T2-9: `AssetGen.concept.style`
 
 ```
-hf repo create assgen.concept.style --repo-type space --space-sdk gradio
+hf repo create AssetGen.concept.style --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: h94/IP-Adapter + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0
@@ -373,10 +373,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-10: `assgen.texture.inpaint`
+### T2-10: `AssetGen.texture.inpaint`
 
 ```
-hf repo create assgen.texture.inpaint --repo-type space --space-sdk gradio
+hf repo create AssetGen.texture.inpaint --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: diffusers/stable-diffusion-xl-1.0-inpainting-0.1
 Package: diffusers>=0.28.0
@@ -415,27 +415,27 @@ gradio>=4.44.0
 
 ---
 
-### T2-11: `assgen.texture.from_concept`
+### T2-11: `AssetGen.texture.from_concept`
 
 ```
-hf repo create assgen.texture.from_concept --repo-type space --space-sdk gradio
+hf repo create AssetGen.texture.from_concept --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: h94/IP-Adapter + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0
 ```
 
-Same implementation as `assgen.concept.style` but with the texture suffix prompt engineering
-from `assgen.texture.generate` applied automatically.
+Same implementation as `AssetGen.concept.style` but with the texture suffix prompt engineering
+from `AssetGen.texture.generate` applied automatically.
 
 **UI Inputs:** `Image` (concept art reference), `Textbox` (surface/material description), `Slider` (style strength)
 **UI Output:** `Image` (tileable texture guided by the concept art style)
 
 ---
 
-### T2-12: `assgen.scene.lighting.hdri`
+### T2-12: `AssetGen.scene.lighting.hdri`
 
 ```
-hf repo create assgen.scene.lighting.hdri --repo-type space --space-sdk gradio
+hf repo create AssetGen.scene.lighting.hdri --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: Intel/ldm3d-pano
 Package: diffusers>=0.28.0
@@ -470,10 +470,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-13: `assgen.narrative.lore.generate`
+### T2-13: `AssetGen.narrative.lore.generate`
 
 ```
-hf repo create assgen.narrative.lore.generate --repo-type space --space-sdk gradio
+hf repo create AssetGen.narrative.lore.generate --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: microsoft/Phi-3.5-mini-instruct
 ```
@@ -485,17 +485,17 @@ Model: microsoft/Phi-3.5-mini-instruct
 
 **UI Output:** `Textbox` (generated lore text)
 
-**Notes:** Same model load pattern as `assgen.narrative.dialogue.npc`. System prompt:
+**Notes:** Same model load pattern as `AssetGen.narrative.dialogue.npc`. System prompt:
 > "You are a world-building writer creating rich game lore entries. Write immersive,
 > detailed lore that feels authentic to the setting. Use in-world terminology and avoid
 > generic fantasy/sci-fi tropes."
 
 ---
 
-### T2-14: `assgen.narrative.quest.design`
+### T2-14: `AssetGen.narrative.quest.design`
 
 ```
-hf repo create assgen.narrative.quest.design --repo-type space --space-sdk gradio
+hf repo create AssetGen.narrative.quest.design --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: microsoft/Phi-3.5-mini-instruct
 ```
@@ -509,10 +509,10 @@ Model: microsoft/Phi-3.5-mini-instruct
 
 ---
 
-### T2-15: `assgen.ui.icon`
+### T2-15: `AssetGen.ui.icon`
 
 ```
-hf repo create assgen.ui.icon --repo-type space --space-sdk gradio
+hf repo create AssetGen.ui.icon --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: stabilityai/stable-diffusion-xl-base-1.0
 ```
@@ -532,10 +532,10 @@ Model: stabilityai/stable-diffusion-xl-base-1.0
 
 ---
 
-### T2-16: `assgen.ui.mockup`
+### T2-16: `AssetGen.ui.mockup`
 
 ```
-hf repo create assgen.ui.mockup --repo-type space --space-sdk gradio
+hf repo create AssetGen.ui.mockup --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: diffusers/controlnet-canny-sdxl-1.0 + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0, controlnet_aux>=0.0.7
@@ -572,10 +572,10 @@ gradio>=4.44.0
 
 ---
 
-### T2-17: `assgen.procedural.level.dungeon`
+### T2-17: `AssetGen.procedural.level.dungeon`
 
 ```
-hf repo create assgen.procedural.level.dungeon --repo-type space --space-sdk gradio
+hf repo create AssetGen.procedural.level.dungeon --repo-type space --space-sdk gradio
 Hardware: cpu-basic
 Model: None (pure algorithmic)
 ```
@@ -621,13 +621,13 @@ For each Space below, the implementing agent should:
 
 | Space Name | CLI Command | Input | Output | Key Package | Notes |
 |-----------|-------------|-------|--------|-------------|-------|
-| `assgen.mesh.validate` | `visual mesh validate` | GLB/OBJ upload | Text report (watertight, normals, manifold, bounds) | `trimesh` | Use `trimesh.load()` + `mesh.is_watertight`, `mesh.is_volume`, `mesh.bounds` |
-| `assgen.mesh.convert` | `visual mesh convert` | GLB/OBJ/PLY/STL upload + format dropdown | Converted file download | `trimesh` | `trimesh.load()` then `mesh.export(output_path)` |
-| `assgen.mesh.bounds` | `visual mesh bounds` | Mesh upload | AABB min/max, OBB, bounding sphere (text + visual) | `trimesh` | Display as JSON; optionally render bounds wireframe |
-| `assgen.mesh.center` | `visual mesh center` | Mesh upload | Re-centered mesh download | `trimesh` | `mesh.apply_translation(-mesh.centroid)` |
-| `assgen.mesh.scale` | `visual mesh scale` | Mesh upload + scale factor slider | Scaled mesh download | `trimesh` | `mesh.apply_scale(factor)` |
-| `assgen.mesh.flipnormals` | `visual mesh flipnormals` | Mesh upload | Mesh with flipped normals download | `trimesh` | `mesh.invert()` |
-| `assgen.mesh.weld` | `visual mesh weld` | Mesh upload + tolerance slider | Welded mesh download + vert count delta | `trimesh` | `trimesh.smoothing.filter_mut_diffs(mesh, ...)` or `trimesh.repair.broken_faces()` |
+| `AssetGen.mesh.validate` | `visual mesh validate` | GLB/OBJ upload | Text report (watertight, normals, manifold, bounds) | `trimesh` | Use `trimesh.load()` + `mesh.is_watertight`, `mesh.is_volume`, `mesh.bounds` |
+| `AssetGen.mesh.convert` | `visual mesh convert` | GLB/OBJ/PLY/STL upload + format dropdown | Converted file download | `trimesh` | `trimesh.load()` then `mesh.export(output_path)` |
+| `AssetGen.mesh.bounds` | `visual mesh bounds` | Mesh upload | AABB min/max, OBB, bounding sphere (text + visual) | `trimesh` | Display as JSON; optionally render bounds wireframe |
+| `AssetGen.mesh.center` | `visual mesh center` | Mesh upload | Re-centered mesh download | `trimesh` | `mesh.apply_translation(-mesh.centroid)` |
+| `AssetGen.mesh.scale` | `visual mesh scale` | Mesh upload + scale factor slider | Scaled mesh download | `trimesh` | `mesh.apply_scale(factor)` |
+| `AssetGen.mesh.flipnormals` | `visual mesh flipnormals` | Mesh upload | Mesh with flipped normals download | `trimesh` | `mesh.invert()` |
+| `AssetGen.mesh.weld` | `visual mesh weld` | Mesh upload + tolerance slider | Welded mesh download + vert count delta | `trimesh` | `trimesh.smoothing.filter_mut_diffs(mesh, ...)` or `trimesh.repair.broken_faces()` |
 
 **requirements.txt for all mesh spaces:**
 ```
@@ -643,14 +643,14 @@ gradio>=4.44.0
 
 | Space Name | CLI Command | Input | Output | Notes |
 |-----------|-------------|-------|--------|-------|
-| `assgen.texture.pbr` | `visual texture pbr` | Albedo PNG | 4 images: albedo, normal, roughness, metallic | Derive normal via Sobel; roughness = inverted grayscale; metallic = threshold. Use Pillow + numpy. |
-| `assgen.texture.channel_pack` | `visual texture channel_pack` | 4 image uploads (R, G, B, A channels) | Packed RGBA PNG | `np.stack([r, g, b, a], axis=-1)` then Pillow |
-| `assgen.texture.atlas_pack` | `visual texture atlas_pack` | Multiple image uploads + grid size dropdown | Atlas PNG | Arrange images in NxM grid with Pillow |
-| `assgen.texture.mipmap` | `visual texture mipmap` | PNG upload | ZIP of mipmap chain (8 levels) | `image.resize(w//2, h//2, LANCZOS)` repeated |
-| `assgen.texture.normalmap_convert` | `visual texture normalmap_convert` | Normal map PNG + direction toggle (DX→GL / GL→DX) | Converted normal map | Flip G channel: `img[:,:,1] = 255 - img[:,:,1]` |
-| `assgen.texture.seamless` | `visual texture seamless` | PNG upload + blend width slider | Seamless-tiled PNG | Mirror edges and blend with original using alpha compositing |
-| `assgen.texture.resize` | `visual texture resize` | PNG upload + width/height sliders + snap-to-pow2 checkbox | Resized PNG | `image.resize((w, h), Image.LANCZOS)` |
-| `assgen.texture.report` | `visual texture report` | PNG upload | JSON report (size, channels, mode, estimated GPU VRAM at each mip) | PIL `image.info`, `image.mode`, compute VRAM as `w * h * channels * bytes_per_channel / 1024**2` |
+| `AssetGen.texture.pbr` | `visual texture pbr` | Albedo PNG | 4 images: albedo, normal, roughness, metallic | Derive normal via Sobel; roughness = inverted grayscale; metallic = threshold. Use Pillow + numpy. |
+| `AssetGen.texture.channel_pack` | `visual texture channel_pack` | 4 image uploads (R, G, B, A channels) | Packed RGBA PNG | `np.stack([r, g, b, a], axis=-1)` then Pillow |
+| `AssetGen.texture.atlas_pack` | `visual texture atlas_pack` | Multiple image uploads + grid size dropdown | Atlas PNG | Arrange images in NxM grid with Pillow |
+| `AssetGen.texture.mipmap` | `visual texture mipmap` | PNG upload | ZIP of mipmap chain (8 levels) | `image.resize(w//2, h//2, LANCZOS)` repeated |
+| `AssetGen.texture.normalmap_convert` | `visual texture normalmap_convert` | Normal map PNG + direction toggle (DX→GL / GL→DX) | Converted normal map | Flip G channel: `img[:,:,1] = 255 - img[:,:,1]` |
+| `AssetGen.texture.seamless` | `visual texture seamless` | PNG upload + blend width slider | Seamless-tiled PNG | Mirror edges and blend with original using alpha compositing |
+| `AssetGen.texture.resize` | `visual texture resize` | PNG upload + width/height sliders + snap-to-pow2 checkbox | Resized PNG | `image.resize((w, h), Image.LANCZOS)` |
+| `AssetGen.texture.report` | `visual texture report` | PNG upload | JSON report (size, channels, mode, estimated GPU VRAM at each mip) | PIL `image.info`, `image.mode`, compute VRAM as `w * h * channels * bytes_per_channel / 1024**2` |
 
 **requirements.txt for all texture utility spaces:**
 ```
@@ -671,13 +671,13 @@ ffmpeg
 
 | Space Name | CLI Command | Input | Output | Key Package |
 |-----------|-------------|-------|--------|-------------|
-| `assgen.audio.process.normalize` | `audio process normalize` | WAV/MP3 upload + target LUFS slider (-23 to -6) | Normalized WAV | `pydub`, `pyloudnorm` |
-| `assgen.audio.process.trim_silence` | `audio process trim_silence` | WAV upload + threshold slider | Trimmed WAV | `pydub` (`AudioSegment.strip_silence`) |
-| `assgen.audio.process.convert` | `audio process convert` | Audio upload + format dropdown (WAV/OGG/MP3/FLAC) | Converted file | `pydub` |
-| `assgen.audio.process.downmix` | `audio process downmix` | Stereo WAV + direction radio (stereo→mono / mono→stereo) | Remixed WAV | `pydub` |
-| `assgen.audio.process.resample` | `audio process resample` | WAV + target sample rate dropdown (22050/44100/48000) | Resampled WAV | `pydub` or `scipy.io.wavfile` + `scipy.signal.resample` |
-| `assgen.audio.process.loop_optimize` | `audio process loop_optimize` | WAV upload | WAV + loop point text (sample offsets for loop start/end) | `numpy`, `scipy` (zero-crossing search) |
-| `assgen.audio.process.waveform` | `audio process waveform` | WAV upload | Waveform PNG | `numpy`, `matplotlib` |
+| `AssetGen.audio.process.normalize` | `audio process normalize` | WAV/MP3 upload + target LUFS slider (-23 to -6) | Normalized WAV | `pydub`, `pyloudnorm` |
+| `AssetGen.audio.process.trim_silence` | `audio process trim_silence` | WAV upload + threshold slider | Trimmed WAV | `pydub` (`AudioSegment.strip_silence`) |
+| `AssetGen.audio.process.convert` | `audio process convert` | Audio upload + format dropdown (WAV/OGG/MP3/FLAC) | Converted file | `pydub` |
+| `AssetGen.audio.process.downmix` | `audio process downmix` | Stereo WAV + direction radio (stereo→mono / mono→stereo) | Remixed WAV | `pydub` |
+| `AssetGen.audio.process.resample` | `audio process resample` | WAV + target sample rate dropdown (22050/44100/48000) | Resampled WAV | `pydub` or `scipy.io.wavfile` + `scipy.signal.resample` |
+| `AssetGen.audio.process.loop_optimize` | `audio process loop_optimize` | WAV upload | WAV + loop point text (sample offsets for loop start/end) | `numpy`, `scipy` (zero-crossing search) |
+| `AssetGen.audio.process.waveform` | `audio process waveform` | WAV upload | Waveform PNG | `numpy`, `matplotlib` |
 
 **requirements.txt for audio process spaces:**
 ```
@@ -700,12 +700,12 @@ ffmpeg
 
 | Space Name | CLI Command | Input | Output | Notes |
 |-----------|-------------|-------|--------|-------|
-| `assgen.procedural.texture.noise` | `procedural texture noise` | Width/height sliders, noise type dropdown (Perlin/Worley/Value), scale, seed | PNG | Reuse noise functions from `assgen.procedural.terrain.heightmap` |
-| `assgen.procedural.level.voronoi` | `procedural level voronoi` | Width/height sliders, N points slider, colormap dropdown, seed | PNG (Voronoi diagram) | `scipy.spatial.Voronoi` → render with Pillow |
-| `assgen.procedural.foliage.scatter` | `procedural foliage scatter` | Area width/height, radius slider (minimum distance), seed | PNG scatter plot + CSV (x,y positions) | Poisson disk sampling with numpy |
-| `assgen.procedural.tileset.wfc` | `procedural tileset wfc` | Upload tileset PNG (NxN grid of tiles) + adjacency rules (auto-detect or manual) + output size | Generated map PNG | WFC is complex; start with auto-detected adjacency from tile edges |
-| `assgen.procedural.plant.lsystem` | `procedural plant lsystem` | L-system axiom text, rules (2–4 production rules), iterations slider, angle slider | PNG plant sketch | Turtle-style rendering with Pillow |
-| `assgen.scene.physics.collider` | `scene physics collider` | GLB/OBJ upload + convex hull count slider | Convex hull mesh(es) GLB download | `trimesh.decomposition.convex_decomposition()` (wraps V-HACD if available, falls back to `trimesh.convex_hull`) |
+| `AssetGen.procedural.texture.noise` | `procedural texture noise` | Width/height sliders, noise type dropdown (Perlin/Worley/Value), scale, seed | PNG | Reuse noise functions from `AssetGen.procedural.terrain.heightmap` |
+| `AssetGen.procedural.level.voronoi` | `procedural level voronoi` | Width/height sliders, N points slider, colormap dropdown, seed | PNG (Voronoi diagram) | `scipy.spatial.Voronoi` → render with Pillow |
+| `AssetGen.procedural.foliage.scatter` | `procedural foliage scatter` | Area width/height, radius slider (minimum distance), seed | PNG scatter plot + CSV (x,y positions) | Poisson disk sampling with numpy |
+| `AssetGen.procedural.tileset.wfc` | `procedural tileset wfc` | Upload tileset PNG (NxN grid of tiles) + adjacency rules (auto-detect or manual) + output size | Generated map PNG | WFC is complex; start with auto-detected adjacency from tile edges |
+| `AssetGen.procedural.plant.lsystem` | `procedural plant lsystem` | L-system axiom text, rules (2–4 production rules), iterations slider, angle slider | PNG plant sketch | Turtle-style rendering with Pillow |
+| `AssetGen.scene.physics.collider` | `scene physics collider` | GLB/OBJ upload + convex hull count slider | Convex hull mesh(es) GLB download | `trimesh.decomposition.convex_decomposition()` (wraps V-HACD if available, falls back to `trimesh.convex_hull`) |
 
 **requirements.txt for procedural spaces:**
 ```
@@ -723,12 +723,12 @@ gradio>=4.44.0
 
 | Space Name | CLI Command | Input | Output | Notes |
 |-----------|-------------|-------|--------|-------|
-| `assgen.lod.generate` | `visual lod generate` | GLB/OBJ upload + 3 target face-count sliders (LOD0/1/2) | 3 GLB files (LOD0, LOD1, LOD2) | `pyfqmr.Simplify` — `pip install pyfqmr` |
-| `assgen.uv.auto` | `visual uv auto` | GLB/OBJ upload | GLB with auto-unwrapped UVs download | `xatlas` Python bindings — `pip install xatlas` |
-| `assgen.vfx.particle` | `visual vfx particle` | Particle description Textbox + frame count + grid layout dropdown | PNG sprite sheet | SDXL (ZeroGPU) or pure Pillow for simple particles |
-| `assgen.sprite.pack` | `visual sprite pack` | Multiple PNG uploads + cell size dropdown | Sprite sheet PNG + JSON manifest | Pillow grid packing + JSON with frame rects |
-| `assgen.blockout.create` | `visual blockout create` | Text description of layout | Sketch-style overhead view PNG | SDXL with prompt prefix "top-down architect sketch, floor plan sketch, blueprint style" |
-| `assgen.animate.mocap` | `visual animate mocap` | Image or short video upload | Annotated image/video with pose skeleton overlay | Already covered in Tier 2 (T2-8) |
+| `AssetGen.lod.generate` | `visual lod generate` | GLB/OBJ upload + 3 target face-count sliders (LOD0/1/2) | 3 GLB files (LOD0, LOD1, LOD2) | `pyfqmr.Simplify` — `pip install pyfqmr` |
+| `AssetGen.uv.auto` | `visual uv auto` | GLB/OBJ upload | GLB with auto-unwrapped UVs download | `xatlas` Python bindings — `pip install xatlas` |
+| `AssetGen.vfx.particle` | `visual vfx particle` | Particle description Textbox + frame count + grid layout dropdown | PNG sprite sheet | SDXL (ZeroGPU) or pure Pillow for simple particles |
+| `AssetGen.sprite.pack` | `visual sprite pack` | Multiple PNG uploads + cell size dropdown | Sprite sheet PNG + JSON manifest | Pillow grid packing + JSON with frame rects |
+| `AssetGen.blockout.create` | `visual blockout create` | Text description of layout | Sketch-style overhead view PNG | SDXL with prompt prefix "top-down architect sketch, floor plan sketch, blueprint style" |
+| `AssetGen.animate.mocap` | `visual animate mocap` | Image or short video upload | Annotated image/video with pose skeleton overlay | Already covered in Tier 2 (T2-8) |
 
 **requirements.txt for LOD and UV spaces:**
 ```
@@ -743,19 +743,19 @@ gradio>=4.44.0
 
 ### UI Variation Spaces (7 Spaces)
 
-The following are all SDXL-based (ZeroGPU) variations on `assgen.concept.generate` and
-`assgen.ui.icon`. The implementation agent should copy the `assgen.concept.generate` app.py
+The following are all SDXL-based (ZeroGPU) variations on `AssetGen.concept.generate` and
+`AssetGen.ui.icon`. The implementation agent should copy the `AssetGen.concept.generate` app.py
 and modify only the system prompt prefix for each:
 
 | Space Name | Prompt Prefix to Prepend |
 |-----------|--------------------------|
-| `assgen.ui.button` | `"game UI button element, stylized, {style_preset}, isolated on transparent background,"` |
-| `assgen.ui.panel` | `"game UI panel/dialog box, {style_preset}, clean layout, game HUD element,"` |
-| `assgen.ui.widget` | `"single game UI widget/control element, {style_preset}, isolated,"` |
-| `assgen.ui.layout` | `"game UI screen layout wireframe, grid layout, {style_preset}, annotated design,"` |
-| `assgen.ui.iconset` | `"set of 6 matching game icons on a grid, {style_preset}, themed icon sheet,"` |
-| `assgen.ui.theme` | `"game UI theme style guide, color palette, {style_preset}, sample components,"` |
-| `assgen.ui.screen` | `"complete game screen/menu design, {style_preset}, full layout with all UI elements,"` |
+| `AssetGen.ui.button` | `"game UI button element, stylized, {style_preset}, isolated on transparent background,"` |
+| `AssetGen.ui.panel` | `"game UI panel/dialog box, {style_preset}, clean layout, game HUD element,"` |
+| `AssetGen.ui.widget` | `"single game UI widget/control element, {style_preset}, isolated,"` |
+| `AssetGen.ui.layout` | `"game UI screen layout wireframe, grid layout, {style_preset}, annotated design,"` |
+| `AssetGen.ui.iconset` | `"set of 6 matching game icons on a grid, {style_preset}, themed icon sheet,"` |
+| `AssetGen.ui.theme` | `"game UI theme style guide, color palette, {style_preset}, sample components,"` |
+| `AssetGen.ui.screen` | `"complete game screen/menu design, {style_preset}, full layout with all UI elements,"` |
 
 For all UI spaces, add a `style_preset` dropdown: Fantasy RPG | Sci-Fi | Minimalist | Retro Pixel | Horror | Cartoon.
 
@@ -777,8 +777,8 @@ These two Spaces are CPU-only and have low demo value, but can be useful as deve
 
 | Space Name | CLI Command | Input | Output | Notes |
 |-----------|-------------|-------|--------|-------|
-| `assgen.narrative.dialogue.validate` | `support narrative dialogue validate` | JSON text area (paste dialogue JSON) | Validation result (valid/invalid + error list) | `jsonschema` or custom assgen schema — import the schema from assgen or hardcode it |
-| `assgen.narrative.quest.validate` | `support narrative quest validate` | JSON text area (paste quest graph JSON) | DAG validation result (cycles, unreachable nodes) | `networkx` for graph analysis |
+| `AssetGen.narrative.dialogue.validate` | `support narrative dialogue validate` | JSON text area (paste dialogue JSON) | Validation result (valid/invalid + error list) | `jsonschema` or custom AssetGen schema — import the schema from AssetGen or hardcode it |
+| `AssetGen.narrative.quest.validate` | `support narrative quest validate` | JSON text area (paste quest graph JSON) | DAG validation result (cycles, unreachable nodes) | `networkx` for graph analysis |
 
 ---
 
@@ -790,87 +790,87 @@ set -e
 
 # Tier 2
 TIER2=(
-  "assgen.audio.ambient.generate"
-  "assgen.audio.voice.clone"
-  "assgen.audio.music.loop"
-  "assgen.model.multiview"
-  "assgen.model.splat"
-  "assgen.rig.auto"
-  "assgen.animate.keyframe"
-  "assgen.animate.mocap"
-  "assgen.concept.style"
-  "assgen.texture.inpaint"
-  "assgen.texture.from_concept"
-  "assgen.scene.lighting.hdri"
-  "assgen.narrative.lore.generate"
-  "assgen.narrative.quest.design"
-  "assgen.ui.icon"
-  "assgen.ui.mockup"
-  "assgen.procedural.level.dungeon"
+  "AssetGen.audio.ambient.generate"
+  "AssetGen.audio.voice.clone"
+  "AssetGen.audio.music.loop"
+  "AssetGen.model.multiview"
+  "AssetGen.model.splat"
+  "AssetGen.rig.auto"
+  "AssetGen.animate.keyframe"
+  "AssetGen.animate.mocap"
+  "AssetGen.concept.style"
+  "AssetGen.texture.inpaint"
+  "AssetGen.texture.from_concept"
+  "AssetGen.scene.lighting.hdri"
+  "AssetGen.narrative.lore.generate"
+  "AssetGen.narrative.quest.design"
+  "AssetGen.ui.icon"
+  "AssetGen.ui.mockup"
+  "AssetGen.procedural.level.dungeon"
 )
 
 # Tier 3 — mesh
 TIER3_MESH=(
-  "assgen.mesh.validate"
-  "assgen.mesh.convert"
-  "assgen.mesh.bounds"
-  "assgen.mesh.center"
-  "assgen.mesh.scale"
-  "assgen.mesh.flipnormals"
-  "assgen.mesh.weld"
+  "AssetGen.mesh.validate"
+  "AssetGen.mesh.convert"
+  "AssetGen.mesh.bounds"
+  "AssetGen.mesh.center"
+  "AssetGen.mesh.scale"
+  "AssetGen.mesh.flipnormals"
+  "AssetGen.mesh.weld"
 )
 
 # Tier 3 — texture utilities
 TIER3_TEXTURE=(
-  "assgen.texture.pbr"
-  "assgen.texture.channel_pack"
-  "assgen.texture.atlas_pack"
-  "assgen.texture.mipmap"
-  "assgen.texture.normalmap_convert"
-  "assgen.texture.seamless"
-  "assgen.texture.resize"
-  "assgen.texture.report"
+  "AssetGen.texture.pbr"
+  "AssetGen.texture.channel_pack"
+  "AssetGen.texture.atlas_pack"
+  "AssetGen.texture.mipmap"
+  "AssetGen.texture.normalmap_convert"
+  "AssetGen.texture.seamless"
+  "AssetGen.texture.resize"
+  "AssetGen.texture.report"
 )
 
 # Tier 3 — audio processing
 TIER3_AUDIO=(
-  "assgen.audio.process.normalize"
-  "assgen.audio.process.trim_silence"
-  "assgen.audio.process.convert"
-  "assgen.audio.process.downmix"
-  "assgen.audio.process.resample"
-  "assgen.audio.process.loop_optimize"
-  "assgen.audio.process.waveform"
+  "AssetGen.audio.process.normalize"
+  "AssetGen.audio.process.trim_silence"
+  "AssetGen.audio.process.convert"
+  "AssetGen.audio.process.downmix"
+  "AssetGen.audio.process.resample"
+  "AssetGen.audio.process.loop_optimize"
+  "AssetGen.audio.process.waveform"
 )
 
 # Tier 3 — procedural
 TIER3_PROC=(
-  "assgen.procedural.texture.noise"
-  "assgen.procedural.level.voronoi"
-  "assgen.procedural.foliage.scatter"
-  "assgen.procedural.tileset.wfc"
-  "assgen.procedural.plant.lsystem"
-  "assgen.scene.physics.collider"
+  "AssetGen.procedural.texture.noise"
+  "AssetGen.procedural.level.voronoi"
+  "AssetGen.procedural.foliage.scatter"
+  "AssetGen.procedural.tileset.wfc"
+  "AssetGen.procedural.plant.lsystem"
+  "AssetGen.scene.physics.collider"
 )
 
 # Tier 3 — visual utilities
 TIER3_VIS=(
-  "assgen.lod.generate"
-  "assgen.uv.auto"
-  "assgen.vfx.particle"
-  "assgen.sprite.pack"
-  "assgen.blockout.create"
+  "AssetGen.lod.generate"
+  "AssetGen.uv.auto"
+  "AssetGen.vfx.particle"
+  "AssetGen.sprite.pack"
+  "AssetGen.blockout.create"
 )
 
 # Tier 3 — UI variations
 TIER3_UI=(
-  "assgen.ui.button"
-  "assgen.ui.panel"
-  "assgen.ui.widget"
-  "assgen.ui.layout"
-  "assgen.ui.iconset"
-  "assgen.ui.theme"
-  "assgen.ui.screen"
+  "AssetGen.ui.button"
+  "AssetGen.ui.panel"
+  "AssetGen.ui.widget"
+  "AssetGen.ui.layout"
+  "AssetGen.ui.iconset"
+  "AssetGen.ui.theme"
+  "AssetGen.ui.screen"
 )
 
 ALL=(
