@@ -109,7 +109,7 @@ def _iter_leaf_commands(
         if cmd is None:
             continue
         path = prefix + [name]
-        if isinstance(cmd, click.Group) and max_depth > 0:
+        if hasattr(cmd, "list_commands") and max_depth > 0:
             yield from _iter_leaf_commands(cmd, path, max_depth - 1)
         else:
             yield path, cmd
@@ -300,7 +300,7 @@ def main() -> None:
 
     gen_ctx = click.Context(root_click)  # type: ignore[arg-type]
     gen_group = root_click.get_command(gen_ctx, "gen")  # type: ignore[arg-type]
-    if gen_group is None or not isinstance(gen_group, click.Group):
+    if gen_group is None or not hasattr(gen_group, "list_commands"):
         return
 
     domain_commands: dict[str, list[dict]] = {}
@@ -308,7 +308,7 @@ def main() -> None:
 
     for domain_name in gen_group.list_commands(gen_inner_ctx):
         domain_cmd = gen_group.get_command(gen_inner_ctx, domain_name)
-        if domain_cmd is None or not isinstance(domain_cmd, click.Group):
+        if domain_cmd is None or not hasattr(domain_cmd, "list_commands"):
             continue
 
         cmds_for_domain: list[dict] = []
