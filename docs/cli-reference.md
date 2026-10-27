@@ -8,7 +8,7 @@ reflected here on the next docs build.
 ## AssetGen
 
 ::: mkdocs-typer
-    :module: AssetGen.client.cli
+    :module: assetgen.client.cli
     :command: app
     :prog_name: AssetGen
     :depth: 0

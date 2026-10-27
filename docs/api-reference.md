@@ -13,7 +13,7 @@ code — no separate doc-maintenance required.
 Job-type → HuggingFace model ID mapping.  Users can override entries in
 `~/.config/AssetGen/models.yaml`.
 
-::: AssetGen.catalog
+::: assetgen.catalog
     options:
       members:
         - load_catalog
@@ -27,7 +27,7 @@ Job-type → HuggingFace model ID mapping.  Users can override entries in
 
 SQLite persistence layer for jobs, models, and usage records.
 
-::: AssetGen.db
+::: assetgen.db
     options:
       members:
         - JobStatus
@@ -48,7 +48,7 @@ SQLite persistence layer for jobs, models, and usage records.
 
 Platform-aware config directory resolution and YAML load/save helpers.
 
-::: AssetGen.config
+::: assetgen.config
     options:
       members:
         - get_config_dir
@@ -65,7 +65,7 @@ Platform-aware config directory resolution and YAML load/save helpers.
 
 Downloads, caches, and tracks HuggingFace models on the server side.
 
-::: AssetGen.server.model_manager
+::: assetgen.server.model_manager
     options:
       members:
         - ModelManager
@@ -77,7 +77,7 @@ Downloads, caches, and tracks HuggingFace models on the server side.
 
 Allow-list enforcement and model↔task compatibility checks.
 
-::: AssetGen.server.validation
+::: assetgen.server.validation
     options:
       members:
         - TASK_COMPATIBLE_TAGS
@@ -90,7 +90,7 @@ Allow-list enforcement and model↔task compatibility checks.
 
 ## Version
 
-::: AssetGen.version
+::: assetgen.version
     options:
       members:
         - get_version_info
