@@ -1,6 +1,6 @@
-# assgen Personas
+# assetgen Personas
 
-These personas represent the primary users of assgen.  They are used to:
+These personas represent the primary users of assetgen.  They are used to:
 
 - Prioritise which tasks belong in the catalog
 - Evaluate whether a CLI command makes sense
@@ -21,22 +21,22 @@ They have a mid-range GPU (RTX 3060) and know enough Python to edit a YAML file.
 **Project**: a 3D dungeon-crawler with hand-crafted levels but AI-generated props,
 textures, and music.
 
-**Primary assgen workflows**
+**Primary assetgen workflows**
 
 | Step | Command |
 |---|---|
-| Sketch a concept for a new prop | `assgen gen visual concept generate --prompt "rusty iron brazier, medieval"` |
-| Turn that concept into a 3D mesh | `assgen gen visual model create --prompt "rusty iron brazier" --wait` |
-| Generate a PBR texture set for it | `assgen gen visual texture generate --prompt "rusty iron, PBR diffuse sheet" --wait` |
-| Compose a 30-second looping dungeon theme | `assgen gen audio music loop --prompt "dark dungeon ambience, low strings, eerie" --wait` |
-| Quickly voice an NPC placeholder line | `assgen gen audio voice tts "The dungeon claims all who enter." --wait` |
+| Sketch a concept for a new prop | `assetgen gen visual concept generate --prompt "rusty iron brazier, medieval"` |
+| Turn that concept into a 3D mesh | `assetgen gen visual model create --prompt "rusty iron brazier" --wait` |
+| Generate a PBR texture set for it | `assetgen gen visual texture generate --prompt "rusty iron, PBR diffuse sheet" --wait` |
+| Compose a 30-second looping dungeon theme | `assetgen gen audio music loop --prompt "dark dungeon ambience, low strings, eerie" --wait` |
+| Quickly voice an NPC placeholder line | `assetgen gen audio voice tts "The dungeon claims all who enter." --wait` |
 
 **Pain points**
 - Waiting 10 minutes per asset kills flow; wants `--wait` to stream progress, not block silently
 - Needs `.glb` output they can drag straight into Godot
 - Music must loop seamlessly; a 10-second clip is useless
 
-**Acceptance criteria for assgen**
+**Acceptance criteria for assetgen**
 - A prop, texture, and 30-second loop generated in a single lunch break
 - Zero manual post-processing required to import into Godot
 
@@ -53,26 +53,26 @@ textures, and hundreds of environmental props (rocks, stumps, crates).
 
 **Project**: a procedurally generated post-apocalyptic world with biome-specific assets.
 
-**Primary assgen workflows**
+**Primary assetgen workflows**
 
 | Step | Command |
 |---|---|
-| Generate concept art for a biome | `assgen gen visual concept generate --prompt "overgrown highway, post-apocalyptic, foggy"` |
-| Create a 360° sky/HDRI for a scene | `assgen gen scene lighting hdri --prompt "stormy industrial skyline at dusk" --wait` |
-| Generate seamless ground texture | `assgen gen visual texture generate --prompt "cracked asphalt, seamless, 4K" --wait` |
-| Fix a seam in a generated texture | `assgen gen visual texture inpaint --input crack.png --mask seam_mask.png --wait` |
-| Estimate depth from a reference photo | `assgen gen scene depth estimate --input reference.jpg --wait` |
+| Generate concept art for a biome | `assetgen gen visual concept generate --prompt "overgrown highway, post-apocalyptic, foggy"` |
+| Create a 360° sky/HDRI for a scene | `assetgen gen scene lighting hdri --prompt "stormy industrial skyline at dusk" --wait` |
+| Generate seamless ground texture | `assetgen gen visual texture generate --prompt "cracked asphalt, seamless, 4K" --wait` |
+| Fix a seam in a generated texture | `assetgen gen visual texture inpaint --input crack.png --mask seam_mask.png --wait` |
+| Estimate depth from a reference photo | `assetgen gen scene depth estimate --input reference.jpg --wait` |
 
 **Pain points**
 - Tiling artefacts in AI-generated textures are a productivity blocker — inpainting is essential
 - HDRI generation quality is inconsistent; wants iterative prompting without re-running the whole pipeline
 - Props need LOD variants; no ML model exists yet for automatic LOD — wants a clear message that this is algorithmic
 
-**Acceptance criteria for assgen**
+**Acceptance criteria for assetgen**
 - Generates a full tileable PBR set (albedo, normal, roughness) from one prompt
 - HDRI output is equirectangular and importable in Unreal without conversion
 
-**Known gap**: automatic LOD generation is algorithmic (not ML); assgen should emit a
+**Known gap**: automatic LOD generation is algorithmic (not ML); assetgen should emit a
 helpful error pointing to Unreal's built-in decimation tools rather than silently failing.
 
 ---
@@ -88,15 +88,15 @@ multiple NPCs to ship each sprint and the rig + skin process takes days per char
 
 **Project**: a fantasy RPG with 40+ unique NPC character models.
 
-**Primary assgen workflows**
+**Primary assetgen workflows**
 
 | Step | Command |
 |---|---|
-| Generate front/back/side reference sheet | `assgen gen visual concept generate --prompt "elf ranger, full body, front back side views, white background"` |
-| Image-to-3D from approved concept | `assgen gen visual model create --input concept.png --wait` |
-| Auto-rig the generated mesh | `assgen gen visual rig auto --input character.glb --wait` |
-| Generate idle and walk animations | `assgen gen visual animate keyframe --input rigged.glb --prompt "looping idle, breathing" --wait` |
-| Extract pose from reference video | `assgen gen visual animate mocap --input reference.mp4 --wait` |
+| Generate front/back/side reference sheet | `assetgen gen visual concept generate --prompt "elf ranger, full body, front back side views, white background"` |
+| Image-to-3D from approved concept | `assetgen gen visual model create --input concept.png --wait` |
+| Auto-rig the generated mesh | `assetgen gen visual rig auto --input character.glb --wait` |
+| Generate idle and walk animations | `assetgen gen visual animate keyframe --input rigged.glb --prompt "looping idle, breathing" --wait` |
+| Extract pose from reference video | `assetgen gen visual animate mocap --input reference.mp4 --wait` |
 
 **Pain points**
 - Auto-rig quality varies by mesh complexity; needs clear error output when a mesh is
@@ -106,9 +106,9 @@ multiple NPCs to ship each sprint and the rig + skin process takes days per char
   the job type is `visual.model.create`
 - Animation BVH export format must be specified; Unity uses Humanoid rig conventions
 
-**Acceptance criteria for assgen**
+**Acceptance criteria for assetgen**
 - A rig + basic animation set in under 20 minutes for a human-proportioned character
-- `assgen gen visual rig auto` gives a clear error (not a 500) when the mesh has holes
+- `assetgen gen visual rig auto` gives a clear error (not a 500) when the mesh has holes
 
 **Known gap**: text-to-motion (generating BVH/FBX motion data from a text description like
 "character throws a punch") has no open, ungated HuggingFace model as of 2026-03.
@@ -128,15 +128,15 @@ adaptive music stems, ambient loops, and VO scratch tracks.
 
 **Project**: a sci-fi shooter with a reactive music system and full VO cast.
 
-**Primary assgen workflows**
+**Primary assetgen workflows**
 
 | Step | Command |
 |---|---|
-| Generate a laser SFX variant | `assgen gen audio sfx generate --prompt "plasma rifle shot, sci-fi, sharp crack" --wait` |
-| Compose a combat music loop | `assgen gen audio music loop --prompt "tense sci-fi combat, electronic drums, 120bpm" --wait` |
-| Generate ambient space station hum | `assgen gen audio ambient generate --prompt "deep space station ambience, low hum, metallic resonance" --wait` |
-| Record scratch VO for a villain | `assgen gen audio voice tts "Your species ends today." --voice villain --wait` |
-| Clone a director's voice for ADR | `assgen gen audio voice clone --input reference.wav --text "We need to retreat now." --wait` |
+| Generate a laser SFX variant | `assetgen gen audio sfx generate --prompt "plasma rifle shot, sci-fi, sharp crack" --wait` |
+| Compose a combat music loop | `assetgen gen audio music loop --prompt "tense sci-fi combat, electronic drums, 120bpm" --wait` |
+| Generate ambient space station hum | `assetgen gen audio ambient generate --prompt "deep space station ambience, low hum, metallic resonance" --wait` |
+| Record scratch VO for a villain | `assetgen gen audio voice tts "Your species ends today." --voice villain --wait` |
+| Clone a director's voice for ADR | `assetgen gen audio voice clone --input reference.wav --text "We need to retreat now." --wait` |
 
 **Pain points**
 - SFX clips are often too short (< 2 seconds) — needs `--duration` flag support
@@ -144,7 +144,7 @@ adaptive music stems, ambient loops, and VO scratch tracks.
 - Voice clone quality is acceptable for scratch tracks but not final VO — that is fine, just needs
   to be clearly communicated in `--help`
 
-**Acceptance criteria for assgen**
+**Acceptance criteria for assetgen**
 - Can generate 20 SFX variants for a weapon in under an hour  
 - Music loops are seamless at the loop point (no audible click)
 - `--wait` streams audio waveform progress, not just a spinner
@@ -163,27 +163,27 @@ goes fully public.
 **Background**  
 Casey is a technical artist at a large studio (100+ people) responsible for the asset pipeline:
 automated import, validation, LOD generation, lightmap baking, and CI integration.
-They run assgen as part of their CI/CD system (GitHub Actions), not interactively.
+They run assetgen as part of their CI/CD system (GitHub Actions), not interactively.
 
 **Project**: automating a Unity asset pipeline for a live-service mobile game.
 
-**Primary assgen workflows**
+**Primary assetgen workflows**
 
 ```bash
 # In CI — validate every asset in a PR
-assgen qa validate assets/ --checks normals,uvs,manifold --strict
+assetgen qa validate assets/ --checks normals,uvs,manifold --strict
 
 # Generate NPC dialogue for a quest (LLM)
-assgen gen support narrative dialog "grizzled blacksmith" \
+assetgen gen support narrative dialog "grizzled blacksmith" \
     --context "player has just saved the village" \
     --lines 8 --branching
 
 # Auto-generate lore for a new region
-assgen gen support narrative lore "The Ashfield Wastes" \
+assetgen gen support narrative lore "The Ashfield Wastes" \
     --format codex --length 400
 
 # Export all assets in a directory to Unreal-compatible format
-assgen gen pipeline integrate export --input assets/ --engine unreal --wait
+assetgen gen pipeline integrate export --input assets/ --engine unreal --wait
 ```
 
 **Pain points**
@@ -193,7 +193,7 @@ assgen gen pipeline integrate export --input assets/ --engine unreal --wait
 - The allow_list in server.yaml is essential: Casey can't have developers downloading
   arbitrary multi-GB models in CI
 
-**Acceptance criteria for assgen**
+**Acceptance criteria for assetgen**
 - Every command exits with code 0 (success) or non-zero (failure) — no ambiguous output
 - `--json` flag on all commands produces structured output parseable by `jq`
 - Server allow_list blocks unapproved models and logs a clear reason in JSON

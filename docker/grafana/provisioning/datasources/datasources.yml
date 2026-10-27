@@ -1,6 +1,6 @@
 # docker/grafana/provisioning/datasources/datasources.yml
 #
-# Auto-provision Prometheus, Loki, and Tempo datasources for the assgen
+# Auto-provision Prometheus, Loki, and Tempo datasources for the assetgen
 # local observability stack.
 
 apiVersion: 1

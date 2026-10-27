@@ -1,4 +1,4 @@
-# assgen server — CPU-only image
+# assetgen server — CPU-only image
 #
 # Suitable for: model downloading, job management, and CPU inference.
 # For GPU inference see Dockerfile.server-cuda.
@@ -6,10 +6,10 @@
 # Build:
 #   docker build -f docker/Dockerfile.server \
 #                --build-arg VERSION=$(git describe --tags --abbrev=0) \
-#                -t assgen-server .
+#                -t assetgen-server .
 #
 # Run:
-#   docker run -p 8432:8432 -v assgen-data:/root/.local/share/assgen assgen-server
+#   docker run -p 8432:8432 -v assetgen-data:/root/.local/share/assetgen assetgen-server
 
 # ── build stage ──────────────────────────────────────────────────────────────
 FROM python:3.12-slim AS builder
@@ -29,8 +29,8 @@ RUN hatch build -t wheel
 # ── runtime stage ─────────────────────────────────────────────────────────────
 FROM python:3.12-slim
 
-LABEL org.opencontainers.image.source="https://github.com/aallbrig/assgen"
-LABEL org.opencontainers.image.description="assgen server — AI game asset generation pipeline"
+LABEL org.opencontainers.image.source="https://github.com/aallbrig/assetgen"
+LABEL org.opencontainers.image.description="assetgen server — AI game asset generation pipeline"
 LABEL org.opencontainers.image.licenses="MIT"
 
 # libgomp1 is required by many ML/numpy extensions
@@ -42,10 +42,10 @@ COPY --from=builder /build/dist/*.whl /tmp/
 RUN pip install --no-cache-dir /tmp/*.whl && rm /tmp/*.whl
 
 # Persist model cache and job outputs
-VOLUME ["/root/.local/share/assgen"]
+VOLUME ["/root/.local/share/assetgen"]
 
 EXPOSE 8432
 
 # Default: run in foreground with structured JSON logs (ideal for container runtimes)
-ENTRYPOINT ["assgen-server"]
+ENTRYPOINT ["assetgen-server"]
 CMD ["start", "--host", "0.0.0.0", "--port", "8432", "--json-logs"]

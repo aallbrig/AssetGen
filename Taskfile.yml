@@ -4,7 +4,7 @@ vars:
   PYTHON: .venv/bin/python
   SRC: src/
   TESTS: tests/
-  SESSION: assgen
+  SESSION: assetgen
   SERVER_PORT: 8432
 
 tasks:
@@ -16,7 +16,7 @@ tasks:
       - |
         echo ""
         echo "=================================================="
-        echo "  assgen dev environment"
+        echo "  assetgen dev environment"
         echo "    server  http://localhost:{{.SERVER_PORT}}"
         echo "    swagger http://localhost:{{.SERVER_PORT}}/docs"
         echo "    redoc   http://localhost:{{.SERVER_PORT}}/redoc"
@@ -43,16 +43,16 @@ tasks:
               echo "  Killing existing session '{{.SESSION}}'..."
               tmux kill-session -t {{.SESSION}}
             fi
-            if .venv/bin/assgen-server status >/dev/null 2>&1; then
-              .venv/bin/assgen-server stop 2>/dev/null || true
+            if .venv/bin/assetgen-server status >/dev/null 2>&1; then
+              .venv/bin/assetgen-server stop 2>/dev/null || true
             fi
-            tmuxinator start -p .tmuxinator/assgen.yml
+            tmuxinator start -p .tmuxinator/assetgen.yml
           fi
           echo ""
           echo "  Session '{{.SESSION}}' — window layout:"
           echo "    window 0 (dev)"
-          echo "      pane 0  serve   assgen server  http://localhost:{{.SERVER_PORT}}"
-          echo "      pane 1  shell   assgen CLI     ad-hoc commands"
+          echo "      pane 0  serve   assetgen server  http://localhost:{{.SERVER_PORT}}"
+          echo "      pane 1  shell   assetgen CLI     ad-hoc commands"
           echo "      pane 2  docs    mkdocs         http://localhost:8000"
           echo "    window 1 (obs)"
           echo "      pane 0  obs     LGTM stack     grafana http://localhost:3030"
@@ -61,13 +61,13 @@ tasks:
           echo "  Reattach any time:  task dev-attach"
           echo "  Capture pane logs:  task dev-logs | dev-logs-server | dev-logs-shell | dev-logs-docs"
           echo "  Open SwaggerUI:     task swagger"
-          echo "  Launch a space:     task space -- assgen.procedural.terrain.heightmap"
+          echo "  Launch a space:     task space -- assetgen.procedural.terrain.heightmap"
           echo "  Stop everything:    task dev-down"
           echo ""
         else
           echo "  tmuxinator not found — run each service in a separate terminal:"
           echo ""
-          echo "  1.  task serve   → assgen server on http://localhost:{{.SERVER_PORT}}"
+          echo "  1.  task serve   → assetgen server on http://localhost:{{.SERVER_PORT}}"
           echo "  2.  task docs    → mkdocs on http://localhost:8000"
           echo "  3.  task obs-start → observability stack (grafana http://localhost:3030)"
           echo ""
@@ -76,7 +76,7 @@ tasks:
         fi
 
   dev-down:
-    desc: "Stop the assgen dev environment (tmux session + server)"
+    desc: "Stop the assetgen dev environment (tmux session + server)"
     cmds:
       - |
         CURRENT_SESSION=$(tmux display-message -p '#S' 2>/dev/null || echo "")
@@ -88,14 +88,14 @@ tasks:
           echo "Killing tmux session '{{.SESSION}}'..."
           tmux kill-session -t {{.SESSION}}
         fi
-        if .venv/bin/assgen-server status >/dev/null 2>&1; then
-          echo "Stopping assgen server..."
-          .venv/bin/assgen-server stop 2>/dev/null || true
+        if .venv/bin/assetgen-server status >/dev/null 2>&1; then
+          echo "Stopping assetgen server..."
+          .venv/bin/assetgen-server stop 2>/dev/null || true
         fi
         echo "Dev environment stopped."
 
   dev-attach:
-    desc: "Reattach to the running assgen tmux session"
+    desc: "Reattach to the running assetgen tmux session"
     cmds:
       - |
         if ! tmux has-session -t {{.SESSION}} 2>/dev/null; then
@@ -125,7 +125,7 @@ tasks:
         done
 
   dev-logs-server:
-    desc: "Capture pane 0 (assgen server) output"
+    desc: "Capture pane 0 (assetgen server) output"
     cmds:
       - |
         tmux has-session -t {{.SESSION}} 2>/dev/null || { echo "Session '{{.SESSION}}' not found"; exit 1; }
@@ -166,7 +166,7 @@ tasks:
         echo "    Prometheus http://localhost:9092"
         echo "    Loki       http://localhost:3100"
         echo "    Tempo      http://localhost:3200"
-        echo "    OTLP HTTP  http://localhost:4318  ← assgen-server export target"
+        echo "    OTLP HTTP  http://localhost:4318  ← assetgen-server export target"
         echo ""
 
   obs-down:
@@ -205,7 +205,7 @@ tasks:
         ls spaces/ | grep -v '^_' | sed 's/^/  /'
 
   space:
-    desc: "Launch a single Gradio space locally (e.g. task space -- assgen.procedural.terrain.heightmap)"
+    desc: "Launch a single Gradio space locally (e.g. task space -- assetgen.procedural.terrain.heightmap)"
     cmds:
       - |
         NAME="{{.CLI_ARGS}}"
@@ -227,7 +227,7 @@ tasks:
     cmds:
       - |
         CPU_SPACES=(
-          assgen.procedural.terrain.heightmap
+          assetgen.procedural.terrain.heightmap
         )
         PORT=7860
         PIDS=()
@@ -245,7 +245,7 @@ tasks:
     desc: "One-time install of spaces dependencies (gradio + spaces extras)"
     cmds:
       - |
-        echo "Installing assgen[spaces] + gradio..."
+        echo "Installing assetgen[spaces] + gradio..."
         .venv/bin/pip install -e ".[spaces]" "gradio>=5.23.0" \
           "imageio>=2.34.0" "imageio-ffmpeg>=0.4.9" "rembg>=2.0.57"
         echo ""
@@ -389,13 +389,13 @@ tasks:
     desc: "Run unit tests with coverage report"
     cmds:
       - .venv/bin/pytest -v --tb=short -m "not integration and not slow and not gpu"
-          --cov={{.SRC}}assgen --cov-report=term-missing --cov-report=xml
+          --cov={{.SRC}}assetgen --cov-report=term-missing --cov-report=xml
 
   test-coverage-html:
     desc: "Run unit tests and open HTML coverage report"
     cmds:
       - .venv/bin/pytest --tb=short -m "not integration and not slow and not gpu"
-          --cov={{.SRC}}assgen --cov-report=html
+          --cov={{.SRC}}assetgen --cov-report=html
       - xdg-open htmlcov/index.html 2>/dev/null || open htmlcov/index.html 2>/dev/null || true
 
   # ─── OPENAPI ─────────────────────────────────────────────────────────────────
@@ -439,9 +439,9 @@ tasks:
   # ─── SERVER / MISC ───────────────────────────────────────────────────────────
 
   serve:
-    desc: "Start assgen server locally (debug mode)"
+    desc: "Start assetgen server locally (debug mode)"
     cmds:
-      - .venv/bin/assgen-server start --log-level debug
+      - .venv/bin/assetgen-server start --log-level debug
 
   clean:
     desc: "Remove build artifacts, caches, and coverage data"

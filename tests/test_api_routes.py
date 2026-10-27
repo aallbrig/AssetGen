@@ -17,7 +17,7 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 
-from assgen.server.app import create_app
+from assetgen.server.app import create_app
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -27,7 +27,7 @@ from assgen.server.app import create_app
 @pytest.fixture(scope="module")
 def tmp_db_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Return a path inside a temp directory for the test DB."""
-    return tmp_path_factory.mktemp("assgen_test") / "test.db"
+    return tmp_path_factory.mktemp("assetgen_test") / "test.db"
 
 
 @pytest.fixture(scope="module")
@@ -42,8 +42,8 @@ def client(tmp_db_path: Path) -> Generator[TestClient, None, None]:
     }
 
     # Patch the DB path so the server uses our temp file
-    with patch("assgen.db.get_db_path", return_value=tmp_db_path):
-        with patch("assgen.config.get_db_path", return_value=tmp_db_path):
+    with patch("assetgen.db.get_db_path", return_value=tmp_db_path):
+        with patch("assetgen.config.get_db_path", return_value=tmp_db_path):
             app = create_app(server_config=server_cfg)
             with TestClient(app, raise_server_exceptions=True) as tc:
                 yield tc
@@ -256,8 +256,8 @@ class TestAllowList:
             "allow_list": ["stabilityai/TripoSR"],
             "skip_model_validation": True,
         }
-        with patch("assgen.db.get_db_path", return_value=tmp_db_path):
-            with patch("assgen.config.get_db_path", return_value=tmp_db_path):
+        with patch("assetgen.db.get_db_path", return_value=tmp_db_path):
+            with patch("assetgen.config.get_db_path", return_value=tmp_db_path):
                 app = create_app(server_config=cfg)
                 with TestClient(app) as tc:
                     r = tc.post(
@@ -276,8 +276,8 @@ class TestAllowList:
             "allow_list": ["stabilityai/TripoSR"],
             "skip_model_validation": True,
         }
-        with patch("assgen.db.get_db_path", return_value=tmp_db_path):
-            with patch("assgen.config.get_db_path", return_value=tmp_db_path):
+        with patch("assetgen.db.get_db_path", return_value=tmp_db_path):
+            with patch("assetgen.config.get_db_path", return_value=tmp_db_path):
                 app = create_app(server_config=cfg)
                 with TestClient(app) as tc:
                     r = tc.post(
@@ -311,7 +311,7 @@ class TestJobFiles:
         """Create a job, manually set it COMPLETED, and write stub output files."""
         from unittest.mock import patch as _patch
 
-        from assgen.db import update_job_status
+        from assetgen.db import update_job_status
 
         # Enqueue a job
         r = client.post("/jobs", json={"job_type": "visual.model.create"})
@@ -325,7 +325,7 @@ class TestJobFiles:
             (job_out_dir / fname).write_text(f"stub content for {fname}")
 
         # Set the job to COMPLETED via direct DB update (bypass the worker)
-        with _patch("assgen.db.get_db_path"):
+        with _patch("assetgen.db.get_db_path"):
             conn = client.app.state.conn
             update_job_status(conn, job_id, "COMPLETED", output={"files": filenames})
 
@@ -337,7 +337,7 @@ class TestJobFiles:
         from unittest.mock import patch as _patch
 
         job_id, job_out_dir = self._make_completed_job(client, tmp_path, ["model.glb"])
-        with _patch("assgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
+        with _patch("assetgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
             r = client.get(f"/jobs/{job_id}/files")
         assert r.status_code == 200
         assert "model.glb" in r.json()
@@ -358,7 +358,7 @@ class TestJobFiles:
         from unittest.mock import patch as _patch
 
         job_id, job_out_dir = self._make_completed_job(client, tmp_path, ["mesh.glb"])
-        with _patch("assgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
+        with _patch("assetgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
             r = client.get(f"/jobs/{job_id}/files/mesh.glb")
         assert r.status_code == 200
         assert b"stub content" in r.content
@@ -367,7 +367,7 @@ class TestJobFiles:
         from unittest.mock import patch as _patch
 
         job_id, job_out_dir = self._make_completed_job(client, tmp_path, ["exists.txt"])
-        with _patch("assgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
+        with _patch("assetgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
             r = client.get(f"/jobs/{job_id}/files/does_not_exist.txt")
         assert r.status_code == 404
 
@@ -375,7 +375,7 @@ class TestJobFiles:
         from unittest.mock import patch as _patch
 
         job_id, job_out_dir = self._make_completed_job(client, tmp_path, ["x.txt"])
-        with _patch("assgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
+        with _patch("assetgen.server.routes.jobs.get_outputs_dir", return_value=tmp_path):
             r = client.get(f"/jobs/{job_id}/files/../secret")
         # FastAPI URL-decodes paths; the router should either 404 or 400
         assert r.status_code in (400, 404)
@@ -394,7 +394,7 @@ class TestJobEvents:
 
     def _make_terminal_job(self, client: TestClient, status: str = "COMPLETED") -> str:
         """Enqueue a job and immediately set it to the requested terminal state."""
-        from assgen.db import update_job_status
+        from assetgen.db import update_job_status
 
         r = client.post("/jobs", json={"job_type": "visual.model.create"})
         assert r.status_code == 201
@@ -456,7 +456,7 @@ class TestJobEvents:
 
     def test_events_emits_failed_event(self, client: TestClient) -> None:
         """A FAILED job emits a FAILED status event."""
-        from assgen.db import update_job_status
+        from assetgen.db import update_job_status
 
         r = client.post("/jobs", json={"job_type": "audio.sfx.generate"})
         job_id = r.json()["id"]

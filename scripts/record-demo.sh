@@ -21,7 +21,7 @@ for arg in "$@"; do
 done
 
 # ── Preflight ──
-for cmd in vhs ffmpeg assgen; do
+for cmd in vhs ffmpeg assetgen; do
   if ! command -v "$cmd" &>/dev/null; then
     echo "error: '$cmd' is not installed or not on \$PATH" >&2
     exit 1

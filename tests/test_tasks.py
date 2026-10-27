@@ -1,4 +1,4 @@
-"""Tests for assgen.client.commands.tasks — task tree completeness."""
+"""Tests for assetgen.client.commands.tasks — task tree completeness."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from __future__ import annotations
 def test_build_tree_returns_tree() -> None:
     from rich.tree import Tree
 
-    from assgen.client.commands.tasks import _build_tree
+    from assetgen.client.commands.tasks import _build_tree
 
     tree = _build_tree()
     assert isinstance(tree, Tree)
@@ -15,7 +15,7 @@ def test_build_tree_returns_tree() -> None:
 def test_build_tree_domain_filter() -> None:
     from rich.tree import Tree
 
-    from assgen.client.commands.tasks import _build_tree
+    from assetgen.client.commands.tasks import _build_tree
 
     for domain in ("visual", "audio", "scene", "pipeline", "support", "qa"):
         tree = _build_tree(domain)
@@ -23,7 +23,7 @@ def test_build_tree_domain_filter() -> None:
 
 
 def test_build_tree_unknown_domain_does_not_raise() -> None:
-    from assgen.client.commands.tasks import _build_tree
+    from assetgen.client.commands.tasks import _build_tree
 
     # Should print an error but not raise
     _build_tree("nonexistent_domain")
@@ -31,8 +31,8 @@ def test_build_tree_unknown_domain_does_not_raise() -> None:
 
 def test_all_catalog_job_types_have_descriptions() -> None:
     """Every job type in the default catalog should have a description entry."""
-    from assgen.catalog import load_catalog
-    from assgen.client.commands.tasks import _TASK_DESC
+    from assetgen.catalog import load_catalog
+    from assetgen.client.commands.tasks import _TASK_DESC
 
     catalog = load_catalog()
     missing = [jt for jt in catalog if jt not in _TASK_DESC]
@@ -41,7 +41,7 @@ def test_all_catalog_job_types_have_descriptions() -> None:
 
 def test_all_tree_job_types_covered() -> None:
     """Every leaf in _DOMAIN_TREE should have a description in _TASK_DESC."""
-    from assgen.client.commands.tasks import _DOMAIN_TREE, _TASK_DESC
+    from assetgen.client.commands.tasks import _DOMAIN_TREE, _TASK_DESC
 
     missing = []
     for domain, dspec in _DOMAIN_TREE.items():
@@ -65,7 +65,7 @@ def test_all_tree_job_types_covered() -> None:
 
 
 def test_domain_tree_has_icons_and_descs() -> None:
-    from assgen.client.commands.tasks import _DOMAIN_TREE
+    from assetgen.client.commands.tasks import _DOMAIN_TREE
 
     for domain, dspec in _DOMAIN_TREE.items():
         assert "_icon" in dspec, f"{domain}: missing _icon"
@@ -74,8 +74,8 @@ def test_domain_tree_has_icons_and_descs() -> None:
 
 def test_json_output_is_valid_list() -> None:
     """_build_tree doesn't test JSON — verify via the raw data structures."""
-    from assgen.catalog import load_catalog
-    from assgen.client.commands.tasks import _DOMAIN_TREE, _TASK_DESC
+    from assetgen.catalog import load_catalog
+    from assetgen.client.commands.tasks import _DOMAIN_TREE, _TASK_DESC
 
     catalog = load_catalog()
     out = []

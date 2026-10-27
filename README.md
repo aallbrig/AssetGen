@@ -1,55 +1,55 @@
-# assgen
+# assetgen
 
 AI-driven game asset generation pipeline — Kubernetes-style client/server architecture for 3D game development.
 
-[![CI](https://github.com/aallbrig/assgen/actions/workflows/ci.yml/badge.svg)](https://github.com/aallbrig/assgen/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/badge/docs-github.io-blue)](https://aallbrig.github.io/assgen/)
+[![CI](https://github.com/aallbrig/assetgen/actions/workflows/ci.yml/badge.svg)](https://github.com/aallbrig/assetgen/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/docs-github.io-blue)](https://aallbrig.github.io/assetgen/)
 
-📖 **[Full Documentation → aallbrig.github.io/assgen](https://aallbrig.github.io/assgen/)**
+📖 **[Full Documentation → aallbrig.github.io/assetgen](https://aallbrig.github.io/assetgen/)**
 
 ## Architecture
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│  assgen  (client CLI)                                      │
+│  assetgen  (client CLI)                                      │
 │  ├── visual model create --prompt "sword" --wait           │
 │  ├── audio sfx generate "laser blast" --wait              │
 │  └── jobs list / status / wait / cancel                   │
 └───────────────────┬───────────────────────────────────────┘
                     │ HTTP (REST)
 ┌───────────────────▼───────────────────────────────────────┐
-│  assgen-server                                             │
+│  assetgen-server                                             │
 │  ├── FastAPI REST API  (/jobs  /models  /health)          │
 │  ├── WorkerThread      (polls SQLite queue)               │
 │  ├── ModelManager      (HuggingFace Hub download/cache)   │
 │  └── Validation        (allow-list + HF tag check)        │
 └───────────────────┬───────────────────────────────────────┘
                     │
-         ~/.config/assgen/assgen.db   (SQLite)
-         ~/.local/share/assgen/models/  (model cache)
+         ~/.config/assetgen/assetgen.db   (SQLite)
+         ~/.local/share/assetgen/models/  (model cache)
 ```
 
 The client auto-detects whether a server is configured:
-- If `server_url` is set in `~/.config/assgen/client.yaml` → use that server.
-- Otherwise → start a local `assgen-server` process (PID-tracked) and use it.
+- If `server_url` is set in `~/.config/assetgen/client.yaml` → use that server.
+- Otherwise → start a local `assetgen-server` process (PID-tracked) and use it.
 
 This lets you run the server on a powerful GPU machine and point your laptop's client at it, or just run everything locally.
 
 ## Installation
 
 ```bash
-pip install assgen
+pip install assetgen
 
 # For GPU inference (RTX 4070 recommended):
-pip install "assgen[inference]"
+pip install "assetgen[inference]"
 ```
 
 > **`[inference]` extra:** Installs `torch`, `transformers`, `diffusers`, `accelerate`, and
-> `trimesh` for local GPU inference. Without it, assgen is a fully functional client that can
-> talk to a remote `assgen-server`, but a local server will return stub outputs instead of
+> `trimesh` for local GPU inference. Without it, assetgen is a fully functional client that can
+> talk to a remote `assetgen-server`, but a local server will return stub outputs instead of
 > running real models.
 >
-> For CI environments or machines without a GPU, `pip install assgen` (without `[inference]`)
+> For CI environments or machines without a GPU, `pip install assetgen` (without `[inference]`)
 > is the right choice.
 
 ## Development Setup
@@ -57,8 +57,8 @@ pip install "assgen[inference]"
 Clone and run from source:
 
 ```bash
-git clone https://github.com/aallbrig/assgen.git
-cd assgen
+git clone https://github.com/aallbrig/assetgen.git
+cd assetgen
 
 # Create and activate a virtual environment
 python -m venv .venv
@@ -72,13 +72,13 @@ pip install -e ".[dev]"
 pip install -e ".[dev,inference]"
 
 # Verify the install
-assgen version
-assgen-server --help
+assetgen version
+assetgen-server --help
 ```
 
 Run tests: `pytest -v`  (or `make test`)
 
-> **Version note:** assgen uses `hatch-vcs` to derive its version from git tags.
+> **Version note:** assetgen uses `hatch-vcs` to derive its version from git tags.
 > If you install without a git tag (fresh clone, no tags), the version will appear as `0.1.dev0`.
 > Run `git tag v0.1.0` to set a version, or ignore the warning — it does not affect functionality.
 
@@ -86,10 +86,10 @@ Run tests: `pytest -v`  (or `make test`)
 
 ```bash
 # Check version
-assgen version
+assetgen version
 
 # Start local server (optional — client auto-starts if not configured)
-assgen-server start --daemon
+assetgen-server start --daemon
 
 # Once the server is running, explore the REST API interactively:
 # http://127.0.0.1:8432/docs      (Swagger UI)
@@ -97,42 +97,42 @@ assgen-server start --daemon
 # http://127.0.0.1:8432/health    (health check)
 
 # Generate a 3D model
-assgen visual model create --prompt "low-poly medieval sword" --wait
+assetgen visual model create --prompt "low-poly medieval sword" --wait
 
 # Generate sound effects
-assgen audio sfx generate "laser gun firing" --wait
+assetgen audio sfx generate "laser gun firing" --wait
 
 # Generate background music
-assgen audio music compose "epic orchestral battle theme" --duration 30 --wait
+assetgen audio music compose "epic orchestral battle theme" --duration 30 --wait
 
 # Auto-rig a character
-assgen visual rig auto character.glb --wait
+assetgen visual rig auto character.glb --wait
 
 # List recent jobs
-assgen jobs list
+assetgen jobs list
 
 # Point client at a remote GPU server
-assgen client config set-server http://my-gpu-machine:8432
+assetgen client config set-server http://my-gpu-machine:8432
 
 # View full game dev task → model catalog
-assgen tasks
+assetgen tasks
 
 # Show current server config
-assgen server config show
+assetgen server config show
 ```
 
-> **`assgen-server` vs `assgen server`:**
-> - `assgen-server start` — runs the inference server directly (the process itself)
-> - `assgen server start` — tells the client to launch a local `assgen-server` process for you
-> - `assgen server status` / `assgen server stop` — manage the locally auto-started server
+> **`assetgen-server` vs `assetgen server`:**
+> - `assetgen-server start` — runs the inference server directly (the process itself)
+> - `assetgen server start` — tells the client to launch a local `assetgen-server` process for you
+> - `assetgen server status` / `assetgen server stop` — manage the locally auto-started server
 >
-> For a remote GPU machine, run `assgen-server start --daemon` there, then on your laptop:
-> `assgen client config set-server http://<gpu-machine>:8432`
+> For a remote GPU machine, run `assetgen-server start --daemon` there, then on your laptop:
+> `assetgen client config set-server http://<gpu-machine>:8432`
 
 ## CLI Command Tree
 
 ```
-assgen
+assetgen
 ├── tasks                     # View all game dev tasks and their assigned models
 │   └── [--domain DOMAIN]     # filter by visual / audio / scene / pipeline / qa / support
 ├── visual                    # All 3D visual assets
@@ -269,16 +269,16 @@ Config lives in the OS-appropriate directory (XDG on Linux/macOS, `%APPDATA%` on
 | `client.yaml` | Server URL, poll interval, default --wait |
 | `server.yaml` | Host, port, device, security policy |
 | `models.yaml` | User catalog overrides (task → HF model) |
-| `assgen.db` | SQLite job database |
+| `assetgen.db` | SQLite job database |
 | `server.pid` | Running local server PID |
 
 ```yaml
-# ~/.config/assgen/client.yaml
+# ~/.config/assetgen/client.yaml
 server_url: null          # null = auto-start local server
 default_wait: false
 poll_interval: 2.0
 
-# ~/.config/assgen/server.yaml
+# ~/.config/assetgen/server.yaml
 host: "127.0.0.1"
 port: 8432
 device: "auto"            # auto | cuda | cpu
@@ -293,23 +293,23 @@ skip_model_validation: false  # true = bypass HF pipeline_tag compatibility chec
 ## Task → Model Catalog
 
 Every game-dev task maps to a HuggingFace model. The built-in catalog lives in
-`src/assgen/catalog.yaml`. Users can override any entry:
+`src/assetgen/catalog.yaml`. Users can override any entry:
 
 ```bash
 # Browse all tasks and their models
-assgen tasks
+assetgen tasks
 
 # Override the model for a task (interactive HF Hub search)
-assgen config set visual.model.create
+assetgen config set visual.model.create
 
 # Or specify directly
-assgen config set visual.model.create --model-id stabilityai/TripoSR
+assetgen config set visual.model.create --model-id stabilityai/TripoSR
 
 # Revert to built-in
-assgen config remove visual.model.create
+assetgen config remove visual.model.create
 ```
 
-Client-side overrides are stored in `~/.config/assgen/models.yaml` and sent
+Client-side overrides are stored in `~/.config/assetgen/models.yaml` and sent
 with each job submission (via the `model_id` field in the job request).
 
 ## Model Validation
@@ -325,13 +325,13 @@ task type using the HuggingFace Hub API:
 
 ```bash
 # Restrict downloads to approved models only
-assgen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
+assetgen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
 
 # Trust all models (default)
-assgen server config set allow_list '[]'
+assetgen server config set allow_list '[]'
 
 # Skip compatibility checks (useful for research / experimental models)
-assgen server config set skip_model_validation true
+assetgen server config set skip_model_validation true
 ```
 
 When `skip_model_validation: false` (default) and the HF Hub API is
@@ -340,15 +340,15 @@ unreachable, the server **allows** the model (fail-open for offline use).
 ## Running as a systemd Service
 
 ```ini
-# /etc/systemd/system/assgen-server.service
+# /etc/systemd/system/assetgen-server.service
 [Unit]
-Description=assgen asset generation server
+Description=assetgen asset generation server
 After=network.target
 
 [Service]
 Type=simple
 User=youruser
-ExecStart=/path/to/.venv/bin/assgen-server start
+ExecStart=/path/to/.venv/bin/assetgen-server start
 Restart=on-failure
 StandardOutput=journal
 StandardError=journal
@@ -358,8 +358,8 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-systemctl enable --now assgen-server
-journalctl -u assgen-server -f   # follow JSON-structured logs
+systemctl enable --now assetgen-server
+journalctl -u assetgen-server -f   # follow JSON-structured logs
 ```
 
 ## Hardware Notes
@@ -371,11 +371,11 @@ journalctl -u assgen-server -f   # follow JSON-structured logs
 
 ## Adding Real Inference Handlers
 
-The worker dispatches each `job_type` to `assgen/server/handlers/<job_type>.py`.
+The worker dispatches each `job_type` to `assetgen/server/handlers/<job_type>.py`.
 Create a module with a `run()` function:
 
 ```python
-# src/assgen/server/handlers/visual_model_create.py
+# src/assetgen/server/handlers/visual_model_create.py
 from pathlib import Path
 from typing import Any, Callable
 
@@ -416,70 +416,70 @@ pytest -v
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│  assgen  (client CLI)                                      │
+│  assetgen  (client CLI)                                      │
 │  ├── visual model create --prompt "sword" --wait           │
 │  ├── audio sfx generate "laser blast" --wait              │
 │  └── jobs list / status / wait / cancel                   │
 └───────────────────┬───────────────────────────────────────┘
                     │ HTTP (REST)
 ┌───────────────────▼───────────────────────────────────────┐
-│  assgen-server                                             │
+│  assetgen-server                                             │
 │  ├── FastAPI REST API  (/jobs  /models  /health)          │
 │  ├── WorkerThread      (polls SQLite queue)               │
 │  └── ModelManager      (HuggingFace Hub download/cache)   │
 └───────────────────┬───────────────────────────────────────┘
                     │
-         ~/.config/assgen/assgen.db   (SQLite)
-         ~/.local/share/assgen/models/  (model cache)
+         ~/.config/assetgen/assetgen.db   (SQLite)
+         ~/.local/share/assetgen/models/  (model cache)
 ```
 
 The client auto-detects whether a server is configured:
-- If `server_url` is set in `~/.config/assgen/client.yaml` → use that server.
-- Otherwise → start a local `assgen-server` process (PID-tracked) and use it.
+- If `server_url` is set in `~/.config/assetgen/client.yaml` → use that server.
+- Otherwise → start a local `assetgen-server` process (PID-tracked) and use it.
 
 This lets you run the server on a powerful GPU machine and point your laptop's client at it, or just run everything locally.
 
 ## Installation
 
 ```bash
-pip install assgen
+pip install assetgen
 
 # For GPU inference (RTX 4070 recommended):
-pip install "assgen[inference]"
+pip install "assetgen[inference]"
 ```
 
 ## Quick Start
 
 ```bash
 # Check version
-assgen version
+assetgen version
 
 # Start local server (optional — client auto-starts if not configured)
-assgen-server start --daemon
+assetgen-server start --daemon
 
 # Generate a 3D model
-assgen visual model create --prompt "low-poly medieval sword" --wait
+assetgen visual model create --prompt "low-poly medieval sword" --wait
 
 # Generate sound effects
-assgen audio sfx generate "laser gun firing" --wait
+assetgen audio sfx generate "laser gun firing" --wait
 
 # Generate background music
-assgen audio music compose "epic orchestral battle theme" --duration 30 --wait
+assetgen audio music compose "epic orchestral battle theme" --duration 30 --wait
 
 # Auto-rig a character
-assgen visual rig auto character.glb --wait
+assetgen visual rig auto character.glb --wait
 
 # List recent jobs
-assgen jobs list
+assetgen jobs list
 
 # Point client at a remote server
-assgen server use http://my-gpu-machine:8432
+assetgen server use http://my-gpu-machine:8432
 ```
 
 ## CLI Command Tree
 
 ```
-assgen
+assetgen
 ├── visual                    # All 3D visual assets
 │   ├── concept               # AI concept art (SDXL)
 │   │   ├── generate          # text → concept art
@@ -600,16 +600,16 @@ Config lives in the OS-appropriate directory (XDG on Linux/macOS, `%APPDATA%` on
 | `client.yaml` | Server URL, poll interval, default --wait |
 | `server.yaml` | Host, port, device (cuda/cpu), log level |
 | `models.yaml` | User catalog overrides |
-| `assgen.db` | SQLite job database |
+| `assetgen.db` | SQLite job database |
 | `server.pid` | Running local server PID |
 
 ```yaml
-# ~/.config/assgen/client.yaml
+# ~/.config/assetgen/client.yaml
 server_url: null          # null = auto-start local server
 default_wait: false
 poll_interval: 2.0
 
-# ~/.config/assgen/server.yaml
+# ~/.config/assetgen/server.yaml
 host: "127.0.0.1"
 port: 8432
 device: "auto"            # auto | cuda | cpu
@@ -619,15 +619,15 @@ log_level: "info"
 ## Running as a systemd Service
 
 ```ini
-# /etc/systemd/system/assgen-server.service
+# /etc/systemd/system/assetgen-server.service
 [Unit]
-Description=assgen asset generation server
+Description=assetgen asset generation server
 After=network.target
 
 [Service]
 Type=simple
 User=youruser
-ExecStart=/path/to/.venv/bin/assgen-server start
+ExecStart=/path/to/.venv/bin/assetgen-server start
 Restart=on-failure
 StandardOutput=journal
 StandardError=journal
@@ -637,8 +637,8 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-systemctl enable --now assgen-server
-journalctl -u assgen-server -f   # follow JSON-structured logs
+systemctl enable --now assetgen-server
+journalctl -u assetgen-server -f   # follow JSON-structured logs
 ```
 
 ## Hardware Notes
@@ -650,11 +650,11 @@ journalctl -u assgen-server -f   # follow JSON-structured logs
 
 ## Adding Real Inference Handlers
 
-The worker dispatches each `job_type` to `assgen/server/handlers/<job_type>.py`.
+The worker dispatches each `job_type` to `assetgen/server/handlers/<job_type>.py`.
 Create a module with a `run()` function:
 
 ```python
-# src/assgen/server/handlers/visual_model_create.py
+# src/assetgen/server/handlers/visual_model_create.py
 from pathlib import Path
 from typing import Any, Callable
 

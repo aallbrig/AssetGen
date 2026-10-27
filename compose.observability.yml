@@ -1,10 +1,10 @@
 # compose.observability.yml
 #
-# Local LGTM-style observability stack for assgen development.
+# Local LGTM-style observability stack for assetgen development.
 # Uses Prometheus instead of Mimir for metrics storage.
 #
 # Stack:
-#   OTel Collector  — receives OTLP from assgen-server, routes to backends
+#   OTel Collector  — receives OTLP from assetgen-server, routes to backends
 #   Prometheus      — metrics storage & query engine
 #   Loki            — log aggregation
 #   Tempo           — distributed tracing
@@ -27,14 +27,14 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.113.0
-    container_name: assgen-otel-collector
+    container_name: assetgen-otel-collector
     volumes:
       - ./docker/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml:ro
     ports:
       - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP  ← assgen-server exports here by default
+      - "4318:4318"   # OTLP HTTP  ← assetgen-server exports here by default
       - "8888:8888"   # OTel Collector internal metrics
-      - "8889:8889"   # Prometheus scrape endpoint (assgen metrics)
+      - "8889:8889"   # Prometheus scrape endpoint (assetgen metrics)
     depends_on:
       - prometheus
       - loki
@@ -48,7 +48,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.55.1
-    container_name: assgen-prometheus
+    container_name: assetgen-prometheus
     volumes:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
@@ -69,7 +69,7 @@ services:
 
   loki:
     image: grafana/loki:3.3.2
-    container_name: assgen-loki
+    container_name: assetgen-loki
     volumes:
       - ./docker/loki-local-config.yml:/etc/loki/local-config.yaml:ro
       - loki-data:/loki
@@ -85,7 +85,7 @@ services:
 
   tempo:
     image: grafana/tempo:2.6.1
-    container_name: assgen-tempo
+    container_name: assetgen-tempo
     volumes:
       - ./docker/tempo-local-config.yml:/etc/tempo.yaml:ro
       - tempo-data:/var/tempo
@@ -101,7 +101,7 @@ services:
 
   grafana:
     image: grafana/grafana:11.4.0
-    container_name: assgen-grafana
+    container_name: assetgen-grafana
     volumes:
       - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro

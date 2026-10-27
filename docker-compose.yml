@@ -1,8 +1,8 @@
-# assgen — docker-compose.yml
+# assetgen — docker-compose.yml
 #
-# Starts the assgen server locally.  The client (assgen CLI) on your host
+# Starts the assetgen server locally.  The client (assetgen CLI) on your host
 # machine can connect to it by setting:
-#   export ASSGEN_SERVER_URL=http://localhost:8432
+#   export ASSETGEN_SERVER_URL=http://localhost:8432
 #
 # Quick start (CPU):
 #   docker compose up server
@@ -19,14 +19,14 @@ services:
       dockerfile: docker/Dockerfile.server
       args:
         VERSION: "${VERSION:-dev}"
-    image: ghcr.io/aallbrig/assgen-server:${VERSION:-dev}
+    image: ghcr.io/aallbrig/assetgen-server:${VERSION:-dev}
     ports:
       - "8432:8432"
     volumes:
-      - assgen-data:/root/.local/share/assgen
-      - assgen-config:/root/.config/assgen
+      - assetgen-data:/root/.local/share/assetgen
+      - assetgen-config:/root/.config/assetgen
     environment:
-      ASSGEN_DEVICE: cpu
+      ASSETGEN_DEVICE: cpu
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c",
@@ -43,14 +43,14 @@ services:
       dockerfile: docker/Dockerfile.server-cuda
       args:
         VERSION: "${VERSION:-dev}"
-    image: ghcr.io/aallbrig/assgen-server-cuda:${VERSION:-dev}
+    image: ghcr.io/aallbrig/assetgen-server-cuda:${VERSION:-dev}
     ports:
       - "8432:8432"
     volumes:
-      - assgen-data:/root/.local/share/assgen
-      - assgen-config:/root/.config/assgen
+      - assetgen-data:/root/.local/share/assetgen
+      - assetgen-config:/root/.config/assetgen
     environment:
-      ASSGEN_DEVICE: cuda
+      ASSETGEN_DEVICE: cuda
     restart: unless-stopped
     profiles: ["gpu"]
     deploy:
@@ -75,16 +75,16 @@ services:
       dockerfile: docker/Dockerfile.client
       args:
         VERSION: "${VERSION:-dev}"
-    image: ghcr.io/aallbrig/assgen-client:${VERSION:-dev}
+    image: ghcr.io/aallbrig/assetgen-client:${VERSION:-dev}
     volumes:
       - ./output:/output
     environment:
-      ASSGEN_SERVER_URL: http://server:8432
+      ASSETGEN_SERVER_URL: http://server:8432
     profiles: ["client"]
     depends_on:
       server:
         condition: service_healthy
 
 volumes:
-  assgen-data:
-  assgen-config:
+  assetgen-data:
+  assetgen-config:

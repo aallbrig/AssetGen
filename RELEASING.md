@@ -1,8 +1,8 @@
-# Releasing assgen
+# Releasing assetgen
 
 ## Versioning
 
-assgen follows [Semantic Versioning](https://semver.org):
+assetgen follows [Semantic Versioning](https://semver.org):
 
 | Change type | Bump | Example |
 |---|---|---|
@@ -18,18 +18,18 @@ there is no version field to edit manually.
 
 ### How `--version` / `-V` works at runtime
 
-Both `assgen --version` and `assgen-server --version` print three pieces of
+Both `assetgen --version` and `assetgen-server --version` print three pieces of
 information:
 
 ```
-assgen 0.1.0           ← installed version (from importlib.metadata)
+assetgen 0.1.0           ← installed version (from importlib.metadata)
   source  v0.0.1-16-gc9ee176-dirty  ⚠  uncommitted changes
   python  3.12.3
 ```
 
 | Field | Source | Meaning |
 |---|---|---|
-| `assgen <ver>` | `importlib.metadata.version("assgen")` | Version baked in at `pip install` time by hatch-vcs |
+| `assetgen <ver>` | `importlib.metadata.version("assetgen")` | Version baked in at `pip install` time by hatch-vcs |
 | `source` line | `git describe --tags --long --dirty` | Current state of the source tree |
 | `⚠  uncommitted changes` | `-dirty` suffix in git describe | Working tree has unstaged/staged changes |
 | `(clean)` | No `-dirty` suffix | Source matches the installed commit |
@@ -38,14 +38,14 @@ assgen 0.1.0           ← installed version (from importlib.metadata)
 (git is not available in a deployed environment):
 
 ```
-assgen 0.1.0
+assetgen 0.1.0
   python  3.12.3
 ```
 
 **Dev editable install, clean** — 16 commits past tag `v0.0.1`:
 
 ```
-assgen 0.0.2.dev16+gc9ee176
+assetgen 0.0.2.dev16+gc9ee176
   source  v0.0.1-16-gc9ee176 (clean)
   python  3.12.3
 ```
@@ -53,7 +53,7 @@ assgen 0.0.2.dev16+gc9ee176
 **Dev editable install, dirty working tree**:
 
 ```
-assgen 0.0.2.dev16+gc9ee176
+assetgen 0.0.2.dev16+gc9ee176
   source  v0.0.1-16-gc9ee176-dirty  ⚠  uncommitted changes
   python  3.12.3
 ```
@@ -67,8 +67,8 @@ version strings written by hatch-vcs / setuptools-scm.
 - [ ] All CI checks pass on `main` (lint, tests, docker build)
 - [ ] Manually smoke-test the fix or feature:
   ```bash
-  assgen --version
-  assgen gen --help
+  assetgen --version
+  assetgen gen --help
   ```
 - [ ] Update docs if the change affects user-facing behaviour
 
@@ -85,12 +85,12 @@ git push origin v0.1.0
 1. **Validates** the tag is proper semver — aborts if malformed
 2. **Lints + tests** (offline tests only; integration tests run separately)
 3. Builds the Python **wheel and sdist** via `hatch build`
-4. Builds the **MkDocs site** and zips it as `assgen-docs-v*.zip`
+4. Builds the **MkDocs site** and zips it as `assetgen-docs-v*.zip`
 5. Creates a **GitHub Release** with wheel, sdist, docs zip, and binaries attached
 6. Builds standalone **client binaries** with PyInstaller in parallel on 3 platforms:
-   - `assgen-v*-linux-x64`
-   - `assgen-v*-windows-x64.exe`
-   - `assgen-v*-macos-x64`
+   - `assetgen-v*-linux-x64`
+   - `assetgen-v*-windows-x64.exe`
+   - `assetgen-v*-macos-x64`
 7. Builds CPU server + client **Docker images** and pushes to `ghcr.io` with full
    semver tags (e.g. `:1.2.3`, `:1.2`, `:1`, `:latest`).
    Pre-release tags (e.g. `v1.2.3-rc.1`) get only `:1.2.3-rc.1` — no `:latest`.
@@ -109,19 +109,19 @@ and no `:major` / `:major.minor` shortcuts.
 
 ```bash
 # Verify Docker images
-docker pull ghcr.io/aallbrig/assgen-server:v0.1.0   # specific
-docker pull ghcr.io/aallbrig/assgen-server:0.1       # minor alias
-docker pull ghcr.io/aallbrig/assgen-server:latest    # latest stable
+docker pull ghcr.io/aallbrig/assetgen-server:v0.1.0   # specific
+docker pull ghcr.io/aallbrig/assetgen-server:0.1       # minor alias
+docker pull ghcr.io/aallbrig/assetgen-server:latest    # latest stable
 
 # Test the standalone binary (Linux)
-curl -LO https://github.com/aallbrig/assgen/releases/latest/download/assgen-v0.1.0-linux-x64
-chmod +x assgen-v0.1.0-linux-x64 && ./assgen-v0.1.0-linux-x64 --version
+curl -LO https://github.com/aallbrig/assetgen/releases/latest/download/assetgen-v0.1.0-linux-x64
+chmod +x assetgen-v0.1.0-linux-x64 && ./assetgen-v0.1.0-linux-x64 --version
 
 # Check the GitHub Release page
 gh release view v0.1.0
 
 # Confirm the upgrade command detects the new release
-assgen upgrade --check
+assetgen upgrade --check
 ```
 
 ## Patch release workflow
@@ -142,11 +142,11 @@ git push origin v0.1.1
   VERSION=v0.1.0
   docker build -f docker/Dockerfile.server-cuda \
                --build-arg VERSION=${VERSION#v} \
-               -t ghcr.io/aallbrig/assgen-server-cuda:$VERSION .
-  docker push ghcr.io/aallbrig/assgen-server-cuda:$VERSION
-  docker tag  ghcr.io/aallbrig/assgen-server-cuda:$VERSION \
-              ghcr.io/aallbrig/assgen-server-cuda:latest
-  docker push ghcr.io/aallbrig/assgen-server-cuda:latest
+               -t ghcr.io/aallbrig/assetgen-server-cuda:$VERSION .
+  docker push ghcr.io/aallbrig/assetgen-server-cuda:$VERSION
+  docker tag  ghcr.io/aallbrig/assetgen-server-cuda:$VERSION \
+              ghcr.io/aallbrig/assetgen-server-cuda:latest
+  docker push ghcr.io/aallbrig/assetgen-server-cuda:latest
   ```
 - PyPI publishing is not yet automated.  Add a `Publish to PyPI` step to
   `release.yml` using OIDC trusted publishing once you are ready to make

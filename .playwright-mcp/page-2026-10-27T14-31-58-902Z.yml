@@ -1,0 +1,305 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#assgen"
+  - banner [ref=e3]:
+    - navigation "Header" [ref=e4]:
+      - generic [ref=e5] [cursor=pointer]
+      - generic [ref=e9]:
+        - generic [ref=e10]: assgen
+        - generic: Home
+      - generic [ref=e12]:
+        - radio "Switch to light mode"
+        - radio "Switch to dark mode"
+        - generic "Switch to dark mode" [ref=e13] [cursor=pointer]
+      - generic [ref=e16] [cursor=pointer]
+      - dialog:
+        - search:
+          - generic:
+            - textbox "Search" [ref=e19]
+            - generic [ref=e20] [cursor=pointer]
+            - navigation "Search":
+              - button "Clear"
+          - generic: Initializing search
+  - generic [ref=e25]:
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - navigation "Navigation" [ref=e30]:
+          - generic [ref=e31] [cursor=pointer]:
+            - link "assgen" [ref=e32]:
+              - /url: .
+            - text: assgen
+          - link "aallbrig/assgen" [ref=e36] [cursor=pointer]:
+            - /url: https://github.com/aallbrig/assgen
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - generic [ref=e43]: Home
+              - navigation "Table of contents" [ref=e46]:
+                - list [ref=e49]:
+                  - listitem [ref=e50]:
+                    - link "What is assgen?" [ref=e51] [cursor=pointer]:
+                      - /url: "#what-is-assgen"
+                  - listitem [ref=e53]:
+                    - link "Architecture" [ref=e54] [cursor=pointer]:
+                      - /url: "#architecture"
+                  - listitem [ref=e56]:
+                    - link "Feature Highlights" [ref=e57] [cursor=pointer]:
+                      - /url: "#feature-highlights"
+                  - listitem [ref=e59]:
+                    - link "Requirements" [ref=e60] [cursor=pointer]:
+                      - /url: "#requirements"
+                  - listitem [ref=e62]:
+                    - link "Workflow Guides" [ref=e63] [cursor=pointer]:
+                      - /url: "#workflow-guides"
+            - listitem [ref=e65]:
+              - generic [ref=e66]: Getting Started
+              - navigation "Getting Started" [ref=e69]:
+                - list [ref=e72]:
+                  - listitem [ref=e73]:
+                    - link "Installation & Upgrade" [ref=e74] [cursor=pointer]:
+                      - /url: install/
+                  - listitem [ref=e76]:
+                    - link "Quick Start" [ref=e77] [cursor=pointer]:
+                      - /url: quickstart/
+                  - listitem [ref=e79]:
+                    - link "Compose Pipelines" [ref=e80] [cursor=pointer]:
+                      - /url: compose-pipelines/
+            - listitem [ref=e82]:
+              - link "CLI Reference" [ref=e83] [cursor=pointer]:
+                - /url: cli-reference/
+            - listitem [ref=e85]:
+              - generic [ref=e86]: Commands
+              - navigation "Commands" [ref=e89]:
+                - list [ref=e92]:
+                  - listitem [ref=e93]:
+                    - link "Overview" [ref=e94] [cursor=pointer]:
+                      - /url: commands/
+                  - listitem [ref=e96]:
+                    - link "🎨 Visual Assets" [ref=e97] [cursor=pointer]:
+                      - /url: commands/visual/
+                  - listitem [ref=e99]:
+                    - link "🔊 Audio" [ref=e100] [cursor=pointer]:
+                      - /url: commands/audio/
+                  - listitem [ref=e102]:
+                    - link "🌍 Scene" [ref=e103] [cursor=pointer]:
+                      - /url: commands/scene/
+                  - listitem [ref=e105]:
+                    - link "⚙️ Pipeline" [ref=e106] [cursor=pointer]:
+                      - /url: commands/pipeline/
+                  - listitem [ref=e108]:
+                    - link "📖 Support & Narrative" [ref=e109] [cursor=pointer]:
+                      - /url: commands/support/
+                  - listitem [ref=e111]:
+                    - link "🔬 QA & Validation" [ref=e112] [cursor=pointer]:
+                      - /url: commands/qa/
+                  - listitem [ref=e114]:
+                    - link "🎲 Procedural Generation" [ref=e115] [cursor=pointer]:
+                      - /url: commands/procedural/
+            - listitem [ref=e117]:
+              - generic [ref=e118]: Configuration
+              - navigation "Configuration" [ref=e121]:
+                - list [ref=e124]:
+                  - listitem [ref=e125]:
+                    - link "Overview" [ref=e126] [cursor=pointer]:
+                      - /url: configuration/
+                  - listitem [ref=e128]:
+                    - link "Model Validation" [ref=e129] [cursor=pointer]:
+                      - /url: model-validation/
+            - listitem [ref=e131]:
+              - link "API Reference" [ref=e132] [cursor=pointer]:
+                - /url: api-reference/
+            - listitem [ref=e134]:
+              - generic [ref=e135]: Workflow Guides
+              - navigation "Workflow Guides" [ref=e138]:
+                - list [ref=e141]:
+                  - listitem [ref=e142]:
+                    - link "Solo Indie Dev (Godot)" [ref=e143] [cursor=pointer]:
+                      - /url: workflow-solo-indie/
+                  - listitem [ref=e145]:
+                    - link "Environment Artist (UE5)" [ref=e146] [cursor=pointer]:
+                      - /url: workflow-environment-artist/
+                  - listitem [ref=e148]:
+                    - link "Character Artist (Unity)" [ref=e149] [cursor=pointer]:
+                      - /url: workflow-character-artist/
+                  - listitem [ref=e151]:
+                    - link "Audio Designer" [ref=e152] [cursor=pointer]:
+                      - /url: workflow-audio-designer/
+                  - listitem [ref=e154]:
+                    - link "CI/CD Pipeline TD" [ref=e155] [cursor=pointer]:
+                      - /url: workflow-ci-pipeline/
+            - listitem [ref=e157]:
+              - generic [ref=e158]: Guides
+              - navigation "Guides" [ref=e161]:
+                - list [ref=e164]:
+                  - listitem [ref=e165]:
+                    - link "UX Design & User Flows" [ref=e166] [cursor=pointer]:
+                      - /url: ux-design/
+                  - listitem [ref=e168]:
+                    - link "Server Setup (Remote GPU)" [ref=e169] [cursor=pointer]:
+                      - /url: server-setup/
+                  - listitem [ref=e171]:
+                    - link "Adding Inference Handlers" [ref=e172] [cursor=pointer]:
+                      - /url: contributing/
+        - article [ref=e175]:
+          - link "Edit this page" [ref=e176] [cursor=pointer]:
+            - /url: https://github.com/aallbrig/assgen/edit/main/docs/index.md
+          - heading [level=1] [ref=e179]:
+            - text: assgen
+            - link "¶" [ref=e180] [cursor=pointer]:
+              - /url: "#assgen"
+          - paragraph [ref=e181]:
+            - strong [ref=e182]: AI-driven game asset generation pipeline
+            - text: — a Kubernetes-style client/server CLI that lets you generate 3D models, textures, rigs, animations, sound effects, and music using open-source HuggingFace models running locally on your GPU.
+          - paragraph [ref=e183]:
+            - link [ref=e184] [cursor=pointer]:
+              - /url: https://github.com/aallbrig/assgen/actions/workflows/ci.yml
+              - img "CI" [ref=e185]
+            - link [ref=e186] [cursor=pointer]:
+              - /url: https://github.com/aallbrig/assgen/releases
+              - img "Latest Release" [ref=e187]
+            - img "Python 3.11+" [ref=e188]
+            - img "MIT License" [ref=e189]
+          - separator [ref=e190]
+          - heading [level=2] [ref=e191]:
+            - text: What is assgen?
+            - link "¶" [ref=e192] [cursor=pointer]:
+              - /url: "#what-is-assgen"
+          - paragraph [ref=e193]: assgen is a command-line tool designed for indie game developers and artists who want to leverage AI for asset creation — without cloud costs, without proprietary APIs, and without leaving their terminal.
+          - paragraph [ref=e194]: You describe what you want. assgen dispatches the work to a local server that downloads the right model from HuggingFace, runs inference on your GPU, and saves the result.
+          - generic [ref=e196]:
+            - navigation [ref=e197]:
+              - button "Copy to clipboard" [ref=e198] [cursor=pointer]
+            - code [ref=e199]:
+              - generic [ref=e200]: "# Generate a 3D prop"
+              - generic [ref=e201]: assgen gen visual model create --prompt "low-poly medieval sword" --wait
+              - generic [ref=e203]: "# Generate a sound effect"
+              - generic [ref=e204]: assgen gen audio sfx generate "laser gun firing" --wait
+              - generic [ref=e206]: "# View all available tasks and their assigned AI models"
+              - generic [ref=e207]: assgen tasks
+          - heading [level=2] [ref=e208]:
+            - text: Architecture
+            - link "¶" [ref=e209] [cursor=pointer]:
+              - /url: "#architecture"
+          - generic [ref=e211]:
+            - navigation [ref=e212]:
+              - button "Copy to clipboard" [ref=e213] [cursor=pointer]
+            - code [ref=e214]:
+              - generic [ref=e215]: ┌─────────────────────────────────────────────────────┐
+              - generic [ref=e216]: │ assgen (client CLI, runs anywhere) │
+              - generic [ref=e217]: └──────────────────────┬──────────────────────────────┘
+              - generic [ref=e218]: │ HTTP REST
+              - generic [ref=e219]: ┌──────────────────────▼──────────────────────────────┐
+              - generic [ref=e220]: │ assgen-server (FastAPI + SQLite job queue) │
+              - generic [ref=e221]: │ ├── ModelManager (HuggingFace Hub download/cache) │
+              - generic [ref=e222]: │ ├── WorkerThread (GPU inference) │
+              - generic [ref=e223]: │ └── Validation (allow-list + HF tag checking) │
+              - generic [ref=e224]: └─────────────────────────────────────────────────────┘
+          - paragraph [ref=e225]: "The client auto-starts a local server on first use, or you can point it at a remote GPU machine:"
+          - generic [ref=e227]:
+            - navigation [ref=e228]:
+              - button "Copy to clipboard" [ref=e229] [cursor=pointer]
+            - code [ref=e230]:
+              - generic [ref=e231]: assgen client config set-server http://my-gpu-desktop:8432
+          - heading [level=2] [ref=e232]:
+            - text: Feature Highlights
+            - link "¶" [ref=e233] [cursor=pointer]:
+              - /url: "#feature-highlights"
+          - generic [ref=e234]:
+            - radio "3D Assets" [checked]
+            - radio "Audio"
+            - radio "Pipeline"
+            - radio "Security"
+            - generic [ref=e235]:
+              - link "3D Assets" [ref=e237] [cursor=pointer]:
+                - /url: "#__tabbed_1_1"
+              - link "Audio" [ref=e239] [cursor=pointer]:
+                - /url: "#__tabbed_1_2"
+              - link "Pipeline" [ref=e241] [cursor=pointer]:
+                - /url: "#__tabbed_1_3"
+              - link "Security" [ref=e243] [cursor=pointer]:
+                - /url: "#__tabbed_1_4"
+            - list [ref=e246]:
+              - listitem [ref=e247]:
+                - text: Text/image → rigged 3D mesh (
+                - code [ref=e248]: .glb
+                - text: ","
+                - code [ref=e249]: .fbx
+                - text: ","
+                - code [ref=e250]: .obj
+                - text: )
+              - listitem [ref=e251]: Auto UV unwrapping and PBR texture generation
+              - listitem [ref=e252]: Gaussian Splatting (3DGS) from multi-view images
+              - listitem [ref=e253]: Auto-rigging and skin weight generation (UniRig)
+              - listitem [ref=e254]: "Animation: keyframe generation, mocap from video"
+            - button [aria-hidden] [ref=e255] [cursor=pointer]
+            - button [aria-hidden] [ref=e256] [cursor=pointer]
+          - heading [level=2] [ref=e257]:
+            - text: Requirements
+            - link "¶" [ref=e258] [cursor=pointer]:
+              - /url: "#requirements"
+          - list [ref=e259]:
+            - listitem [ref=e260]: Python 3.11+
+            - listitem [ref=e261]: "For inference: an NVIDIA GPU (RTX 4070 or better recommended — 12GB VRAM handles SDXL, TripoSR, AudioLDM2)"
+            - listitem [ref=e262]: "For check-only / orchestration: CPU is fine"
+          - heading [level=2] [ref=e263]:
+            - text: Workflow Guides
+            - link "¶" [ref=e264] [cursor=pointer]:
+              - /url: "#workflow-guides"
+          - paragraph [ref=e265]: "Jump straight to a guide written for your role:"
+          - table [ref=e268]:
+            - rowgroup [ref=e269]:
+              - row [ref=e270]:
+                - columnheader "Role" [ref=e271]
+                - columnheader "Engine" [ref=e272]
+                - columnheader "Guide" [ref=e273]
+            - rowgroup [ref=e274]:
+              - row [ref=e275]:
+                - cell "Solo indie dev" [ref=e276]
+                - cell "Godot" [ref=e277]
+                - cell [ref=e278]:
+                  - link "Prop → texture → music in a lunch break" [ref=e279] [cursor=pointer]:
+                    - /url: workflow-solo-indie/
+              - row [ref=e280]:
+                - cell "Environment / level artist" [ref=e281]
+                - cell "Unreal Engine 5" [ref=e282]
+                - cell [ref=e283]:
+                  - link "Biome textures, HDRI skies, seam inpainting" [ref=e284] [cursor=pointer]:
+                    - /url: workflow-environment-artist/
+              - row [ref=e285]:
+                - cell "Character artist" [ref=e286]
+                - cell "Unity" [ref=e287]
+                - cell [ref=e288]:
+                  - link "Concept → mesh → rig → animate" [ref=e289] [cursor=pointer]:
+                    - /url: workflow-character-artist/
+              - row [ref=e290]:
+                - cell "Game audio designer" [ref=e291]
+                - cell "Any" [ref=e292]
+                - cell [ref=e293]:
+                  - link "SFX variants, adaptive music, VO scratch" [ref=e294] [cursor=pointer]:
+                    - /url: workflow-audio-designer/
+              - row [ref=e295]:
+                - cell "Pipeline TD / technical artist" [ref=e296]
+                - cell "Any (CI/CD)" [ref=e297]
+                - cell [ref=e298]:
+                  - link "GitHub Actions, allow-list, QA validation" [ref=e299] [cursor=pointer]:
+                    - /url: workflow-ci-pipeline/
+          - separator [ref=e300]
+          - paragraph [ref=e301]:
+            - link "Get started →" [ref=e302] [cursor=pointer]:
+              - /url: install/
+            - link "View source on GitHub →" [ref=e303] [cursor=pointer]:
+              - /url: https://github.com/aallbrig/assgen
+      - button "Back to top"
+    - contentinfo [ref=e304]:
+      - navigation "Footer" [ref=e305]:
+        - 'link "Next: Installation & Upgrade" [ref=e306] [cursor=pointer]':
+          - /url: install/
+          - generic [ref=e307]:
+            - text: Next
+            - generic [ref=e308]: Installation & Upgrade
+      - generic [ref=e313]:
+        - generic [ref=e314]:
+          - text: Made with
+          - link "Material for MkDocs" [ref=e315] [cursor=pointer]:
+            - /url: https://squidfunk.github.io/mkdocs-material/
+        - link "github.com" [ref=e317] [cursor=pointer]:
+          - /url: https://github.com/aallbrig/assgen
