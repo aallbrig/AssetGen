@@ -11,7 +11,7 @@ The fastest way to get a complete, game-ready prop into Godot is a single compos
 
 ```bash
 # Complete brazier prop: concept → mesh → UV → texture → LODs → collider → .glb
-AssetGen compose prop "rusty iron brazier, medieval dungeon" \
+assetgen compose prop "rusty iron brazier, medieval dungeon" \
     --engine godot --quality low --wait
 ```
 
@@ -22,15 +22,15 @@ For the level's audio:
 
 ```bash
 # Ambient loop + dungeon music + 5 themed SFX
-AssetGen compose soundscape "dark dungeon ambience, distant dripping water" \
+assetgen compose soundscape "dark dungeon ambience, distant dripping water" \
     --duration 30 --wait
 ```
 
 For ground and wall materials:
 
 ```bash
-AssetGen compose material "cracked stone floor, dungeon" --engine godot --wait
-AssetGen compose material "rough stone wall, dark, damp" --engine godot --wait
+assetgen compose material "cracked stone floor, dungeon" --engine godot --wait
+assetgen compose material "rough stone wall, dark, damp" --engine godot --wait
 ```
 
 See the [Compose Pipelines guide](compose-pipelines.md) for all options.
@@ -60,12 +60,12 @@ No cloud, no monthly fees, no leaving your terminal.
 ## Prerequisites
 
 ```bash
-# Install AssetGen with GPU inference support
-pip install "AssetGen[inference]"
+# Install assetgen with GPU inference support
+pip install "assetgen[inference]"
 
 # Verify your server starts and your GPU is visible
-AssetGen server status
-# ⚡ No server detected — starting local AssetGen-server on http://127.0.0.1:8432
+assetgen server status
+# ⚡ No server detected — starting local assetgen-server on http://127.0.0.1:8432
 # ✓ Server ready
 # device  cuda (NVIDIA GeForce RTX 3060)
 ```
@@ -81,7 +81,7 @@ AssetGen server status
 Generate a reference image to guide the 3D step:
 
 ```bash
-AssetGen gen visual concept generate \
+assetgen gen visual concept generate \
   --prompt "rusty iron brazier, medieval, top-down view, white background" \
   --wait
 ```
@@ -96,7 +96,7 @@ Open it, check the silhouette looks right, then move on.
 Pipe the concept image directly into TripoSR:
 
 ```bash
-AssetGen gen visual model create \
+assetgen gen visual model create \
   --input concept_<id>.png \
   --wait
 ```
@@ -112,7 +112,7 @@ Output: `model_<id>.glb` — a single mesh with auto-UV, ready for texturing.
 ## Step 3 — PBR texture set (~4 minutes)
 
 ```bash
-AssetGen gen visual texture generate \
+assetgen gen visual texture generate \
   --input model_<id>.glb \
   --prompt "rusty iron, dark soot, medieval forge, PBR diffuse" \
   --wait
@@ -123,7 +123,7 @@ Output: `texture_<id>.glb` — the mesh with albedo, normal, and roughness maps 
 !!! warning "Tiling artefacts on organic shapes"
     If you see seams, run the inpaint command on the problem area:
     ```bash
-    AssetGen gen visual texture inpaint \
+    assetgen gen visual texture inpaint \
       --input texture_<id>.glb \
       --mask seam_mask.png \
       --wait
@@ -134,7 +134,7 @@ Output: `texture_<id>.glb` — the mesh with albedo, normal, and roughness maps 
 ## Step 4 — Looping dungeon music (~2 minutes)
 
 ```bash
-AssetGen gen audio music loop \
+assetgen gen audio music loop \
   --prompt "dark dungeon ambience, low strings, eerie, minor key, loopable" \
   --duration 30 \
   --wait
@@ -178,10 +178,10 @@ For audio:
 set -e
 PROMPT="rusty iron brazier, medieval"
 
-CONCEPT=$(AssetGen gen visual concept generate --prompt "$PROMPT, top-down, white bg" --wait --json | jq -r '.output_path')
-MESH=$(AssetGen gen visual model create --input "$CONCEPT" --wait --json | jq -r '.output_path')
-TEXTURED=$(AssetGen gen visual texture generate --input "$MESH" --prompt "$PROMPT, PBR diffuse" --wait --json | jq -r '.output_path')
-MUSIC=$(AssetGen gen audio music loop --prompt "dark dungeon ambience, eerie, loopable" --duration 30 --wait --json | jq -r '.output_path')
+CONCEPT=$(assetgen gen visual concept generate --prompt "$PROMPT, top-down, white bg" --wait --json | jq -r '.output_path')
+MESH=$(assetgen gen visual model create --input "$CONCEPT" --wait --json | jq -r '.output_path')
+TEXTURED=$(assetgen gen visual texture generate --input "$MESH" --prompt "$PROMPT, PBR diffuse" --wait --json | jq -r '.output_path')
+MUSIC=$(assetgen gen audio music loop --prompt "dark dungeon ambience, eerie, loopable" --duration 30 --wait --json | jq -r '.output_path')
 
 echo "✓ Prop:  $TEXTURED"
 echo "✓ Music: $MUSIC"
@@ -189,7 +189,7 @@ echo "✓ Music: $MUSIC"
 
 !!! note "`--json` flag"
     `--json` is on the roadmap and will emit structured output for scripting.
-    Until then, check `AssetGen jobs list` for output paths.
+    Until then, check `assetgen jobs list` for output paths.
 
 ---
 
@@ -204,7 +204,7 @@ echo "✓ Music: $MUSIC"
 If you hit OOM errors, reduce texture resolution:
 
 ```bash
-AssetGen gen visual texture generate --input mesh.glb --resolution 1024 --wait
+assetgen gen visual texture generate --input mesh.glb --resolution 1024 --wait
 ```
 
 ---

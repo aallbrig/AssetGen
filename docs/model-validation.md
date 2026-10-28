@@ -29,10 +29,10 @@ all models.
 
 ```bash
 # Add a model to the allow-list
-AssetGen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
+assetgen server config set allow_list '["stabilityai/TripoSR","cvssp/audioldm2"]'
 
 # Check current list
-AssetGen server config show
+assetgen server config show
 ```
 
 ---
@@ -55,7 +55,7 @@ The full task → allowed-tags map lives in
 ### Failure example
 
 ```bash
-$ AssetGen visual model create --prompt "sword" --model-id "cvssp/audioldm2"
+$ assetgen visual model create --prompt "sword" --model-id "cvssp/audioldm2"
 Error 422: Model 'cvssp/audioldm2' has pipeline_tag='text-to-audio'
 which is not compatible with task 'image-to-3d'.
 Expected one of: ['image-to-3d', 'text-to-3d'].
@@ -65,7 +65,7 @@ Set skip_model_validation: true in server.yaml to override.
 ### Disabling the check
 
 ```bash
-AssetGen server config set skip_model_validation true
+assetgen server config set skip_model_validation true
 ```
 
 !!! warning

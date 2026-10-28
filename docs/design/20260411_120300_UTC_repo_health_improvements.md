@@ -115,7 +115,7 @@ pip install -e ".[dev]"
 pip install -e ".[dev,inference]"
 
 # Verify the install
-AssetGen version
+assetgen version
 AssetGen-server --help
 ```
 
@@ -138,7 +138,7 @@ pip install -e ".[docs]"
 mkdocs serve          # opens http://localhost:8000
 ```
 
-> **Version note:** AssetGen uses `hatch-vcs` to derive its version from git tags.
+> **Version note:** assetgen uses `hatch-vcs` to derive its version from git tags.
 > If you install without a git tag (fresh clone, no tags), the version will appear as `0.1.dev0`.
 > Run `git tag v0.1.0` to set a version, or ignore the warning — it does not affect functionality.
 ```
@@ -177,7 +177,7 @@ test:
 
 # Run the full test suite with coverage
 test-cov:
-	pytest -v --cov=src/AssetGen --cov-report=term-missing --cov-report=html
+	pytest -v --cov=src/assetgen --cov-report=term-missing --cov-report=html
 
 # Lint and auto-fix
 lint:
@@ -198,7 +198,7 @@ docs-build:
 
 # Run the server locally (foreground, auto-device)
 serve:
-	AssetGen-server start --log-level debug
+	assetgen-server start --log-level debug
 
 # Remove build artifacts and caches
 clean:
@@ -243,7 +243,7 @@ dev = [
 Then add at the end of `pyproject.toml`:
 ```toml
 [tool.coverage.run]
-source = ["src/AssetGen"]
+source = ["src/assetgen"]
 omit = ["*/tests/*", "*/_version.py"]
 
 [tool.coverage.report]
@@ -253,25 +253,25 @@ skip_covered = false
 
 ---
 
-### 1.5 Document the `AssetGen-server` vs `AssetGen server` distinction in README
+### 1.5 Document the `AssetGen-server` vs `assetgen server` distinction in README
 
 **Problem:** The README Quick Start uses `AssetGen-server start --daemon`, but the CLI tree
-shows `AssetGen server` as a subcommand. These are two different things:
+shows `assetgen server` as a subcommand. These are two different things:
 - `AssetGen-server` — the standalone server entry point (direct process)
-- `AssetGen server` — client-side commands to manage a server process (start/stop/status via the client)
+- `assetgen server` — client-side commands to manage a server process (start/stop/status via the client)
 
 This is confusing. The README should clarify this.
 
 **Fix:** Add this note below the Quick Start code block in README.md:
 
 ```markdown
-> **`AssetGen-server` vs `AssetGen server`:**
-> - `AssetGen-server start` — runs the inference server directly (the process itself)
-> - `AssetGen server start` — tells the client to launch a local `AssetGen-server` process for you
-> - `AssetGen server status` / `AssetGen server stop` — manage the locally auto-started server
+> **`assetgen-server` vs `assetgen server`:**
+> - `assetgen-server start` — runs the inference server directly (the process itself)
+> - `assetgen server start` — tells the client to launch a local `assetgen-server` process for you
+> - `assetgen server status` / `assetgen server stop` — manage the locally auto-started server
 >
-> For a remote GPU machine, run `AssetGen-server start --daemon` there, then on your laptop:
-> `AssetGen client config set-server http://<gpu-machine>:8432`
+> For a remote GPU machine, run `assetgen-server start --daemon` there, then on your laptop:
+> `assetgen client config set-server http://<gpu-machine>:8432`
 ```
 
 ---
@@ -313,7 +313,7 @@ A clear description of what went wrong.
 **To Reproduce**
 ```bash
 # exact command that failed
-AssetGen gen audio sfx generate "example prompt"
+assetgen gen audio sfx generate "example prompt"
 ```
 
 **Expected behavior**
@@ -327,7 +327,7 @@ paste full error / traceback here
 **Environment**
 - OS: [e.g. Ubuntu 22.04]
 - Python: [e.g. 3.11.9]
-- AssetGen version: [output of `AssetGen version`]
+- assetgen version: [output of `assetgen version`]
 - Install type: [pip / source / docker]
 - GPU: [e.g. RTX 4070 12 GB, or "CPU only"]
 - CUDA version (if GPU): [e.g. 12.4]
@@ -345,7 +345,7 @@ labels: enhancement
 
 **Describe the proposed command**
 ```bash
-AssetGen gen <domain> <command> --example-flag value
+assetgen gen <domain> <command> --example-flag value
 ```
 
 **What model or algorithm would power it?**
@@ -366,7 +366,7 @@ Link to the HuggingFace model or algorithm paper if applicable.
 ```markdown
 # Changelog
 
-All notable changes to AssetGen are documented here.
+All notable changes to assetgen are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
@@ -446,11 +446,11 @@ return stubs.
 **Fix:** Below the Installation section, add:
 ```markdown
 > **`[inference]` extra:** Installs `torch`, `transformers`, `diffusers`, `accelerate`, and
-> `trimesh` for local GPU inference. Without it, AssetGen is a fully functional client that can
-> talk to a remote `AssetGen-server`, but a local server will return stub outputs instead of
+> `trimesh` for local GPU inference. Without it, assetgen is a fully functional client that can
+> talk to a remote `assetgen-server`, but a local server will return stub outputs instead of
 > running real models.
 >
-> For CI environments or machines without a GPU, `pip install AssetGen` (without `[inference]`)
+> For CI environments or machines without a GPU, `pip install assetgen` (without `[inference]`)
 > is the right choice.
 ```
 
@@ -492,7 +492,7 @@ configured. Type errors can slip through ruff linting.
 1. In `.github/workflows/ci.yml`, add a coverage step:
    ```yaml
    - name: Run tests with coverage
-     run: pytest -v --cov=src/AssetGen --cov-report=xml --cov-fail-under=60
+     run: pytest -v --cov=src/assetgen --cov-report=xml --cov-fail-under=60
    ```
 2. Upload to codecov.io (free for open source) or use the GitHub Actions summary.
 3. Add a coverage badge to README.md.
@@ -538,8 +538,8 @@ Contributors wanting to run the full stack (client + server + GPU) locally need 
    ```bash
    docker compose -f docker/docker-compose.yml up server
    # then in another terminal:
-   AssetGen client config set-server http://localhost:8432
-   AssetGen audio sfx generate "test sound"
+   assetgen client config set-server http://localhost:8432
+   assetgen audio sfx generate "test sound"
    ```
 
 ---

@@ -10,21 +10,21 @@ from any machine on your network while keeping heavy inference off your laptop.
 On the GPU machine:
 
 ```bash
-pip install "AssetGen[inference]"
-AssetGen server config set host "0.0.0.0"   # accept LAN connections
-AssetGen server config set device cuda
-AssetGen-server start --daemon
+pip install "assetgen[inference]"
+assetgen server config set host "0.0.0.0"   # accept LAN connections
+assetgen server config set device cuda
+assetgen-server start --daemon
 ```
 
 On the client machine (laptop):
 
 ```bash
-pip install AssetGen
-AssetGen client config set-server http://192.168.1.50:8432
-AssetGen client config show    # verify health check passes
+pip install assetgen
+assetgen client config set-server http://192.168.1.50:8432
+assetgen client config show    # verify health check passes
 
 # Pre-download recommended models (~25 GB)
-AssetGen models install --recommended
+assetgen models install --recommended
 ```
 
 ---
@@ -48,33 +48,33 @@ python -c "import torch; print(torch.cuda.is_available())"
 
 ```powershell
 # Create a virtual environment
-python -m venv C:\AssetGen-venv
-C:\AssetGen-venv\Scripts\activate
+python -m venv C:\assetgen-venv
+C:\assetgen-venv\Scripts\activate
 
-# Install with CUDA-enabled PyTorch first, then AssetGen
+# Install with CUDA-enabled PyTorch first, then assetgen
 pip install torch --index-url https://download.pytorch.org/whl/cu121
-pip install "AssetGen[inference]"
+pip install "assetgen[inference]"
 ```
 
 ### 3. Configure and start the server
 
 ```powershell
 # Accept connections from your LAN
-AssetGen server config set host "0.0.0.0"
-AssetGen server config set device cuda
+assetgen server config set host "0.0.0.0"
+assetgen server config set device cuda
 
 # Start the server
-AssetGen-server start
+assetgen-server start
 
 # Pre-download recommended models (~25 GB)
-AssetGen models install --recommended
+assetgen models install --recommended
 ```
 
 ### 4. Allow through Windows Firewall
 
 ```powershell
 # Run PowerShell as Administrator
-New-NetFirewallRule -DisplayName "AssetGen-server" `
+New-NetFirewallRule -DisplayName "assetgen-server" `
     -Direction Inbound -Protocol TCP -LocalPort 8432 `
     -Action Allow -Profile Private
 ```
@@ -88,10 +88,10 @@ Use [NSSM](https://nssm.cc/) (Non-Sucking Service Manager) to run AssetGen as a 
 
 ```powershell
 # Download nssm and place it in PATH, then:
-nssm install AssetGen-server C:\AssetGen-venv\Scripts\AssetGen-server.exe start
-nssm set AssetGen-server AppParameters "--host 0.0.0.0"
-nssm set AssetGen-server AppEnvironmentExtra "ASSETGEN_DEVICE=cuda"
-nssm start AssetGen-server
+nssm install assetgen-server C:\assetgen-venv\Scripts\assetgen-server.exe start
+nssm set assetgen-server AppParameters "--host 0.0.0.0"
+nssm set assetgen-server AppEnvironmentExtra "ASSETGEN_DEVICE=cuda"
+nssm start assetgen-server
 ```
 
 Or use **Task Scheduler**: create a task that runs at logon with action
@@ -115,13 +115,13 @@ Create `/etc/systemd/system/AssetGen-server.service`:
 
 ```ini
 [Unit]
-Description=AssetGen inference server
+Description=assetgen inference server
 After=network.target
 
 [Service]
 Type=simple
 User=youruser
-ExecStart=/home/youruser/.venv/bin/AssetGen-server start \
+ExecStart=/home/youruser/.venv/bin/assetgen-server start \
     --host 0.0.0.0 --port 8432
 Restart=on-failure
 RestartSec=5
@@ -141,8 +141,8 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now AssetGen-server
-sudo journalctl -u AssetGen-server -f
+sudo systemctl enable --now assetgen-server
+sudo journalctl -u assetgen-server -f
 ```
 
 ### NVIDIA CUDA persistence (recommended for gaming GPUs)
@@ -161,7 +161,7 @@ Or as its own systemd unit (`/etc/systemd/system/nvidia-persist.service`):
 ```ini
 [Unit]
 Description=NVIDIA persistence mode
-Before=AssetGen-server.service
+Before=assetgen-server.service
 
 [Service]
 Type=oneshot
@@ -179,21 +179,21 @@ take minutes.  Add a pre-warm step that loads your most-used models before
 serving any requests:
 
 ```bash
-# /home/youruser/AssetGen-prewarm.sh
+# /home/youruser/assetgen-prewarm.sh
 #!/bin/bash
 set -e
 # Wait for the server to be ready
 sleep 5
-AssetGen client config set server_url "http://localhost:8432"
+assetgen client config set server_url "http://localhost:8432"
 # Enqueue lightweight warm-up jobs (they complete quickly and prime the cache)
-AssetGen gen audio sfx generate "test" --wait --timeout 120 || true
-echo "AssetGen server warmed up"
+assetgen gen audio sfx generate "test" --wait --timeout 120 || true
+echo "assetgen server warmed up"
 ```
 
 Add to the service unit:
 
 ```ini
-ExecStartPost=/home/youruser/AssetGen-prewarm.sh
+ExecStartPost=/home/youruser/assetgen-prewarm.sh
 ```
 
 ### Multi-GPU: assigning specific tasks to specific GPUs
@@ -202,20 +202,20 @@ Run two server instances on different ports, each pinned to a different GPU:
 
 ```bash
 # GPU 0 — visual / 3D tasks
-CUDA_VISIBLE_DEVICES=0 AssetGen-server start --host 127.0.0.1 --port 8432 --daemon
+CUDA_VISIBLE_DEVICES=0 assetgen-server start --host 127.0.0.1 --port 8432 --daemon
 
 # GPU 1 — audio / narrative tasks
-CUDA_VISIBLE_DEVICES=1 AssetGen-server start --host 127.0.0.1 --port 8743 --daemon
+CUDA_VISIBLE_DEVICES=1 assetgen-server start --host 127.0.0.1 --port 8743 --daemon
 ```
 
 Then in client scripts route by job type:
 
 ```bash
-AssetGen client config set server_url "http://localhost:8432"
-AssetGen gen visual model create "sword" --wait
+assetgen client config set server_url "http://localhost:8432"
+assetgen gen visual model create "sword" --wait
 
-AssetGen client config set server_url "http://localhost:8743"
-AssetGen gen audio music compose "battle theme" --wait
+assetgen client config set server_url "http://localhost:8743"
+assetgen gen audio music compose "battle theme" --wait
 ```
 
 ---
@@ -229,10 +229,10 @@ LAN, you should enable API key auth to prevent unauthorized access.
 
 ```bash
 # Generate a random key and save it
-AssetGen server config set api_key "$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
+assetgen server config set api_key "$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
 
 # Restart the server for the change to take effect
-AssetGen-server stop && AssetGen-server start --daemon
+assetgen-server stop && assetgen-server start --daemon
 ```
 
 Or set it directly in `~/.config/AssetGen/server.yaml`:
@@ -247,7 +247,7 @@ api_key: "your-secret-key-here"
 # Option 1: environment variable
 export ASSETGEN_API_KEY="your-secret-key-here"
 
-# Option 2: client config file (~/.config/AssetGen/client.yaml)
+# Option 2: client config file (~/.config/assetgen/client.yaml)
 # Add: api_key: "your-secret-key-here"
 ```
 
@@ -279,7 +279,7 @@ sudo iptables -A INPUT -p tcp --dport 8432 -s 192.168.1.0/24 -j ACCEPT
 ```bash
 # On the client machine:
 ssh -N -L 8432:localhost:8432 user@gpu-machine &
-AssetGen client config set server_url "http://localhost:8432"
+assetgen client config set server_url "http://localhost:8432"
 ```
 
 ---

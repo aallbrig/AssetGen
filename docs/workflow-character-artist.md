@@ -20,8 +20,8 @@ End-to-end NPC character pipeline:
 ## Prerequisites
 
 ```bash
-pip install "AssetGen[inference]"
-AssetGen server status   # confirm CUDA device is visible
+pip install "assetgen[inference]"
+assetgen server status   # confirm CUDA device is visible
 ```
 
 ---
@@ -32,7 +32,7 @@ A front/back/side reference sheet gives the image-to-3D model the geometry cues 
 Do not skip this — text-to-3D for bipedal characters is unreliable.
 
 ```bash
-AssetGen gen visual concept generate \
+assetgen gen visual concept generate \
   --prompt "elf ranger NPC, full body character sheet, front back side views, white background, clean line art, fantasy RPG style" \
   --wait
 ```
@@ -49,7 +49,7 @@ If unsatisfied, tweak the prompt and regenerate (takes ~1 minute).
 ## Step 2 — Image-to-3D mesh
 
 ```bash
-AssetGen gen visual model create \
+assetgen gen visual model create \
   --input concept_<id>.png \
   --wait
 ```
@@ -81,7 +81,7 @@ Output: `model_<id>.glb`
 ## Step 3 — Auto-rig
 
 ```bash
-AssetGen gen visual rig auto \
+assetgen gen visual rig auto \
   --input model_<id>.glb \
   --skeleton humanoid \
   --wait
@@ -111,7 +111,7 @@ Output: `rig_<id>.glb` — mesh + skeleton + skin weights.
     the rig looks plausible before investing in mocap or hand-keyed animation.
 
 ```bash
-AssetGen gen visual animate keyframe \
+assetgen gen visual animate keyframe \
   --input rig_<id>.glb \
   --prompt "looping idle animation, breathing, weight shift, natural" \
   --wait
@@ -129,7 +129,7 @@ or a dedicated animation tool like Cascadeur or Mixamo.
 If you have a short reference video of the motion you want:
 
 ```bash
-AssetGen gen visual animate mocap \
+assetgen gen visual animate mocap \
   --input reference_walk.mp4 \
   --wait
 ```
@@ -153,20 +153,20 @@ set -e
 CHARACTER="elf ranger NPC, fantasy RPG"
 
 echo "→ Generating concept sheet..."
-CONCEPT=$(AssetGen gen visual concept generate \
+CONCEPT=$(assetgen gen visual concept generate \
   --prompt "$CHARACTER, full body, front back side views, white background" \
   --wait --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Creating 3D mesh from concept..."
-MESH=$(AssetGen gen visual model create --input "$CONCEPT" --wait \
+MESH=$(assetgen gen visual model create --input "$CONCEPT" --wait \
   --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Auto-rigging (humanoid)..."
-RIG=$(AssetGen gen visual rig auto --input "$MESH" --skeleton humanoid --wait \
+RIG=$(assetgen gen visual rig auto --input "$MESH" --skeleton humanoid --wait \
   --output-dir ./output | grep "output:" | awk '{print $2}')
 
 echo "→ Preview animation..."
-AssetGen gen visual animate keyframe \
+assetgen gen visual animate keyframe \
   --input "$RIG" --prompt "looping idle, breathing" --wait
 
 echo "✓ Done: $RIG"

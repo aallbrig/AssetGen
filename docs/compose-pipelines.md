@@ -14,8 +14,8 @@ The cost equals the sum of the individual steps. There is no overhead.
 | Scenario | Use |
 |---|---|
 | You want a complete game-ready asset in one command | `compose` |
-| You want to tweak one specific step interactively | `AssetGen gen ...` |
-| You want to reuse an existing mesh from disk | `AssetGen gen ...` with `--input` |
+| You want to tweak one specific step interactively | `assetgen gen ...` |
+| You want to reuse an existing mesh from disk | `assetgen gen ...` with `--input` |
 | You want to script asset batch generation | `compose ... --wait` in a loop |
 | You want to see exactly what would run | `compose ... --dry-run` |
 
@@ -34,44 +34,44 @@ All compose commands accept:
 
 ---
 
-## AssetGen compose npc
+## assetgen compose npc
 
 Generate a complete game NPC: concept art → multi-view images → 3D mesh → UV →
 PBR texture → rig → animations → LOD levels → collision → voice lines → export.
 
 ```bash
 # Pig shopkeeper for a medieval fantasy game
-AssetGen compose npc "pig shopkeeper with apron, medieval fantasy" --wait
+assetgen compose npc "pig shopkeeper with apron, medieval fantasy" --wait
 
 # Dark elf archer — Unreal Engine, high quality
-AssetGen compose npc "dark elf archer, gritty realistic" \
+assetgen compose npc "dark elf archer, gritty realistic" \
     --style "gritty realistic" --engine unreal --quality high --wait
 
 # Quick prototype — skip multiview and LODs
-AssetGen compose npc "robot guard" --no-multiview --no-lod --wait
+assetgen compose npc "robot guard" --no-multiview --no-lod --wait
 
 # Preview the 12-step chain before committing
-AssetGen compose npc "wizard sage" --dry-run
+assetgen compose npc "wizard sage" --dry-run
 ```
 
 **Key flags:** `--style`, `--voice`, `--no-multiview`, `--no-lod`, `--no-collider`
 
 ---
 
-## AssetGen compose weapon
+## assetgen compose weapon
 
 Generate a complete weapon asset: concept art → mesh → UV unwrap →
 concept-guided texture → LOD levels → collision mesh → export.
 
 ```bash
-AssetGen compose weapon "rusted iron longsword, dark fantasy" --wait
-AssetGen compose weapon "plasma rifle" --style "sci-fi, chrome" --engine unreal --wait
-AssetGen compose weapon "elven bow, silver filigree" --quality high --wait
+assetgen compose weapon "rusted iron longsword, dark fantasy" --wait
+assetgen compose weapon "plasma rifle" --style "sci-fi, chrome" --engine unreal --wait
+assetgen compose weapon "elven bow, silver filigree" --quality high --wait
 ```
 
 ---
 
-## AssetGen compose prop
+## assetgen compose prop
 
 Generate a static game prop — furniture, containers, decorations, foliage, or
 structural elements. Ideal for high-volume prop production.
@@ -83,18 +83,18 @@ concept art → mesh → UV unwrap → concept-guided texture → LOD levels
 
 ```bash
 # Barrel for a medieval dungeon (Godot)
-AssetGen compose prop "wooden barrel with iron bands, medieval" \
+assetgen compose prop "wooden barrel with iron bands, medieval" \
     --engine godot --wait
 
 # Quick low-poly decoration
-AssetGen compose prop "stone pillar, dungeon" \
+assetgen compose prop "stone pillar, dungeon" \
     --type decoration --quality low --wait
 
 # Ornate chest — preview first
-AssetGen compose prop "ornate treasure chest, gold trim" --dry-run
+assetgen compose prop "ornate treasure chest, gold trim" --dry-run
 
 # Hanging lantern
-AssetGen compose prop "oil lantern, hanging, warm glow" --wait
+assetgen compose prop "oil lantern, hanging, warm glow" --wait
 ```
 
 **Flags:**
@@ -103,17 +103,17 @@ AssetGen compose prop "oil lantern, hanging, warm glow" --wait
 
 !!! tip "High-volume prop generation"
     Run several props in parallel by submitting without `--wait`, then
-    monitor with `AssetGen jobs list`:
+    monitor with `assetgen jobs list`:
     ```bash
-    AssetGen compose prop "barrel" --engine godot
-    AssetGen compose prop "crate" --engine godot
-    AssetGen compose prop "torch bracket" --engine godot
-    AssetGen jobs list
+    assetgen compose prop "barrel" --engine godot
+    assetgen compose prop "crate" --engine godot
+    assetgen compose prop "torch bracket" --engine godot
+    assetgen jobs list
     ```
 
 ---
 
-## AssetGen compose material
+## assetgen compose material
 
 Generate a full PBR material set from a text description.
 
@@ -126,18 +126,18 @@ Output files: `albedo.png`, `normal.png`, `roughness.png`, `ao.png`, `metallic.p
 
 ```bash
 # Cobblestone ground material
-AssetGen compose material "weathered cobblestone, mossy, medieval" --wait
+assetgen compose material "weathered cobblestone, mossy, medieval" --wait
 
 # High-res rusted metal with upscaling
-AssetGen compose material "rusted iron sheet, factory floor" \
+assetgen compose material "rusted iron sheet, factory floor" \
     --resolution 2048 --upscale --wait
 
 # Wood for Godot
-AssetGen compose material "worn oak planks, aged" \
+assetgen compose material "worn oak planks, aged" \
     --type wood --engine godot --wait
 
 # Organic skin material
-AssetGen compose material "dragon scale, iridescent, reptilian" \
+assetgen compose material "dragon scale, iridescent, reptilian" \
     --type organic --quality high --wait
 ```
 
@@ -160,7 +160,7 @@ AssetGen compose material "dragon scale, iridescent, reptilian" \
 
 ---
 
-## AssetGen compose soundscape
+## assetgen compose soundscape
 
 Generate a complete audio suite for a game level or biome: ambient loop +
 theme music + a set of themed sound effects, all in one command.
@@ -172,19 +172,19 @@ ambient loop → theme music → loopable music → N themed SFX
 
 ```bash
 # Enchanted forest at night (5 SFX)
-AssetGen compose soundscape "enchanted forest at night" --wait
+assetgen compose soundscape "enchanted forest at night" --wait
 
 # Busy tavern with explicit SFX list
-AssetGen compose soundscape "medieval tavern, busy crowd" \
+assetgen compose soundscape "medieval tavern, busy crowd" \
     --sfx-list "coin clink,wooden chair scrape,fire crackle,mug slam,door creak" \
     --wait
 
 # Dungeon — ambient + SFX only, no music
-AssetGen compose soundscape "dungeon corridor, dripping water" \
+assetgen compose soundscape "dungeon corridor, dripping water" \
     --no-music --sfx-count 8 --wait
 
 # Long ambient loop for an open world region
-AssetGen compose soundscape "volcanic crater, rumbling" \
+assetgen compose soundscape "volcanic crater, rumbling" \
     --duration 60 --sfx-count 4 --wait
 ```
 
@@ -200,7 +200,7 @@ AssetGen compose soundscape "volcanic crater, rumbling" \
 
 ---
 
-## AssetGen compose ui-kit
+## assetgen compose ui-kit
 
 Generate a cohesive UI element set for a game. All elements share a common
 style reference generated in the first step.
@@ -212,18 +212,18 @@ style reference → button states (normal/hover/pressed) → dialog panel
 
 ```bash
 # Dark fantasy RPG UI
-AssetGen compose ui-kit "dark fantasy RPG" --wait
+assetgen compose ui-kit "dark fantasy RPG" --wait
 
 # Sci-fi HUD with custom icons
-AssetGen compose ui-kit "sci-fi HUD, blue holographic glow" \
+assetgen compose ui-kit "sci-fi HUD, blue holographic glow" \
     --icons "health,shield,ammo,radar,objective" --wait
 
 # Cozy farming game with warm palette
-AssetGen compose ui-kit "cozy farming game, warm" \
+assetgen compose ui-kit "cozy farming game, warm" \
     --palette "warm earthy tones, hand-drawn style" --wait
 
 # Preview the step plan
-AssetGen compose ui-kit "horror survival" --dry-run
+assetgen compose ui-kit "horror survival" --dry-run
 ```
 
 **Flags:**
@@ -232,7 +232,7 @@ AssetGen compose ui-kit "horror survival" --dry-run
 
 ---
 
-## AssetGen compose environment
+## assetgen compose environment
 
 Generate a full level environment kit: multiple props sharing a common style,
 a ground material, and ambient audio — all in a single command.
@@ -249,24 +249,24 @@ dozens of manual commands.
 
 ```bash
 # Medieval tavern interior — 6 props, Godot export
-AssetGen compose environment "medieval tavern interior" \
+assetgen compose environment "medieval tavern interior" \
     --count 6 --engine godot --wait
 
 # Sci-fi corridor kit — 4 props, Unreal
-AssetGen compose environment "sci-fi maintenance corridor" \
+assetgen compose environment "sci-fi maintenance corridor" \
     --count 4 --engine unreal --wait
 
 # Explicit item list
-AssetGen compose environment "haunted forest clearing" \
+assetgen compose environment "haunted forest clearing" \
     --items "dead tree,moss-covered gravestone,iron fence,broken lantern,fog machine" \
     --wait
 
 # Skip audio and ground (props only)
-AssetGen compose environment "crystal cave" \
+assetgen compose environment "crystal cave" \
     --count 5 --no-audio --no-ground --wait
 
 # Always preview first — 26 steps is a lot to cancel mid-way
-AssetGen compose environment "medieval tavern" --count 6 --dry-run
+assetgen compose environment "medieval tavern" --count 6 --dry-run
 ```
 
 **Flags:**
@@ -287,7 +287,7 @@ AssetGen compose environment "medieval tavern" --count 6 --dry-run
     | 6 + `--quality low` | 26 | ~20 min |
 
     Use `--quality low` for rapid prototyping and upgrade individual props
-    with `AssetGen gen` commands once you've confirmed the kit direction.
+    with `assetgen gen` commands once you've confirmed the kit direction.
 
 ---
 
@@ -297,7 +297,7 @@ Every compose command supports `--dry-run`. It prints the full step table —
 step ID, job type, upstream dependency, and parameters — without submitting anything.
 
 ```bash
-AssetGen compose environment "desert ruins" --count 4 --dry-run
+assetgen compose environment "desert ruins" --count 4 --dry-run
 ```
 
 ```
@@ -320,13 +320,13 @@ Use dry-run to:
 
 ```bash
 # All recent jobs
-AssetGen jobs list
+assetgen jobs list
 
 # Detailed status for a specific job
-AssetGen jobs status <job-id>
+assetgen jobs status <job-id>
 
 # Full info including the original prompt, in YAML
-AssetGen jobs status <job-id> --yaml
+assetgen jobs status <job-id> --yaml
 ```
 
 The `--yaml` output shows the exact prompt, parameters, and CLI command used

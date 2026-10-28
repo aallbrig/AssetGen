@@ -23,24 +23,24 @@ You describe what you want. AssetGen dispatches the work to a local server that 
 
 ```bash
 # Generate a 3D prop
-AssetGen gen visual model create --prompt "low-poly medieval sword" --wait
+assetgen gen visual model create --prompt "low-poly medieval sword" --wait
 
 # Generate a sound effect
-AssetGen gen audio sfx generate "laser gun firing" --wait
+assetgen gen audio sfx generate "laser gun firing" --wait
 
 # View all available tasks and their assigned AI models
-AssetGen tasks
+assetgen tasks
 ```
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  AssetGen  (client CLI, runs anywhere)                 │
+│  assetgen  (client CLI, runs anywhere)                 │
 └──────────────────────┬──────────────────────────────┘
                        │ HTTP REST
 ┌──────────────────────▼──────────────────────────────┐
-│  AssetGen-server  (FastAPI + SQLite job queue)         │
+│  assetgen-server  (FastAPI + SQLite job queue)         │
 │  ├── ModelManager   (HuggingFace Hub download/cache) │
 │  ├── WorkerThread   (GPU inference)                  │
 │  └── Validation     (allow-list + HF tag checking)  │
@@ -50,7 +50,7 @@ AssetGen tasks
 The client auto-starts a local server on first use, or you can point it at a remote GPU machine:
 
 ```bash
-AssetGen client config set-server http://my-gpu-desktop:8432
+assetgen client config set-server http://my-gpu-desktop:8432
 ```
 
 ## Feature Highlights

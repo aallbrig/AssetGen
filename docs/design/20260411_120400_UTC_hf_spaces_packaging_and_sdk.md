@@ -29,7 +29,7 @@ Homebrew, Chocolatey, Docker, and PyInstaller binaries all work on tag. PyPI doe
         with:
           # Uses Trusted Publishing (OIDC) — no API token needed.
           # One-time setup: go to pypi.org → your project → Publishing → add GitHub publisher:
-          #   Owner: aallbrig   Repo: AssetGen   Workflow: release.yml   Environment: (leave blank)
+          #   Owner: aallbrig   Repo: assetgen   Workflow: release.yml   Environment: (leave blank)
           skip-existing: true
 ```
 
@@ -47,12 +47,12 @@ in the `release` job. The `id-token: write` permission is already present in the
 
 HuggingFace Spaces build their Python environment from `requirements.txt` at Space startup.
 If AssetGen is not on PyPI, the Space has two bad alternatives:
-- `AssetGen @ git+https://github.com/aallbrig/AssetGen.git` — slow, fragile (pulls main HEAD)
+- `assetgen @ git+https://github.com/aallbrig/AssetGen.git` — slow, fragile (pulls main HEAD)
 - Bundling all handler code directly — duplicates logic, defeats the purpose
 
 Once the PyPI step is merged, every Space's `requirements.txt` is simply:
 ```
-AssetGen[spaces]
+assetgen[spaces]
 ```
 
 ---
@@ -79,14 +79,14 @@ HuggingFace Spaces (and any other programmatic consumer) should not have to:
 
 ```python
 """
-AssetGen.sdk — public Python API for running AssetGen generation without the server.
+assetgen.sdk — public Python API for running assetgen generation without the server.
 
 Intended for HuggingFace Spaces, notebooks, and any programmatic consumer that
 wants inference without the client-server HTTP stack.
 
 Example::
 
-    from AssetGen.sdk import run
+    from assetgen.sdk import run
     result = run("audio.sfx.generate", {"prompt": "sword clash", "duration": 2.0})
     print(result["files"])   # ['/tmp/abc123/sfx.wav']
 """
@@ -105,7 +105,7 @@ def run(
     output_dir: Path | str | None = None,
     model_id: str | None = None,
 ) -> dict[str, Any]:
-    """Run any AssetGen generation task as a pure Python call.
+    """Run any assetgen generation task as a pure Python call.
 
     No server process, no SQLite, no HTTP. Loads models on demand via HuggingFace Hub.
 
@@ -115,7 +115,7 @@ def run(
         Dot-separated task identifier, e.g. ``"audio.sfx.generate"``,
         ``"visual.texture.generate"``, ``"narrative.dialogue.npc"``.
         Must match a key in ``catalog.yaml`` and a handler module in
-        ``AssetGen.server.handlers``.
+        ``assetgen.server.handlers``.
     params:
         Task-specific parameter dict. Keys match what the CLI passes internally.
         See the handler module's docstring for the full parameter spec.
@@ -162,7 +162,7 @@ def run(
     if model_id is None:
         try:
             # get_catalog() does not exist — use get_model_for_job() instead.
-            from AssetGen.catalog import get_model_for_job
+            from assetgen.catalog import get_model_for_job
             entry = get_model_for_job(job_type) or {}
             model_id = entry.get("model_id")
         except Exception:
@@ -194,7 +194,7 @@ def _load_handler(job_type: str):
     Unlike the server's ``_load_handler``, this raises ``NotImplementedError``
     rather than silently returning a stub — callers should know if a handler is missing.
     """
-    module_name = "AssetGen.server.handlers." + job_type.replace(".", "_")
+    module_name = "assetgen.server.handlers." + job_type.replace(".", "_")
     try:
         mod = importlib.import_module(module_name)
         return mod.run  # type: ignore[attr-defined]
@@ -216,7 +216,7 @@ and duplicate the catalog. A Space that needs `generate_sfx` behavior just calls
 
 Add to `src/AssetGen/__init__.py`:
 ```python
-from AssetGen.sdk import run as generate  # noqa: F401
+from assetgen.sdk import run as generate  # noqa: F401
 ```
 This lets power users do `from AssetGen import generate` but is not required for Spaces.
 
@@ -293,16 +293,16 @@ spaces/
 ├── _template/
 │   ├── app.py            # Template for new Spaces (copy and modify)
 │   └── README.md         # Template for HF Space card
-├── AssetGen.audio.sfx.generate/
+├── assetgen.audio.sfx.generate/
 │   ├── app.py
 │   └── README.md
-├── AssetGen.audio.music.compose/
+├── assetgen.audio.music.compose/
 │   ├── app.py
 │   └── README.md
-├── AssetGen.audio.voice.tts/
+├── assetgen.audio.voice.tts/
 │   ├── app.py
 │   └── README.md
-├── AssetGen.concept.generate/
+├── assetgen.concept.generate/
 │   ├── app.py
 │   └── README.md
 ... (one directory per Space)
@@ -319,16 +319,16 @@ dynamically by the sync workflow (see Section 5) because they differ by Space ha
 
 ```python
 """
-AssetGen.<domain>.<command> — HuggingFace Space
+assetgen.<domain>.<command> — HuggingFace Space
 <one-line description>
 
-CLI equivalent: AssetGen gen <domain> <command> [args]
+CLI equivalent: assetgen gen <domain> <command> [args]
 """
 from __future__ import annotations
 
 import spaces
 import gradio as gr
-from AssetGen.sdk import run
+from assetgen.sdk import run
 
 JOB_TYPE = "domain.subdomain.command"   # ← change this
 
@@ -339,11 +339,11 @@ def _run(param1: str, param2: float) -> str:
     return result["files"][0]   # or result["files"] for multiple outputs
 
 
-with gr.Blocks(title="AssetGen · <Title>") as demo:
+with gr.Blocks(title="assetgen · <Title>") as demo:
     gr.Markdown(
-        "# AssetGen · <Title>\n"
+        "# assetgen · <Title>\n"
         "<Short description of what this Space demonstrates.>\n"
-        "Part of the [AssetGen](https://github.com/aallbrig/AssetGen) pipeline."
+        "Part of the [assetgen](https://github.com/aallbrig/assetgen) pipeline."
     )
     with gr.Row():
         with gr.Column():
@@ -362,7 +362,7 @@ demo.launch()
 
 ```markdown
 ---
-title: "AssetGen · <Title>"
+title: "assetgen · <Title>"
 emoji: 🎮
 colorFrom: purple
 colorTo: blue
@@ -374,18 +374,18 @@ license: apache-2.0
 hardware: zero-gpu        # or: cpu-basic
 tags:
   - game-assets
-  - AssetGen
+  - assetgen
 short_description: <One-line description>
 ---
 
-# AssetGen · <Title>
+# assetgen · <Title>
 
 <Description of what this Space does.>
 
-Part of the [AssetGen](https://github.com/aallbrig/AssetGen) game asset generation pipeline.
+Part of the [assetgen](https://github.com/aallbrig/assetgen) game asset generation pipeline.
 
 **Model:** [model-org/model-name](https://huggingface.co/model-org/model-name)
-**CLI equivalent:** `AssetGen gen <domain> <command>`
+**CLI equivalent:** `assetgen gen <domain> <command>`
 ```
 
 ---
@@ -457,53 +457,53 @@ SPACES_DIR = REPO_ROOT / "spaces"
 
 # Spaces that need audiocraft (not on PyPI — requires git install)
 AUDIOCRAFT_SPACES = {
-    "AssetGen.audio.sfx.generate",
-    "AssetGen.audio.music.compose",
-    "AssetGen.audio.music.loop",
-    "AssetGen.audio.ambient.generate",
+    "assetgen.audio.sfx.generate",
+    "assetgen.audio.music.compose",
+    "assetgen.audio.music.loop",
+    "assetgen.audio.ambient.generate",
 }
 
 # Spaces that are CPU-only (no ZeroGPU needed)
 CPU_SPACES = {
-    "AssetGen.procedural.terrain.heightmap",
-    "AssetGen.mesh.validate",
-    "AssetGen.mesh.convert",
-    "AssetGen.mesh.bounds",
-    "AssetGen.mesh.center",
-    "AssetGen.mesh.scale",
-    "AssetGen.mesh.flipnormals",
-    "AssetGen.mesh.weld",
-    "AssetGen.texture.pbr",
-    "AssetGen.texture.channel_pack",
-    "AssetGen.texture.atlas_pack",
-    "AssetGen.texture.mipmap",
-    "AssetGen.texture.normalmap_convert",
-    "AssetGen.texture.seamless",
-    "AssetGen.texture.resize",
-    "AssetGen.texture.report",
-    "AssetGen.audio.process.normalize",
-    "AssetGen.audio.process.trim_silence",
-    "AssetGen.audio.process.convert",
-    "AssetGen.audio.process.downmix",
-    "AssetGen.audio.process.resample",
-    "AssetGen.audio.process.loop_optimize",
-    "AssetGen.audio.process.waveform",
-    "AssetGen.procedural.level.dungeon",
-    "AssetGen.procedural.texture.noise",
-    "AssetGen.procedural.level.voronoi",
-    "AssetGen.procedural.foliage.scatter",
-    "AssetGen.procedural.plant.lsystem",
-    "AssetGen.procedural.tileset.wfc",
-    "AssetGen.scene.physics.collider",
-    "AssetGen.lod.generate",
-    "AssetGen.uv.auto",
-    "AssetGen.sprite.pack",
+    "assetgen.procedural.terrain.heightmap",
+    "assetgen.mesh.validate",
+    "assetgen.mesh.convert",
+    "assetgen.mesh.bounds",
+    "assetgen.mesh.center",
+    "assetgen.mesh.scale",
+    "assetgen.mesh.flipnormals",
+    "assetgen.mesh.weld",
+    "assetgen.texture.pbr",
+    "assetgen.texture.channel_pack",
+    "assetgen.texture.atlas_pack",
+    "assetgen.texture.mipmap",
+    "assetgen.texture.normalmap_convert",
+    "assetgen.texture.seamless",
+    "assetgen.texture.resize",
+    "assetgen.texture.report",
+    "assetgen.audio.process.normalize",
+    "assetgen.audio.process.trim_silence",
+    "assetgen.audio.process.convert",
+    "assetgen.audio.process.downmix",
+    "assetgen.audio.process.resample",
+    "assetgen.audio.process.loop_optimize",
+    "assetgen.audio.process.waveform",
+    "assetgen.procedural.level.dungeon",
+    "assetgen.procedural.texture.noise",
+    "assetgen.procedural.level.voronoi",
+    "assetgen.procedural.foliage.scatter",
+    "assetgen.procedural.plant.lsystem",
+    "assetgen.procedural.tileset.wfc",
+    "assetgen.scene.physics.collider",
+    "assetgen.lod.generate",
+    "assetgen.uv.auto",
+    "assetgen.sprite.pack",
 }
 
 
 def make_requirements(space_name: str, version: str) -> str:
     """Generate requirements.txt content for a Space."""
-    lines = [f"AssetGen[spaces]=={version}"]
+    lines = [f"assetgen[spaces]=={version}"]
     if space_name in AUDIOCRAFT_SPACES:
         lines.append(
             "audiocraft @ git+https://github.com/facebookresearch/audiocraft.git"
@@ -550,7 +550,7 @@ def sync_space(space_name: str, version: str) -> None:
                 folder_path=str(tmp_path),
                 repo_id=space_name,
                 repo_type="space",
-                commit_message=f"AssetGen {version}",
+                commit_message=f"assetgen {version}",
             )
             print(f"  OK    {space_name}")
         except Exception as exc:
@@ -559,7 +559,7 @@ def sync_space(space_name: str, version: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", required=True, help="AssetGen version tag, e.g. v0.2.0")
+    parser.add_argument("--version", required=True, help="assetgen version tag, e.g. v0.2.0")
     parser.add_argument("--space", help="sync only this space (for manual use)")
     args = parser.parse_args()
 
@@ -573,7 +573,7 @@ def main() -> None:
             if d.is_dir() and not d.name.startswith("_")
         )
 
-    print(f"Syncing {len(spaces)} space(s) — AssetGen {version}")
+    print(f"Syncing {len(spaces)} space(s) — assetgen {version}")
     for space_name in spaces:
         sync_space(space_name, version)
 
@@ -587,7 +587,7 @@ if __name__ == "__main__":
 **Manual sync (for testing before a full release):**
 ```bash
 # Push a single Space without a tag
-python scripts/sync_spaces.py --version 0.2.0 --space AssetGen.audio.sfx.generate
+python scripts/sync_spaces.py --version 0.2.0 --space assetgen.audio.sfx.generate
 ```
 
 ---
@@ -599,11 +599,11 @@ The Tier 1 spec (`20260411_120100_UTC_hf_spaces_spec_tier1.md`) is updated to re
 
 Example — `AssetGen.audio.sfx.generate/app.py`:
 ```python
-"""AssetGen.audio.sfx.generate — HuggingFace Space"""
+"""assetgen.audio.sfx.generate — HuggingFace Space"""
 from __future__ import annotations
 import spaces
 import gradio as gr
-from AssetGen.sdk import run
+from assetgen.sdk import run
 
 @spaces.GPU
 def generate_sfx(description: str, duration: float) -> str:
@@ -614,11 +614,11 @@ def generate_sfx(description: str, duration: float) -> str:
     )
     return result["files"][0]
 
-with gr.Blocks(title="AssetGen · Audio SFX Generator") as demo:
+with gr.Blocks(title="assetgen · Audio SFX Generator") as demo:
     gr.Markdown(
-        "# 🔊 AssetGen · Audio SFX Generator\n"
+        "# 🔊 assetgen · Audio SFX Generator\n"
         "Generate game sound effects from text. "
-        "Part of the [AssetGen](https://github.com/aallbrig/AssetGen) pipeline."
+        "Part of the [assetgen](https://github.com/aallbrig/assetgen) pipeline."
     )
     with gr.Row():
         with gr.Column():
@@ -643,7 +643,7 @@ demo.launch()
 
 `requirements.txt` (generated by `sync_spaces.py`, not stored in repo):
 ```
-AssetGen[spaces]==0.2.0
+assetgen[spaces]==0.2.0
 audiocraft @ git+https://github.com/facebookresearch/audiocraft.git
 ```
 

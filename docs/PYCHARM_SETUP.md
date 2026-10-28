@@ -13,7 +13,7 @@ This guide explains how to use the preconfigured PyCharm run configurations for 
 
 ### 1. **AssetGen (CLI)**
 - **What it does:** Runs the `AssetGen` client CLI directly
-- **Use case:** Test CLI commands during development (e.g., `AssetGen version`, `AssetGen models list`)
+- **Use case:** Test CLI commands during development (e.g., `assetgen version`, `assetgen models list`)
 - **How to run:** Select "AssetGen (CLI)" from Run dropdown, then add command arguments in the Run Parameters field
 - **Keyboard shortcut:** Shift+F10 (after selecting this config)
 

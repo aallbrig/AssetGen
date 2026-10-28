@@ -199,23 +199,23 @@ while moderation is pending.
 ```python
 EXTRA_PIP: dict[str, list[str]] = {
     # voice.clone uses XTTS-v2 via Coqui TTS (Tier 2 Space, not yet deployed)
-    "AssetGen.audio.voice.clone": ["TTS>=0.22"],
+    "assetgen.audio.voice.clone": ["TTS>=0.22"],
     # LOD generation — pyfqmr is a C extension, build may fail on some platforms
-    "AssetGen.lod.generate": ["pyfqmr>=0.2"],
+    "assetgen.lod.generate": ["pyfqmr>=0.2"],
     # UV unwrapping — xatlas Python bindings
-    "AssetGen.uv.auto": ["xatlas>=0.0.9"],
+    "assetgen.uv.auto": ["xatlas>=0.0.9"],
     # TripoSR — image-to-3D (git install, not on PyPI)
-    "AssetGen.model.splat": [
+    "assetgen.model.splat": [
         "tsr @ git+https://github.com/VAST-AI-Research/TripoSR.git",
         "rembg>=2.0.57",
     ],
     # AnimateDiff needs imageio for GIF/MP4 export
-    "AssetGen.animate.keyframe": [
+    "assetgen.animate.keyframe": [
         "imageio>=2.34.0",
         "imageio-ffmpeg>=0.4.9",
     ],
     # UI mockup uses ControlNet auxiliary preprocessors
-    "AssetGen.ui.mockup": ["controlnet-aux>=0.0.7"],
+    "assetgen.ui.mockup": ["controlnet-aux>=0.0.7"],
 }
 ```
 

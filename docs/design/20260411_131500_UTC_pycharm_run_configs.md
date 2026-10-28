@@ -12,7 +12,7 @@ This document specifies the developer tooling that lets you open any Gradio Spac
 ```
 .idea/
 └── runConfigurations/
-    ├── space_AssetGen_audio_sfx_generate.xml      # Space: AssetGen.audio.sfx.generate
+    ├── space_AssetGen_audio_sfx_generate.xml      # Space: assetgen.audio.sfx.generate
     ├── space_AssetGen_audio_music_compose.xml
     ├── ...                                       # 72 total — one per feasible Space
     └── space_AssetGen_ui_screen.xml
@@ -82,23 +82,23 @@ config by copying this template to `.idea/runConfigurations/space_<name_with_und
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false"
-                 name="Space: AssetGen.<domain>.<command>"
+                 name="Space: assetgen.<domain>.<command>"
                  type="PythonConfigurationType"
                  factoryName="Python"
                  folderName="Spaces: <Domain>">
-    <module name="AssetGen" />
+    <module name="assetgen" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spaces/AssetGen.<domain>.<command>" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spaces/assetgen.<domain>.<command>" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spaces/AssetGen.<domain>.<command>/app.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spaces/assetgen.<domain>.<command>/app.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="true" />
@@ -170,89 +170,89 @@ RUNCONFIGS_DIR = REPO_ROOT / ".idea" / "runConfigurations"
 # One entry per feasible Space: (space_repo_name, pycharm_folder_name)
 SPACES: list[tuple[str, str]] = [
     # Audio (14)
-    ("AssetGen.audio.sfx.generate",           "Spaces: Audio"),
-    ("AssetGen.audio.music.compose",          "Spaces: Audio"),
-    ("AssetGen.audio.music.loop",             "Spaces: Audio"),
-    ("AssetGen.audio.music.adaptive",         "Spaces: Audio"),
-    ("AssetGen.audio.ambient.generate",       "Spaces: Audio"),
-    ("AssetGen.audio.voice.tts",              "Spaces: Audio"),
-    ("AssetGen.audio.voice.clone",            "Spaces: Audio"),
-    ("AssetGen.audio.process.normalize",      "Spaces: Audio"),
-    ("AssetGen.audio.process.trim_silence",   "Spaces: Audio"),
-    ("AssetGen.audio.process.loop_optimize",  "Spaces: Audio"),
-    ("AssetGen.audio.process.convert",        "Spaces: Audio"),
-    ("AssetGen.audio.process.downmix",        "Spaces: Audio"),
-    ("AssetGen.audio.process.resample",       "Spaces: Audio"),
-    ("AssetGen.audio.process.waveform",       "Spaces: Audio"),
+    ("assetgen.audio.sfx.generate",           "Spaces: Audio"),
+    ("assetgen.audio.music.compose",          "Spaces: Audio"),
+    ("assetgen.audio.music.loop",             "Spaces: Audio"),
+    ("assetgen.audio.music.adaptive",         "Spaces: Audio"),
+    ("assetgen.audio.ambient.generate",       "Spaces: Audio"),
+    ("assetgen.audio.voice.tts",              "Spaces: Audio"),
+    ("assetgen.audio.voice.clone",            "Spaces: Audio"),
+    ("assetgen.audio.process.normalize",      "Spaces: Audio"),
+    ("assetgen.audio.process.trim_silence",   "Spaces: Audio"),
+    ("assetgen.audio.process.loop_optimize",  "Spaces: Audio"),
+    ("assetgen.audio.process.convert",        "Spaces: Audio"),
+    ("assetgen.audio.process.downmix",        "Spaces: Audio"),
+    ("assetgen.audio.process.resample",       "Spaces: Audio"),
+    ("assetgen.audio.process.waveform",       "Spaces: Audio"),
     # Visual (43)
-    ("AssetGen.concept.generate",             "Spaces: Visual"),
-    ("AssetGen.concept.style",                "Spaces: Visual"),
-    ("AssetGen.blockout.create",              "Spaces: Visual"),
-    ("AssetGen.model.create",                 "Spaces: Visual"),
-    ("AssetGen.model.multiview",              "Spaces: Visual"),
-    ("AssetGen.model.splat",                  "Spaces: Visual"),
-    ("AssetGen.mesh.validate",                "Spaces: Visual"),
-    ("AssetGen.mesh.convert",                 "Spaces: Visual"),
-    ("AssetGen.mesh.merge",                   "Spaces: Visual"),
-    ("AssetGen.mesh.bounds",                  "Spaces: Visual"),
-    ("AssetGen.mesh.flipnormals",             "Spaces: Visual"),
-    ("AssetGen.mesh.weld",                    "Spaces: Visual"),
-    ("AssetGen.mesh.center",                  "Spaces: Visual"),
-    ("AssetGen.mesh.scale",                   "Spaces: Visual"),
-    ("AssetGen.lod.generate",                 "Spaces: Visual"),
-    ("AssetGen.uv.auto",                      "Spaces: Visual"),
-    ("AssetGen.texture.generate",             "Spaces: Visual"),
-    ("AssetGen.texture.upscale",              "Spaces: Visual"),
-    ("AssetGen.texture.from_concept",         "Spaces: Visual"),
-    ("AssetGen.texture.inpaint",              "Spaces: Visual"),
-    ("AssetGen.texture.pbr",                  "Spaces: Visual"),
-    ("AssetGen.texture.channel_pack",         "Spaces: Visual"),
-    ("AssetGen.texture.convert",              "Spaces: Visual"),
-    ("AssetGen.texture.atlas_pack",           "Spaces: Visual"),
-    ("AssetGen.texture.mipmap",               "Spaces: Visual"),
-    ("AssetGen.texture.normalmap_convert",    "Spaces: Visual"),
-    ("AssetGen.texture.seamless",             "Spaces: Visual"),
-    ("AssetGen.texture.resize",               "Spaces: Visual"),
-    ("AssetGen.texture.report",               "Spaces: Visual"),
-    ("AssetGen.rig.auto",                     "Spaces: Visual"),
-    ("AssetGen.animate.keyframe",             "Spaces: Visual"),
-    ("AssetGen.animate.mocap",                "Spaces: Visual"),
-    ("AssetGen.vfx.particle",                 "Spaces: Visual"),
-    ("AssetGen.sprite.pack",                  "Spaces: Visual"),
-    ("AssetGen.ui.icon",                      "Spaces: Visual"),
-    ("AssetGen.ui.button",                    "Spaces: Visual"),
-    ("AssetGen.ui.panel",                     "Spaces: Visual"),
-    ("AssetGen.ui.widget",                    "Spaces: Visual"),
-    ("AssetGen.ui.mockup",                    "Spaces: Visual"),
-    ("AssetGen.ui.layout",                    "Spaces: Visual"),
-    ("AssetGen.ui.iconset",                   "Spaces: Visual"),
-    ("AssetGen.ui.theme",                     "Spaces: Visual"),
-    ("AssetGen.ui.screen",                    "Spaces: Visual"),
+    ("assetgen.concept.generate",             "Spaces: Visual"),
+    ("assetgen.concept.style",                "Spaces: Visual"),
+    ("assetgen.blockout.create",              "Spaces: Visual"),
+    ("assetgen.model.create",                 "Spaces: Visual"),
+    ("assetgen.model.multiview",              "Spaces: Visual"),
+    ("assetgen.model.splat",                  "Spaces: Visual"),
+    ("assetgen.mesh.validate",                "Spaces: Visual"),
+    ("assetgen.mesh.convert",                 "Spaces: Visual"),
+    ("assetgen.mesh.merge",                   "Spaces: Visual"),
+    ("assetgen.mesh.bounds",                  "Spaces: Visual"),
+    ("assetgen.mesh.flipnormals",             "Spaces: Visual"),
+    ("assetgen.mesh.weld",                    "Spaces: Visual"),
+    ("assetgen.mesh.center",                  "Spaces: Visual"),
+    ("assetgen.mesh.scale",                   "Spaces: Visual"),
+    ("assetgen.lod.generate",                 "Spaces: Visual"),
+    ("assetgen.uv.auto",                      "Spaces: Visual"),
+    ("assetgen.texture.generate",             "Spaces: Visual"),
+    ("assetgen.texture.upscale",              "Spaces: Visual"),
+    ("assetgen.texture.from_concept",         "Spaces: Visual"),
+    ("assetgen.texture.inpaint",              "Spaces: Visual"),
+    ("assetgen.texture.pbr",                  "Spaces: Visual"),
+    ("assetgen.texture.channel_pack",         "Spaces: Visual"),
+    ("assetgen.texture.convert",              "Spaces: Visual"),
+    ("assetgen.texture.atlas_pack",           "Spaces: Visual"),
+    ("assetgen.texture.mipmap",               "Spaces: Visual"),
+    ("assetgen.texture.normalmap_convert",    "Spaces: Visual"),
+    ("assetgen.texture.seamless",             "Spaces: Visual"),
+    ("assetgen.texture.resize",               "Spaces: Visual"),
+    ("assetgen.texture.report",               "Spaces: Visual"),
+    ("assetgen.rig.auto",                     "Spaces: Visual"),
+    ("assetgen.animate.keyframe",             "Spaces: Visual"),
+    ("assetgen.animate.mocap",                "Spaces: Visual"),
+    ("assetgen.vfx.particle",                 "Spaces: Visual"),
+    ("assetgen.sprite.pack",                  "Spaces: Visual"),
+    ("assetgen.ui.icon",                      "Spaces: Visual"),
+    ("assetgen.ui.button",                    "Spaces: Visual"),
+    ("assetgen.ui.panel",                     "Spaces: Visual"),
+    ("assetgen.ui.widget",                    "Spaces: Visual"),
+    ("assetgen.ui.mockup",                    "Spaces: Visual"),
+    ("assetgen.ui.layout",                    "Spaces: Visual"),
+    ("assetgen.ui.iconset",                   "Spaces: Visual"),
+    ("assetgen.ui.theme",                     "Spaces: Visual"),
+    ("assetgen.ui.screen",                    "Spaces: Visual"),
     # Scene (3)
-    ("AssetGen.scene.depth.estimate",         "Spaces: Scene"),
-    ("AssetGen.scene.lighting.hdri",          "Spaces: Scene"),
-    ("AssetGen.scene.physics.collider",       "Spaces: Scene"),
+    ("assetgen.scene.depth.estimate",         "Spaces: Scene"),
+    ("assetgen.scene.lighting.hdri",          "Spaces: Scene"),
+    ("assetgen.scene.physics.collider",       "Spaces: Scene"),
     # Procedural (7)
-    ("AssetGen.procedural.terrain.heightmap", "Spaces: Procedural"),
-    ("AssetGen.procedural.texture.noise",     "Spaces: Procedural"),
-    ("AssetGen.procedural.level.dungeon",     "Spaces: Procedural"),
-    ("AssetGen.procedural.level.voronoi",     "Spaces: Procedural"),
-    ("AssetGen.procedural.foliage.scatter",   "Spaces: Procedural"),
-    ("AssetGen.procedural.tileset.wfc",       "Spaces: Procedural"),
-    ("AssetGen.procedural.plant.lsystem",     "Spaces: Procedural"),
+    ("assetgen.procedural.terrain.heightmap", "Spaces: Procedural"),
+    ("assetgen.procedural.texture.noise",     "Spaces: Procedural"),
+    ("assetgen.procedural.level.dungeon",     "Spaces: Procedural"),
+    ("assetgen.procedural.level.voronoi",     "Spaces: Procedural"),
+    ("assetgen.procedural.foliage.scatter",   "Spaces: Procedural"),
+    ("assetgen.procedural.tileset.wfc",       "Spaces: Procedural"),
+    ("assetgen.procedural.plant.lsystem",     "Spaces: Procedural"),
     # Narrative (5)
-    ("AssetGen.narrative.dialogue.npc",       "Spaces: Narrative"),
-    ("AssetGen.narrative.dialogue.validate",  "Spaces: Narrative"),
-    ("AssetGen.narrative.lore.generate",      "Spaces: Narrative"),
-    ("AssetGen.narrative.quest.design",       "Spaces: Narrative"),
-    ("AssetGen.narrative.quest.validate",     "Spaces: Narrative"),
+    ("assetgen.narrative.dialogue.npc",       "Spaces: Narrative"),
+    ("assetgen.narrative.dialogue.validate",  "Spaces: Narrative"),
+    ("assetgen.narrative.lore.generate",      "Spaces: Narrative"),
+    ("assetgen.narrative.quest.design",       "Spaces: Narrative"),
+    ("assetgen.narrative.quest.validate",     "Spaces: Narrative"),
 ]
 
 TEMPLATE = """\
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Space: {space_name}" type="PythonConfigurationType" factoryName="Python" folderName="{folder}">
-    <module name="AssetGen" />
+    <module name="assetgen" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>

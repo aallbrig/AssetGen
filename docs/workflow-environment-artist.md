@@ -12,7 +12,7 @@ in one command, use `compose environment`:
 
 ```bash
 # 5 biome props + ground material + audio (Unreal export)
-AssetGen compose environment "overgrown highway, post-apocalyptic" \
+assetgen compose environment "overgrown highway, post-apocalyptic" \
     --count 5 --engine unreal --wait
 ```
 
@@ -25,7 +25,7 @@ This runs ~20 sequential ML steps and produces:
 For finer control over what props are generated:
 
 ```bash
-AssetGen compose environment "overgrown highway, post-apocalyptic" \
+assetgen compose environment "overgrown highway, post-apocalyptic" \
     --items "cracked concrete barrier,rusted car wreck,overgrown billboard,chain-link fence,abandoned oil drum" \
     --engine unreal --wait
 ```
@@ -33,22 +33,22 @@ AssetGen compose environment "overgrown highway, post-apocalyptic" \
 Preview the full step plan before committing GPU time:
 
 ```bash
-AssetGen compose environment "post-apocalyptic highway" --count 5 --dry-run
+assetgen compose environment "post-apocalyptic highway" --count 5 --dry-run
 ```
 
 !!! warning "Runtime expectations on an RTX 3060/3070"
     5 props + ground + audio ≈ **40 min**. Use `--quality low` to prototype the
     kit direction first (~15 min), then re-run at default quality for the keeper:
     ```bash
-    AssetGen compose environment "overgrown highway" --count 5 --quality low --wait
+    assetgen compose environment "overgrown highway" --count 5 --quality low --wait
     ```
 
 For PBR material sets only (no props, no audio):
 
 ```bash
-AssetGen compose material "cracked asphalt, post-apocalyptic, road surface" \
+assetgen compose material "cracked asphalt, post-apocalyptic, road surface" \
     --resolution 2048 --upscale --engine unreal --wait
-AssetGen compose material "dead grass and gravel, dry wasteland" \
+assetgen compose material "dead grass and gravel, dry wasteland" \
     --resolution 2048 --engine unreal --wait
 ```
 
@@ -59,7 +59,7 @@ See the [Compose Pipelines guide](compose-pipelines.md) for all options.
 ## Manual step-by-step (more control)
 
 For finer iteration — e.g. approving concept art before the mesh step — run
-individual `AssetGen gen` commands:
+individual `assetgen gen` commands:
 
 ---
 
@@ -76,8 +76,8 @@ individual `AssetGen gen` commands:
 ## Prerequisites
 
 ```bash
-pip install "AssetGen[inference]"
-AssetGen server status   # confirm GPU is visible
+pip install "assetgen[inference]"
+assetgen server status   # confirm GPU is visible
 ```
 
 ---
@@ -89,7 +89,7 @@ AssetGen server status   # confirm GPU is visible
 Before generating any textures, lock down the visual language with a concept:
 
 ```bash
-AssetGen gen visual concept generate \
+assetgen gen visual concept generate \
   --prompt "overgrown highway, post-apocalyptic, foggy morning, cracked asphalt, vines, desolate" \
   --wait
 ```
@@ -103,13 +103,13 @@ Adjust the prompt until the palette and mood match your target biome.
 
 ```bash
 # Cracked asphalt — primary road surface
-AssetGen gen visual texture generate \
+assetgen gen visual texture generate \
   --prompt "cracked asphalt, post-apocalyptic, seamless tile, 4K, PBR" \
   --resolution 2048 \
   --wait
 
 # Overgrown verge
-AssetGen gen visual texture generate \
+assetgen gen visual texture generate \
   --prompt "cracked concrete with weeds, seamless tile, 4K, PBR" \
   --resolution 2048 \
   --wait
@@ -130,7 +130,7 @@ If a generated texture has visible tiling artefacts:
 3. Run inpaint:
 
 ```bash
-AssetGen gen visual texture inpaint \
+assetgen gen visual texture inpaint \
   --input asphalt_texture.png \
   --mask seam_mask.png \
   --prompt "cracked asphalt, seamless, match surrounding texture" \
@@ -144,7 +144,7 @@ Repeat with a smaller mask if the first pass is still visible.
 ### 4 — HDRI sky generation
 
 ```bash
-AssetGen gen scene lighting hdri \
+assetgen gen scene lighting hdri \
   --prompt "stormy industrial skyline at dusk, post-apocalyptic, heavy clouds, orange haze" \
   --wait
 ```
@@ -169,7 +169,7 @@ Output: `hdri_<id>.exr` — a 16-bit equirectangular HDR image.
 If you have a reference photo of a real location and want to sculpt terrain from it:
 
 ```bash
-AssetGen gen scene depth estimate \
+assetgen gen scene depth estimate \
   --input reference_highway.jpg \
   --wait
 ```
@@ -199,10 +199,10 @@ PROMPTS=(
 )
 
 for PROMPT in "${PROMPTS[@]}"; do
-  AssetGen gen visual texture generate --prompt "$PROMPT" --resolution 2048 &
+  assetgen gen visual texture generate --prompt "$PROMPT" --resolution 2048 &
 done
 wait
-echo "✓ All variants queued — check: AssetGen jobs list"
+echo "✓ All variants queued — check: assetgen jobs list"
 ```
 
 This submits all jobs concurrently.  The server processes them serially (one GPU),
