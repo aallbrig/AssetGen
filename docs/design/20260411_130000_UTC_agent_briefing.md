@@ -64,22 +64,22 @@ module paths via `job_type.replace(".", "_")`:
 
 | CLI command | `job_type` string | Handler module file |
 |-------------|-------------------|---------------------|
-| `AssetGen gen audio sfx generate` | `audio.sfx.generate` | `audio_sfx_generate.py` |
-| `AssetGen gen visual concept generate` | `visual.concept.generate` | `visual_concept_generate.py` |
-| `AssetGen gen scene depth estimate` | `scene.depth.estimate` | `scene_depth_estimate.py` |
+| `assetgen gen audio sfx generate` | `audio.sfx.generate` | `audio_sfx_generate.py` |
+| `assetgen gen visual concept generate` | `visual.concept.generate` | `visual_concept_generate.py` |
+| `assetgen gen scene depth estimate` | `scene.depth.estimate` | `scene_depth_estimate.py` |
 
 **To verify a handler exists:**
 ```bash
-python -c "from AssetGen.catalog import all_job_types; print('\n'.join(all_job_types()))"
+python -c "from assetgen.catalog import all_job_types; print('\n'.join(all_job_types()))"
 ```
 
 **To read a handler's params contract before writing an app.py (required for all Tier 2/3):**
 ```bash
 # Step 1: check the module docstring
-head -30 src/AssetGen/server/handlers/audio_ambient_generate.py
+head -30 src/assetgen/server/handlers/audio_ambient_generate.py
 
 # Step 2: list every params.get() call
-grep -n "params.get" src/AssetGen/server/handlers/audio_ambient_generate.py
+grep -n "params.get" src/assetgen/server/handlers/audio_ambient_generate.py
 ```
 
 ---
@@ -133,7 +133,7 @@ where they conflict.
 
 **After implementing Space #2 (`AssetGen.audio.sfx.generate`) — stop and verify locally:**
 ```bash
-cd spaces/AssetGen.audio.sfx.generate
+cd spaces/assetgen.audio.sfx.generate
 pip install -e "../../.[spaces]"
 python app.py
 # Gradio should open at http://127.0.0.1:7860
@@ -184,8 +184,8 @@ These require human action in a browser. Do them before Phase 3.
 Run the `hf repo create ...` commands from each Space's spec before first sync.
 All 10 Tier 1 creation commands are in `_spec_tier1`. Batch example:
 ```bash
-hf repo create AssetGen.audio.sfx.generate --repo-type space --space-sdk gradio
-hf repo create AssetGen.audio.music.compose --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.sfx.generate --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.music.compose --repo-type space --space-sdk gradio
 # ... (one per Space)
 ```
 
@@ -212,9 +212,9 @@ Use this cycle for every Space before pushing to HF Hub:
 
 ```bash
 # 1. Navigate to the Space directory
-cd spaces/AssetGen.<name>
+cd spaces/assetgen.<name>
 
-# 2. Install AssetGen with spaces extra (from repo root)
+# 2. Install assetgen with spaces extra (from repo root)
 pip install -e "../../.[spaces]"
 
 # 3. For audio spaces: install audiocraft (not on PyPI)
@@ -291,5 +291,5 @@ the Space name equals the job_type string exactly.
 
 **Verify any job_type before using it:**
 ```bash
-python -c "from AssetGen.catalog import all_job_types; print('\n'.join(all_job_types()))"
+python -c "from assetgen.catalog import all_job_types; print('\n'.join(all_job_types()))"
 ```

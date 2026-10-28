@@ -33,7 +33,7 @@ corresponding `.idea/runConfigurations/space_AssetGen_<name>.xml`.
 ### T2-1: `AssetGen.audio.ambient.generate`
 
 ```
-hf repo create AssetGen.audio.ambient.generate --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.ambient.generate --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/musicgen-stereo-large
 Package: audiocraft (same git install as Tier 1 audio spaces)
@@ -59,7 +59,7 @@ gradio>=4.44.0
 ### T2-2: `AssetGen.audio.voice.clone`
 
 ```
-hf repo create AssetGen.audio.voice.clone --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.voice.clone --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: coqui-ai/XTTS-v2
 Package: coqui-tts (TTS on PyPI)
@@ -101,7 +101,7 @@ gradio>=4.44.0
 ### T2-3: `AssetGen.audio.music.loop`
 
 ```
-hf repo create AssetGen.audio.music.loop --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.music.loop --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/musicgen-medium
 Package: audiocraft (same as other audio spaces)
@@ -134,7 +134,7 @@ numpy>=1.26.0
 ### T2-4: `AssetGen.model.multiview`
 
 ```
-hf repo create AssetGen.model.multiview --repo-type space --space-sdk gradio
+hf repo create assetgen.model.multiview --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: sudo-ai/zero123plus
 Package: diffusers>=0.28.0
@@ -173,7 +173,7 @@ gradio>=4.44.0
 ### T2-5: `AssetGen.model.splat`
 
 ```
-hf repo create AssetGen.model.splat --repo-type space --space-sdk gradio
+hf repo create assetgen.model.splat --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: stabilityai/TripoSR
 Package: tsr (TripoSR package from GitHub)
@@ -216,7 +216,7 @@ gradio>=4.44.0
 ### T2-6: `AssetGen.rig.auto`
 
 ```
-hf repo create AssetGen.rig.auto --repo-type space --space-sdk gradio
+hf repo create assetgen.rig.auto --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: VAST-AI/UniRig
 Package: unicore / unirig (custom, check model card)
@@ -249,7 +249,7 @@ gradio>=4.44.0
 ### T2-7: `AssetGen.animate.keyframe`
 
 ```
-hf repo create AssetGen.animate.keyframe --repo-type space --space-sdk gradio
+hf repo create assetgen.animate.keyframe --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: guoyww/animatediff-motion-adapter-v1-5-2 + stabilityai/stable-diffusion-v1-5
 Package: diffusers>=0.28.0
@@ -297,7 +297,7 @@ gradio>=4.44.0
 ### T2-8: `AssetGen.animate.mocap`
 
 ```
-hf repo create AssetGen.animate.mocap --repo-type space --space-sdk gradio
+hf repo create assetgen.animate.mocap --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: facebook/sapiens-pose-0.3b
 Package: transformers>=4.40.0
@@ -335,7 +335,7 @@ gradio>=4.44.0
 ### T2-9: `AssetGen.concept.style`
 
 ```
-hf repo create AssetGen.concept.style --repo-type space --space-sdk gradio
+hf repo create assetgen.concept.style --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: h94/IP-Adapter + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0
@@ -376,7 +376,7 @@ gradio>=4.44.0
 ### T2-10: `AssetGen.texture.inpaint`
 
 ```
-hf repo create AssetGen.texture.inpaint --repo-type space --space-sdk gradio
+hf repo create assetgen.texture.inpaint --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: diffusers/stable-diffusion-xl-1.0-inpainting-0.1
 Package: diffusers>=0.28.0
@@ -418,7 +418,7 @@ gradio>=4.44.0
 ### T2-11: `AssetGen.texture.from_concept`
 
 ```
-hf repo create AssetGen.texture.from_concept --repo-type space --space-sdk gradio
+hf repo create assetgen.texture.from_concept --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: h94/IP-Adapter + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0
@@ -435,7 +435,7 @@ from `AssetGen.texture.generate` applied automatically.
 ### T2-12: `AssetGen.scene.lighting.hdri`
 
 ```
-hf repo create AssetGen.scene.lighting.hdri --repo-type space --space-sdk gradio
+hf repo create assetgen.scene.lighting.hdri --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: Intel/ldm3d-pano
 Package: diffusers>=0.28.0
@@ -473,7 +473,7 @@ gradio>=4.44.0
 ### T2-13: `AssetGen.narrative.lore.generate`
 
 ```
-hf repo create AssetGen.narrative.lore.generate --repo-type space --space-sdk gradio
+hf repo create assetgen.narrative.lore.generate --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: microsoft/Phi-3.5-mini-instruct
 ```
@@ -495,7 +495,7 @@ Model: microsoft/Phi-3.5-mini-instruct
 ### T2-14: `AssetGen.narrative.quest.design`
 
 ```
-hf repo create AssetGen.narrative.quest.design --repo-type space --space-sdk gradio
+hf repo create assetgen.narrative.quest.design --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: microsoft/Phi-3.5-mini-instruct
 ```
@@ -512,7 +512,7 @@ Model: microsoft/Phi-3.5-mini-instruct
 ### T2-15: `AssetGen.ui.icon`
 
 ```
-hf repo create AssetGen.ui.icon --repo-type space --space-sdk gradio
+hf repo create assetgen.ui.icon --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: stabilityai/stable-diffusion-xl-base-1.0
 ```
@@ -535,7 +535,7 @@ Model: stabilityai/stable-diffusion-xl-base-1.0
 ### T2-16: `AssetGen.ui.mockup`
 
 ```
-hf repo create AssetGen.ui.mockup --repo-type space --space-sdk gradio
+hf repo create assetgen.ui.mockup --repo-type space --space-sdk gradio
 Hardware: zero-gpu
 Model: diffusers/controlnet-canny-sdxl-1.0 + stabilityai/stable-diffusion-xl-base-1.0
 Package: diffusers>=0.28.0, controlnet_aux>=0.0.7
@@ -575,7 +575,7 @@ gradio>=4.44.0
 ### T2-17: `AssetGen.procedural.level.dungeon`
 
 ```
-hf repo create AssetGen.procedural.level.dungeon --repo-type space --space-sdk gradio
+hf repo create assetgen.procedural.level.dungeon --repo-type space --space-sdk gradio
 Hardware: cpu-basic
 Model: None (pure algorithmic)
 ```
@@ -790,87 +790,87 @@ set -e
 
 # Tier 2
 TIER2=(
-  "AssetGen.audio.ambient.generate"
-  "AssetGen.audio.voice.clone"
-  "AssetGen.audio.music.loop"
-  "AssetGen.model.multiview"
-  "AssetGen.model.splat"
-  "AssetGen.rig.auto"
-  "AssetGen.animate.keyframe"
-  "AssetGen.animate.mocap"
-  "AssetGen.concept.style"
-  "AssetGen.texture.inpaint"
-  "AssetGen.texture.from_concept"
-  "AssetGen.scene.lighting.hdri"
-  "AssetGen.narrative.lore.generate"
-  "AssetGen.narrative.quest.design"
-  "AssetGen.ui.icon"
-  "AssetGen.ui.mockup"
-  "AssetGen.procedural.level.dungeon"
+  "assetgen.audio.ambient.generate"
+  "assetgen.audio.voice.clone"
+  "assetgen.audio.music.loop"
+  "assetgen.model.multiview"
+  "assetgen.model.splat"
+  "assetgen.rig.auto"
+  "assetgen.animate.keyframe"
+  "assetgen.animate.mocap"
+  "assetgen.concept.style"
+  "assetgen.texture.inpaint"
+  "assetgen.texture.from_concept"
+  "assetgen.scene.lighting.hdri"
+  "assetgen.narrative.lore.generate"
+  "assetgen.narrative.quest.design"
+  "assetgen.ui.icon"
+  "assetgen.ui.mockup"
+  "assetgen.procedural.level.dungeon"
 )
 
 # Tier 3 — mesh
 TIER3_MESH=(
-  "AssetGen.mesh.validate"
-  "AssetGen.mesh.convert"
-  "AssetGen.mesh.bounds"
-  "AssetGen.mesh.center"
-  "AssetGen.mesh.scale"
-  "AssetGen.mesh.flipnormals"
-  "AssetGen.mesh.weld"
+  "assetgen.mesh.validate"
+  "assetgen.mesh.convert"
+  "assetgen.mesh.bounds"
+  "assetgen.mesh.center"
+  "assetgen.mesh.scale"
+  "assetgen.mesh.flipnormals"
+  "assetgen.mesh.weld"
 )
 
 # Tier 3 — texture utilities
 TIER3_TEXTURE=(
-  "AssetGen.texture.pbr"
-  "AssetGen.texture.channel_pack"
-  "AssetGen.texture.atlas_pack"
-  "AssetGen.texture.mipmap"
-  "AssetGen.texture.normalmap_convert"
-  "AssetGen.texture.seamless"
-  "AssetGen.texture.resize"
-  "AssetGen.texture.report"
+  "assetgen.texture.pbr"
+  "assetgen.texture.channel_pack"
+  "assetgen.texture.atlas_pack"
+  "assetgen.texture.mipmap"
+  "assetgen.texture.normalmap_convert"
+  "assetgen.texture.seamless"
+  "assetgen.texture.resize"
+  "assetgen.texture.report"
 )
 
 # Tier 3 — audio processing
 TIER3_AUDIO=(
-  "AssetGen.audio.process.normalize"
-  "AssetGen.audio.process.trim_silence"
-  "AssetGen.audio.process.convert"
-  "AssetGen.audio.process.downmix"
-  "AssetGen.audio.process.resample"
-  "AssetGen.audio.process.loop_optimize"
-  "AssetGen.audio.process.waveform"
+  "assetgen.audio.process.normalize"
+  "assetgen.audio.process.trim_silence"
+  "assetgen.audio.process.convert"
+  "assetgen.audio.process.downmix"
+  "assetgen.audio.process.resample"
+  "assetgen.audio.process.loop_optimize"
+  "assetgen.audio.process.waveform"
 )
 
 # Tier 3 — procedural
 TIER3_PROC=(
-  "AssetGen.procedural.texture.noise"
-  "AssetGen.procedural.level.voronoi"
-  "AssetGen.procedural.foliage.scatter"
-  "AssetGen.procedural.tileset.wfc"
-  "AssetGen.procedural.plant.lsystem"
-  "AssetGen.scene.physics.collider"
+  "assetgen.procedural.texture.noise"
+  "assetgen.procedural.level.voronoi"
+  "assetgen.procedural.foliage.scatter"
+  "assetgen.procedural.tileset.wfc"
+  "assetgen.procedural.plant.lsystem"
+  "assetgen.scene.physics.collider"
 )
 
 # Tier 3 — visual utilities
 TIER3_VIS=(
-  "AssetGen.lod.generate"
-  "AssetGen.uv.auto"
-  "AssetGen.vfx.particle"
-  "AssetGen.sprite.pack"
-  "AssetGen.blockout.create"
+  "assetgen.lod.generate"
+  "assetgen.uv.auto"
+  "assetgen.vfx.particle"
+  "assetgen.sprite.pack"
+  "assetgen.blockout.create"
 )
 
 # Tier 3 — UI variations
 TIER3_UI=(
-  "AssetGen.ui.button"
-  "AssetGen.ui.panel"
-  "AssetGen.ui.widget"
-  "AssetGen.ui.layout"
-  "AssetGen.ui.iconset"
-  "AssetGen.ui.theme"
-  "AssetGen.ui.screen"
+  "assetgen.ui.button"
+  "assetgen.ui.panel"
+  "assetgen.ui.widget"
+  "assetgen.ui.layout"
+  "assetgen.ui.iconset"
+  "assetgen.ui.theme"
+  "assetgen.ui.screen"
 )
 
 ALL=(

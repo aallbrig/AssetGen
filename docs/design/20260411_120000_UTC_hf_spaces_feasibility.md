@@ -14,16 +14,16 @@ established via examples:
 
 | Rule | Example |
 |------|---------|
-| Drop the `gen` CLI prefix | `AssetGen gen audio sfx generate` → `AssetGen.audio.sfx.generate` |
-| Drop the `visual` CLI domain prefix | `AssetGen gen visual rig auto` → `AssetGen.rig.auto` |
-| Drop the `support` CLI grouping prefix | `AssetGen gen support narrative dialogue npc` → `AssetGen.narrative.dialogue.npc` |
-| Keep all other domain prefixes (`audio`, `scene`, `procedural`, `pipeline`, `qa`, `narrative`, `data`) | `AssetGen gen scene lighting hdri` → `AssetGen.scene.lighting.hdri` |
+| Drop the `gen` CLI prefix | `assetgen gen audio sfx generate` → `AssetGen.audio.sfx.generate` |
+| Drop the `visual` CLI domain prefix | `assetgen gen visual rig auto` → `AssetGen.rig.auto` |
+| Drop the `support` CLI grouping prefix | `assetgen gen support narrative dialogue npc` → `AssetGen.narrative.dialogue.npc` |
+| Keep all other domain prefixes (`audio`, `scene`, `procedural`, `pipeline`, `qa`, `narrative`, `data`) | `assetgen gen scene lighting hdri` → `AssetGen.scene.lighting.hdri` |
 
 **Full mapping table is in Section 3.**
 
 The HF repo creation command pattern is:
 ```bash
-hf repo create AssetGen.audio.sfx.generate --repo-type space --space-sdk gradio
+hf repo create assetgen.audio.sfx.generate --repo-type space --space-sdk gradio
 ```
 Repos are created under your authenticated HF account. The full URL will be
 `https://huggingface.co/spaces/{YOUR_HF_USERNAME}/AssetGen.audio.sfx.generate`.
@@ -72,120 +72,120 @@ Understanding these constraints drives the feasibility decisions below.
 
 | CLI Command | HF Space Name | Feasible | Tier | Hardware | Primary Model |
 |-------------|---------------|----------|------|----------|---------------|
-| `AssetGen gen visual concept generate` | `AssetGen.concept.generate` | ✅ | 1 | ZeroGPU | SDXL Base 1.0 |
-| `AssetGen gen visual concept style` | `AssetGen.concept.style` | ✅ | 2 | ZeroGPU | IP-Adapter + SDXL |
-| `AssetGen gen visual blockout create` | `AssetGen.blockout.create` | ✅ | 3 | ZeroGPU | SDXL (renders sketch) |
-| `AssetGen gen visual model create` | `AssetGen.model.create` | ✅ | 1 | ZeroGPU (A100) | Hunyuan3D-2 |
-| `AssetGen gen visual model multiview` | `AssetGen.model.multiview` | ✅ | 2 | ZeroGPU | Zero123++ |
-| `AssetGen gen visual model splat` | `AssetGen.model.splat` | ✅ | 2 | ZeroGPU | TripoSR |
-| `AssetGen gen visual model retopo` | `AssetGen.model.retopo` | ❌ | — | — | Blender required |
-| `AssetGen gen visual mesh validate` | `AssetGen.mesh.validate` | ✅ | 2 | CPU | trimesh |
-| `AssetGen gen visual mesh convert` | `AssetGen.mesh.convert` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh merge` | `AssetGen.mesh.merge` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh bounds` | `AssetGen.mesh.bounds` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh flipnormals` | `AssetGen.mesh.flipnormals` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh weld` | `AssetGen.mesh.weld` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh center` | `AssetGen.mesh.center` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual mesh scale` | `AssetGen.mesh.scale` | ✅ | 3 | CPU | trimesh |
-| `AssetGen gen visual lod generate` | `AssetGen.lod.generate` | ✅ | 3 | CPU | pyfqmr |
-| `AssetGen gen visual uv auto` | `AssetGen.uv.auto` | ✅ | 3 | CPU | xatlas |
-| `AssetGen gen visual texture generate` | `AssetGen.texture.generate` | ✅ | 1 | ZeroGPU | SDXL Base 1.0 |
-| `AssetGen gen visual texture from_concept` | `AssetGen.texture.from_concept` | ✅ | 2 | ZeroGPU | IP-Adapter + SDXL |
-| `AssetGen gen visual texture pbr` | `AssetGen.texture.pbr` | ✅ | 3 | CPU | algorithmic (Pillow) |
-| `AssetGen gen visual texture bake` | `AssetGen.texture.bake` | ❌ | — | — | Blender renderer required |
-| `AssetGen gen visual texture inpaint` | `AssetGen.texture.inpaint` | ✅ | 2 | ZeroGPU | SDXL Inpainting |
-| `AssetGen gen visual texture upscale` | `AssetGen.texture.upscale` | ✅ | 1 | ZeroGPU | Real-ESRGAN x4+ |
-| `AssetGen gen visual texture channel_pack` | `AssetGen.texture.channel_pack` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture convert` | `AssetGen.texture.convert` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture atlas_pack` | `AssetGen.texture.atlas_pack` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture mipmap` | `AssetGen.texture.mipmap` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture normalmap_convert` | `AssetGen.texture.normalmap_convert` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture seamless` | `AssetGen.texture.seamless` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture resize` | `AssetGen.texture.resize` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual texture report` | `AssetGen.texture.report` | ✅ | 3 | CPU | Pillow |
-| `AssetGen gen visual rig auto` | `AssetGen.rig.auto` | ✅ | 2 | ZeroGPU | UniRig |
-| `AssetGen gen visual animate keyframe` | `AssetGen.animate.keyframe` | ✅ | 2 | ZeroGPU | AnimateDiff v1.5 |
-| `AssetGen gen visual animate mocap` | `AssetGen.animate.mocap` | ✅ | 2 | ZeroGPU | Sapiens Pose 0.3B |
-| `AssetGen gen visual animate retarget` | `AssetGen.animate.retarget` | ❌ | — | — | Skeletal solver (Blender/BVH) required |
-| `AssetGen gen visual vfx particle` | `AssetGen.vfx.particle` | ✅ | 3 | CPU | Pillow + numpy |
-| `AssetGen gen visual ui icon` | `AssetGen.ui.icon` | ✅ | 2 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui button` | `AssetGen.ui.button` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui panel` | `AssetGen.ui.panel` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui widget` | `AssetGen.ui.widget` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui mockup` | `AssetGen.ui.mockup` | ✅ | 2 | ZeroGPU | ControlNet + SDXL |
-| `AssetGen gen visual ui layout` | `AssetGen.ui.layout` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui iconset` | `AssetGen.ui.iconset` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui theme` | `AssetGen.ui.theme` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual ui screen` | `AssetGen.ui.screen` | ✅ | 3 | ZeroGPU | SDXL |
-| `AssetGen gen visual sprite pack` | `AssetGen.sprite.pack` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual concept generate` | `AssetGen.concept.generate` | ✅ | 1 | ZeroGPU | SDXL Base 1.0 |
+| `assetgen gen visual concept style` | `AssetGen.concept.style` | ✅ | 2 | ZeroGPU | IP-Adapter + SDXL |
+| `assetgen gen visual blockout create` | `AssetGen.blockout.create` | ✅ | 3 | ZeroGPU | SDXL (renders sketch) |
+| `assetgen gen visual model create` | `AssetGen.model.create` | ✅ | 1 | ZeroGPU (A100) | Hunyuan3D-2 |
+| `assetgen gen visual model multiview` | `AssetGen.model.multiview` | ✅ | 2 | ZeroGPU | Zero123++ |
+| `assetgen gen visual model splat` | `AssetGen.model.splat` | ✅ | 2 | ZeroGPU | TripoSR |
+| `assetgen gen visual model retopo` | `AssetGen.model.retopo` | ❌ | — | — | Blender required |
+| `assetgen gen visual mesh validate` | `AssetGen.mesh.validate` | ✅ | 2 | CPU | trimesh |
+| `assetgen gen visual mesh convert` | `AssetGen.mesh.convert` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh merge` | `AssetGen.mesh.merge` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh bounds` | `AssetGen.mesh.bounds` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh flipnormals` | `AssetGen.mesh.flipnormals` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh weld` | `AssetGen.mesh.weld` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh center` | `AssetGen.mesh.center` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual mesh scale` | `AssetGen.mesh.scale` | ✅ | 3 | CPU | trimesh |
+| `assetgen gen visual lod generate` | `AssetGen.lod.generate` | ✅ | 3 | CPU | pyfqmr |
+| `assetgen gen visual uv auto` | `AssetGen.uv.auto` | ✅ | 3 | CPU | xatlas |
+| `assetgen gen visual texture generate` | `AssetGen.texture.generate` | ✅ | 1 | ZeroGPU | SDXL Base 1.0 |
+| `assetgen gen visual texture from_concept` | `AssetGen.texture.from_concept` | ✅ | 2 | ZeroGPU | IP-Adapter + SDXL |
+| `assetgen gen visual texture pbr` | `AssetGen.texture.pbr` | ✅ | 3 | CPU | algorithmic (Pillow) |
+| `assetgen gen visual texture bake` | `AssetGen.texture.bake` | ❌ | — | — | Blender renderer required |
+| `assetgen gen visual texture inpaint` | `AssetGen.texture.inpaint` | ✅ | 2 | ZeroGPU | SDXL Inpainting |
+| `assetgen gen visual texture upscale` | `AssetGen.texture.upscale` | ✅ | 1 | ZeroGPU | Real-ESRGAN x4+ |
+| `assetgen gen visual texture channel_pack` | `AssetGen.texture.channel_pack` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture convert` | `AssetGen.texture.convert` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture atlas_pack` | `AssetGen.texture.atlas_pack` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture mipmap` | `AssetGen.texture.mipmap` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture normalmap_convert` | `AssetGen.texture.normalmap_convert` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture seamless` | `AssetGen.texture.seamless` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture resize` | `AssetGen.texture.resize` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual texture report` | `AssetGen.texture.report` | ✅ | 3 | CPU | Pillow |
+| `assetgen gen visual rig auto` | `AssetGen.rig.auto` | ✅ | 2 | ZeroGPU | UniRig |
+| `assetgen gen visual animate keyframe` | `AssetGen.animate.keyframe` | ✅ | 2 | ZeroGPU | AnimateDiff v1.5 |
+| `assetgen gen visual animate mocap` | `AssetGen.animate.mocap` | ✅ | 2 | ZeroGPU | Sapiens Pose 0.3B |
+| `assetgen gen visual animate retarget` | `AssetGen.animate.retarget` | ❌ | — | — | Skeletal solver (Blender/BVH) required |
+| `assetgen gen visual vfx particle` | `AssetGen.vfx.particle` | ✅ | 3 | CPU | Pillow + numpy |
+| `assetgen gen visual ui icon` | `AssetGen.ui.icon` | ✅ | 2 | ZeroGPU | SDXL |
+| `assetgen gen visual ui button` | `AssetGen.ui.button` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui panel` | `AssetGen.ui.panel` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui widget` | `AssetGen.ui.widget` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui mockup` | `AssetGen.ui.mockup` | ✅ | 2 | ZeroGPU | ControlNet + SDXL |
+| `assetgen gen visual ui layout` | `AssetGen.ui.layout` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui iconset` | `AssetGen.ui.iconset` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui theme` | `AssetGen.ui.theme` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual ui screen` | `AssetGen.ui.screen` | ✅ | 3 | ZeroGPU | SDXL |
+| `assetgen gen visual sprite pack` | `AssetGen.sprite.pack` | ✅ | 3 | CPU | Pillow |
 
 ### 3b. Audio Domain
 
 | CLI Command | HF Space Name | Feasible | Tier | Hardware | Primary Model |
 |-------------|---------------|----------|------|----------|---------------|
-| `AssetGen gen audio sfx generate` | `AssetGen.audio.sfx.generate` | ✅ | 1 | ZeroGPU | AudioGen Medium |
-| `AssetGen gen audio music compose` | `AssetGen.audio.music.compose` | ✅ | 1 | ZeroGPU | MusicGen Medium |
-| `AssetGen gen audio music loop` | `AssetGen.audio.music.loop` | ✅ | 2 | ZeroGPU | MusicGen Medium |
-| `AssetGen gen audio music adaptive` | `AssetGen.audio.music.adaptive` | ✅ | 3 | ZeroGPU | MusicGen Large |
-| `AssetGen gen audio ambient generate` | `AssetGen.audio.ambient.generate` | ✅ | 2 | ZeroGPU | MusicGen Stereo Large |
-| `AssetGen gen audio voice tts` | `AssetGen.audio.voice.tts` | ✅ | 1 | ZeroGPU | Bark (suno/bark) |
-| `AssetGen gen audio voice clone` | `AssetGen.audio.voice.clone` | ✅ | 2 | ZeroGPU | XTTS-v2 |
-| `AssetGen gen audio process normalize` | `AssetGen.audio.process.normalize` | ✅ | 3 | CPU | pydub + pyloudnorm |
-| `AssetGen gen audio process trim_silence` | `AssetGen.audio.process.trim_silence` | ✅ | 3 | CPU | pydub |
-| `AssetGen gen audio process loop_optimize` | `AssetGen.audio.process.loop_optimize` | ✅ | 3 | CPU | scipy |
-| `AssetGen gen audio process convert` | `AssetGen.audio.process.convert` | ✅ | 3 | CPU | pydub (needs ffmpeg) |
-| `AssetGen gen audio process downmix` | `AssetGen.audio.process.downmix` | ✅ | 3 | CPU | pydub |
-| `AssetGen gen audio process resample` | `AssetGen.audio.process.resample` | ✅ | 3 | CPU | scipy |
-| `AssetGen gen audio process waveform` | `AssetGen.audio.process.waveform` | ✅ | 3 | CPU | matplotlib |
+| `assetgen gen audio sfx generate` | `AssetGen.audio.sfx.generate` | ✅ | 1 | ZeroGPU | AudioGen Medium |
+| `assetgen gen audio music compose` | `AssetGen.audio.music.compose` | ✅ | 1 | ZeroGPU | MusicGen Medium |
+| `assetgen gen audio music loop` | `AssetGen.audio.music.loop` | ✅ | 2 | ZeroGPU | MusicGen Medium |
+| `assetgen gen audio music adaptive` | `AssetGen.audio.music.adaptive` | ✅ | 3 | ZeroGPU | MusicGen Large |
+| `assetgen gen audio ambient generate` | `AssetGen.audio.ambient.generate` | ✅ | 2 | ZeroGPU | MusicGen Stereo Large |
+| `assetgen gen audio voice tts` | `AssetGen.audio.voice.tts` | ✅ | 1 | ZeroGPU | Bark (suno/bark) |
+| `assetgen gen audio voice clone` | `AssetGen.audio.voice.clone` | ✅ | 2 | ZeroGPU | XTTS-v2 |
+| `assetgen gen audio process normalize` | `AssetGen.audio.process.normalize` | ✅ | 3 | CPU | pydub + pyloudnorm |
+| `assetgen gen audio process trim_silence` | `AssetGen.audio.process.trim_silence` | ✅ | 3 | CPU | pydub |
+| `assetgen gen audio process loop_optimize` | `AssetGen.audio.process.loop_optimize` | ✅ | 3 | CPU | scipy |
+| `assetgen gen audio process convert` | `AssetGen.audio.process.convert` | ✅ | 3 | CPU | pydub (needs ffmpeg) |
+| `assetgen gen audio process downmix` | `AssetGen.audio.process.downmix` | ✅ | 3 | CPU | pydub |
+| `assetgen gen audio process resample` | `AssetGen.audio.process.resample` | ✅ | 3 | CPU | scipy |
+| `assetgen gen audio process waveform` | `AssetGen.audio.process.waveform` | ✅ | 3 | CPU | matplotlib |
 
 ### 3c. Scene Domain
 
 | CLI Command | HF Space Name | Feasible | Tier | Hardware | Primary Model |
 |-------------|---------------|----------|------|----------|---------------|
-| `AssetGen gen scene physics collider` | `AssetGen.scene.physics.collider` | ✅ | 3 | CPU | V-HACD / CoACD |
-| `AssetGen gen scene lighting hdri` | `AssetGen.scene.lighting.hdri` | ✅ | 2 | ZeroGPU | Intel LDM3D-pano |
-| `AssetGen gen scene depth estimate` | `AssetGen.scene.depth.estimate` | ✅ | 1 | ZeroGPU | Intel DPT-Large |
+| `assetgen gen scene physics collider` | `AssetGen.scene.physics.collider` | ✅ | 3 | CPU | V-HACD / CoACD |
+| `assetgen gen scene lighting hdri` | `AssetGen.scene.lighting.hdri` | ✅ | 2 | ZeroGPU | Intel LDM3D-pano |
+| `assetgen gen scene depth estimate` | `AssetGen.scene.depth.estimate` | ✅ | 1 | ZeroGPU | Intel DPT-Large |
 
 ### 3d. Procedural Domain
 
 | CLI Command | HF Space Name | Feasible | Tier | Hardware | Primary Model |
 |-------------|---------------|----------|------|----------|---------------|
-| `AssetGen gen procedural terrain heightmap` | `AssetGen.procedural.terrain.heightmap` | ✅ | 1 | CPU | numpy / noise |
-| `AssetGen gen procedural texture noise` | `AssetGen.procedural.texture.noise` | ✅ | 3 | CPU | numpy |
-| `AssetGen gen procedural level dungeon` | `AssetGen.procedural.level.dungeon` | ✅ | 2 | CPU | BSP / cellular automata |
-| `AssetGen gen procedural level voronoi` | `AssetGen.procedural.level.voronoi` | ✅ | 3 | CPU | scipy |
-| `AssetGen gen procedural foliage scatter` | `AssetGen.procedural.foliage.scatter` | ✅ | 3 | CPU | Poisson disk / numpy |
-| `AssetGen gen procedural tileset wfc` | `AssetGen.procedural.tileset.wfc` | ✅ | 3 | CPU | Wave Function Collapse |
-| `AssetGen gen procedural plant lsystem` | `AssetGen.procedural.plant.lsystem` | ✅ | 3 | CPU | L-system |
+| `assetgen gen procedural terrain heightmap` | `AssetGen.procedural.terrain.heightmap` | ✅ | 1 | CPU | numpy / noise |
+| `assetgen gen procedural texture noise` | `AssetGen.procedural.texture.noise` | ✅ | 3 | CPU | numpy |
+| `assetgen gen procedural level dungeon` | `AssetGen.procedural.level.dungeon` | ✅ | 2 | CPU | BSP / cellular automata |
+| `assetgen gen procedural level voronoi` | `AssetGen.procedural.level.voronoi` | ✅ | 3 | CPU | scipy |
+| `assetgen gen procedural foliage scatter` | `AssetGen.procedural.foliage.scatter` | ✅ | 3 | CPU | Poisson disk / numpy |
+| `assetgen gen procedural tileset wfc` | `AssetGen.procedural.tileset.wfc` | ✅ | 3 | CPU | Wave Function Collapse |
+| `assetgen gen procedural plant lsystem` | `AssetGen.procedural.plant.lsystem` | ✅ | 3 | CPU | L-system |
 
 ### 3e. Pipeline Domain — ALL INFEASIBLE
 
 | CLI Command | HF Space Name | Feasible | Reason |
 |-------------|---------------|----------|--------|
-| `AssetGen gen pipeline asset manifest` | `AssetGen.pipeline.asset.manifest` | ❌ | Operates on a local game project directory tree; no meaningful web demo |
-| `AssetGen gen pipeline asset validate` | `AssetGen.pipeline.asset.validate` | ❌ | Same — whole-project file walker |
-| `AssetGen gen pipeline asset rename` | `AssetGen.pipeline.asset.rename` | ❌ | Same — batch renames local files |
-| `AssetGen gen pipeline asset report` | `AssetGen.pipeline.asset.report` | ❌ | Same — reads local project tree |
-| `AssetGen gen pipeline git lfs_rules` | `AssetGen.pipeline.git.lfs_rules` | ❌ | Outputs `.gitattributes` content for a local Git repo; no web demo value |
-| `AssetGen gen pipeline integrate export` | `AssetGen.pipeline.integrate.export` | ❌ | Requires Unity/Godot/Unreal engine installed locally |
+| `assetgen gen pipeline asset manifest` | `AssetGen.pipeline.asset.manifest` | ❌ | Operates on a local game project directory tree; no meaningful web demo |
+| `assetgen gen pipeline asset validate` | `AssetGen.pipeline.asset.validate` | ❌ | Same — whole-project file walker |
+| `assetgen gen pipeline asset rename` | `AssetGen.pipeline.asset.rename` | ❌ | Same — batch renames local files |
+| `assetgen gen pipeline asset report` | `AssetGen.pipeline.asset.report` | ❌ | Same — reads local project tree |
+| `assetgen gen pipeline git lfs_rules` | `AssetGen.pipeline.git.lfs_rules` | ❌ | Outputs `.gitattributes` content for a local Git repo; no web demo value |
+| `assetgen gen pipeline integrate export` | `AssetGen.pipeline.integrate.export` | ❌ | Requires Unity/Godot/Unreal engine installed locally |
 
 ### 3f. Support / Narrative Domain
 
 | CLI Command | HF Space Name | Feasible | Tier | Hardware | Primary Model |
 |-------------|---------------|----------|------|----------|---------------|
-| `AssetGen gen support narrative dialogue npc` | `AssetGen.narrative.dialogue.npc` | ✅ | 1 | ZeroGPU | Phi-3.5-mini-instruct |
-| `AssetGen gen support narrative dialogue validate` | `AssetGen.narrative.dialogue.validate` | ⚠️ | 3 | CPU | networkx — low demo value |
-| `AssetGen gen support narrative lore generate` | `AssetGen.narrative.lore.generate` | ✅ | 2 | ZeroGPU | Phi-3.5-mini-instruct |
-| `AssetGen gen support narrative quest design` | `AssetGen.narrative.quest.design` | ✅ | 2 | ZeroGPU | Phi-3.5-mini-instruct |
-| `AssetGen gen support narrative quest validate` | `AssetGen.narrative.quest.validate` | ⚠️ | 3 | CPU | networkx — low demo value |
-| `AssetGen gen support data i18n extract` | `AssetGen.data.i18n.extract` | ❌ | — | — | Extracts strings from local source files; no web demo |
+| `assetgen gen support narrative dialogue npc` | `AssetGen.narrative.dialogue.npc` | ✅ | 1 | ZeroGPU | Phi-3.5-mini-instruct |
+| `assetgen gen support narrative dialogue validate` | `AssetGen.narrative.dialogue.validate` | ⚠️ | 3 | CPU | networkx — low demo value |
+| `assetgen gen support narrative lore generate` | `AssetGen.narrative.lore.generate` | ✅ | 2 | ZeroGPU | Phi-3.5-mini-instruct |
+| `assetgen gen support narrative quest design` | `AssetGen.narrative.quest.design` | ✅ | 2 | ZeroGPU | Phi-3.5-mini-instruct |
+| `assetgen gen support narrative quest validate` | `AssetGen.narrative.quest.validate` | ⚠️ | 3 | CPU | networkx — low demo value |
+| `assetgen gen support data i18n extract` | `AssetGen.data.i18n.extract` | ❌ | — | — | Extracts strings from local source files; no web demo |
 
 ### 3g. QA Domain — ALL INFEASIBLE
 
 | CLI Command | Feasible | Reason |
 |-------------|----------|--------|
-| `AssetGen gen qa validate` | ❌ | Validates a full local game asset project; requires directory context |
-| `AssetGen gen qa report` | ❌ | Same — whole-project analysis tool |
+| `assetgen gen qa validate` | ❌ | Validates a full local game asset project; requires directory context |
+| `assetgen gen qa report` | ❌ | Same — whole-project analysis tool |
 
 ---
 
@@ -224,7 +224,7 @@ Parses source code files (`.cs`, `.gd`, `.lua`, `.py`) within a game project to 
 localization strings. Requires access to a real game project on disk.
 
 ### QA commands — Whole-project context required
-Both `AssetGen gen qa validate` and `AssetGen gen qa report` analyze an entire asset project tree:
+Both `assetgen gen qa validate` and `assetgen gen qa report` analyze an entire asset project tree:
 they check polygon budgets across all meshes, texture resolution consistency, UV island
 overlap across the whole atlas. Uploading an entire game project to a web demo is impractical.
 

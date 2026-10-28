@@ -11,25 +11,25 @@ This document describes how `AssetGen` is meant to feel from the user's perspect
 The most common starting point. The user has just installed AssetGen on their machine and wants to try it out without any configuration.
 
 ```
-$ AssetGen gen audio sfx generate "laser gun firing"
+$ assetgen gen audio sfx generate "laser gun firing"
 
-⚡ No server detected — starting local AssetGen-server on http://127.0.0.1:8432
-   (It will stay running between commands. Stop with: AssetGen server stop)
+⚡ No server detected — starting local assetgen-server on http://127.0.0.1:8432
+   (It will stay running between commands. Stop with: assetgen server stop)
 
 ✓ Server ready
 
 Job enqueued  id=a1b2c3d4  type=audio.sfx.generate
-Track with: AssetGen jobs status a1b2c3d4
-Or wait  with: AssetGen jobs wait a1b2c3d4
+Track with: assetgen jobs status a1b2c3d4
+Or wait  with: assetgen jobs wait a1b2c3d4
 ```
 
 Or with `--wait`:
 
 ```
-$ AssetGen gen audio sfx generate "laser gun firing" --wait
+$ assetgen gen audio sfx generate "laser gun firing" --wait
 
-⚡ No server detected — starting local AssetGen-server on http://127.0.0.1:8432
-   (It will stay running between commands. Stop with: AssetGen server stop)
+⚡ No server detected — starting local assetgen-server on http://127.0.0.1:8432
+   (It will stay running between commands. Stop with: assetgen server stop)
 
 ✓ Server ready
 
@@ -40,19 +40,19 @@ $ AssetGen gen audio sfx generate "laser gun firing" --wait
 
 ✓  Job a1b2c3d4 completed in 1m 33s
 
-  Output file: ~/AssetGen-outputs/a1b2c3d4/laser_gun_firing.wav
+  Output file: ~/assetgen-outputs/a1b2c3d4/laser_gun_firing.wav
   Duration:    2.0s  |  Sample rate: 44100 Hz
 
-  To play:   afplay ~/AssetGen-outputs/a1b2c3d4/laser_gun_firing.wav
-  Or open:   AssetGen jobs open a1b2c3d4
+  To play:   afplay ~/assetgen-outputs/a1b2c3d4/laser_gun_firing.wav
+  Or open:   assetgen jobs open a1b2c3d4
 ```
 
 **Key behaviours in solo mode:**
 
-- The server starts the first time and **stays running** between commands (via PID file). The second `AssetGen gen …` in the same terminal session is instant — no re-start.
+- The server starts the first time and **stays running** between commands (via PID file). The second `assetgen gen …` in the same terminal session is instant — no re-start.
 - Models are downloaded to a shared OS-level location (`~/.local/share/AssetGen/models` on Linux, `%LOCALAPPDATA%\AssetGen\AssetGen\models` on Windows) so re-runs skip the download entirely.
 - Output files are written to `~/AssetGen-outputs/<job-id>/` by default, or overridden with `--output`.
-- The server is **not** killed when the command exits. It stays alive so the next command is faster. Use `AssetGen server stop` to shut it down explicitly.
+- The server is **not** killed when the command exits. It stays alive so the next command is faster. Use `assetgen server stop` to shut it down explicitly.
 
 ---
 
@@ -62,7 +62,7 @@ For users who want the server running as a background service on their machine r
 
 ```bash
 # Terminal A — start server with visible logs
-$ AssetGen-server start
+$ assetgen-server start
 [2024-03-07 10:00:00] INFO  Server listening on http://127.0.0.1:8432
 [2024-03-07 10:00:00] INFO  Worker thread started (device=cuda)
 [2024-03-07 10:05:23] INFO  Job a1b2c3d4 QUEUED  type=visual.model.create
@@ -71,7 +71,7 @@ $ AssetGen-server start
 [2024-03-07 10:07:45] INFO  Job a1b2c3d4 COMPLETED
 
 # Terminal B — use it normally
-$ AssetGen gen visual model create --prompt "low-poly sword" --wait
+$ assetgen gen visual model create --prompt "low-poly sword" --wait
 ⠸ Downloading TencentARC/InstantMesh (8/24 files)…    12%  0:00:55
 ...
 ```
@@ -88,33 +88,33 @@ The primary production use case: your beefy desktop runs the server and your lap
 
 ```powershell
 # Install
-pip install AssetGen
+pip install assetgen
 
 # Configure to accept connections from the network (not just localhost)
-AssetGen-server config set host 0.0.0.0
-AssetGen-server config set port 8432
+assetgen-server config set host 0.0.0.0
+assetgen-server config set port 8432
 
 # Start the server (keep this terminal open, or use --daemon)
-AssetGen-server start
+assetgen-server start
 # Or as a background Windows service:
-AssetGen-server start --daemon
+assetgen-server start --daemon
 ```
 
 **One-time setup on the laptop:**
 
 ```bash
 # Point the client at the desktop
-AssetGen client config set-server http://MY-DESKTOP-IP:8432
+assetgen client config set-server http://MY-DESKTOP-IP:8432
 
 # Verify connection
-AssetGen server status
-# → Connected to http://MY-DESKTOP-IP:8432 (AssetGen 0.0.1, device=cuda, model=...)
+assetgen server status
+# → Connected to http://MY-DESKTOP-IP:8432 (assetgen 0.0.1, device=cuda, model=...)
 ```
 
 **Then just use it normally:**
 
 ```bash
-$ AssetGen gen visual model create --prompt "low-poly sword" --wait
+$ assetgen gen visual model create --prompt "low-poly sword" --wait
 
 ⠸ Model TencentARC/InstantMesh already cached ✓         15%  0:00:01
 ⠼ Generating mesh from prompt…                          40%  0:00:45
@@ -147,10 +147,10 @@ The laptop user gets the generated file locally even though all computation happ
 | No `server_url` configured, PID file exists, process alive, health OK | Reuse existing server — instant |
 | No `server_url` configured, PID file exists, process dead | Clean up stale PID, start fresh |
 | `server_url` configured (remote or manual) | Connect directly, no auto-start logic |
-| `AssetGen server stop` | Send SIGTERM to PID, remove PID file |
+| `assetgen server stop` | Send SIGTERM to PID, remove PID file |
 | Machine reboots | PID file becomes stale, auto-start cleans it up on next command |
 
-**Why does the server persist between commands?** The biggest cost for most AI workflows is loading model weights into GPU VRAM — this can take 30–120 seconds for large models. Keeping the server alive means the second `AssetGen gen ...` call skips that cost entirely.
+**Why does the server persist between commands?** The biggest cost for most AI workflows is loading model weights into GPU VRAM — this can take 30–120 seconds for large models. Keeping the server alive means the second `assetgen gen ...` call skips that cost entirely.
 
 ---
 
@@ -161,7 +161,7 @@ Server side                        Client side
 ──────────────────────────────     ──────────────────────────────
 Job runs inference
   → writes output file(s) to        (polling GET /jobs/{id})
-    ~/.local/share/AssetGen/
+    ~/.local/share/assetgen/
       outputs/{job_id}/
         output.glb
         output_preview.png
@@ -190,7 +190,7 @@ server_url: null          # null = auto-start; or "http://MY-DESKTOP:8432"
 default_wait: false       # true = always block and show progress bar
 default_timeout: 300      # seconds before --wait gives up
 poll_interval: 2.0        # seconds between status polls
-output_dir: null          # null = current dir; or "/home/user/AssetGen-outputs"
+output_dir: null          # null = current dir; or "/home/user/assetgen-outputs"
 ```
 
 ### Server config (`~/.config/AssetGen/server.yaml`)
@@ -213,47 +213,47 @@ skip_model_validation: false
 ## Command Summary
 
 ```
-AssetGen gen <domain> <subdomain> <action> [OPTIONS]
+assetgen gen <domain> <subdomain> <action> [OPTIONS]
   Submit a job to the server (auto-starting it if needed)
 
   --wait / --no-wait   Block and show progress bar until done
   --output PATH        Where to save output file(s)
   --model-id TEXT      Override the catalog model (validated by server)
 
-AssetGen jobs list [-s STATUS] [--limit N]
+assetgen jobs list [-s STATUS] [--limit N]
   Show recent jobs
 
-AssetGen jobs status <id>
+assetgen jobs status <id>
   Show full details for a single job
 
-AssetGen jobs wait <id> [--timeout N]
+assetgen jobs wait <id> [--timeout N]
   Block until a job completes (attach to a running job)
 
-AssetGen jobs download <id> [--output DIR]
+assetgen jobs download <id> [--output DIR]
   Download output files for a completed job
 
-AssetGen server status
+assetgen server status
   Check if a server is reachable and show its config
 
-AssetGen server start
+assetgen server start
   Start a local server in the foreground (for development)
 
-AssetGen server stop
+assetgen server stop
   Stop the local auto-started server
 
-AssetGen client config set-server <URL>
+assetgen client config set-server <URL>
   Point this client at a specific server
 
-AssetGen client config unset-server
+assetgen client config unset-server
   Revert to auto-start mode
 
-AssetGen tasks [--domain DOMAIN]
+assetgen tasks [--domain DOMAIN]
   Browse all supported game-dev tasks and their assigned models
 
-AssetGen config list
+assetgen config list
   Show all job-type → model mappings
 
-AssetGen config set <job-type> <model-id>
+assetgen config set <job-type> <model-id>
   Override the model for a job type on this server
 ```
 
@@ -261,7 +261,7 @@ AssetGen config set <job-type> <model-id>
 
 ## Design Principles
 
-1. **Zero configuration required.** `pip install AssetGen && AssetGen gen audio sfx generate "explosion"` works on first run. The server starts itself, downloads the model, and runs inference.
+1. **Zero configuration required.** `pip install AssetGen && assetgen gen audio sfx generate "explosion"` works on first run. The server starts itself, downloads the model, and runs inference.
 
 2. **The client is always talking to a server** — even if it's a server the client started itself. This means all commands are thin HTTP wrappers; there is no inference code in the client package at all.
 
@@ -269,6 +269,6 @@ AssetGen config set <job-type> <model-id>
 
 4. **The server is stateless enough to restart cleanly.** Jobs are persisted in SQLite. If the server crashes, jobs in RUNNING state are re-queued on next start.
 
-5. **Model weights are cached, not re-downloaded.** The first run downloads a model; every subsequent run uses the local cache. `AssetGen models list` shows what's cached.
+5. **Model weights are cached, not re-downloaded.** The first run downloads a model; every subsequent run uses the local cache. `assetgen models list` shows what's cached.
 
 6. **Output files belong to the user, not the server.** Jobs complete with file paths; clients download them. Files are never ephemeral.

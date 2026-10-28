@@ -5,22 +5,22 @@
 ### Homebrew (macOS / Linux)
 
 ```bash
-brew install aallbrig/tap/AssetGen
+brew install aallbrig/tap/assetgen
 ```
 
 ### Chocolatey (Windows)
 
 ```powershell
-choco install AssetGen
+choco install assetgen
 ```
 
 ### pip (all platforms)
 
 ```bash
-pip install AssetGen
+pip install assetgen
 
 # With GPU inference support (for the server machine)
-pip install "AssetGen[inference]"
+pip install "assetgen[inference]"
 ```
 
 ### Windows with CUDA (server machine)
@@ -28,12 +28,12 @@ pip install "AssetGen[inference]"
 On a Windows machine with an NVIDIA GPU, install PyTorch with CUDA first:
 
 ```powershell
-python -m venv C:\AssetGen-venv
-C:\AssetGen-venv\Scripts\activate
+python -m venv C:\assetgen-venv
+C:\assetgen-venv\Scripts\activate
 
-# Install CUDA-enabled PyTorch, then AssetGen
+# Install CUDA-enabled PyTorch, then assetgen
 pip install torch --index-url https://download.pytorch.org/whl/cu121
-pip install "AssetGen[inference]"
+pip install "assetgen[inference]"
 ```
 
 See [Server Setup (Windows)](server-setup.md#quick-start-windows) for full details.
@@ -49,17 +49,17 @@ Each tagged release publishes a `.whl` wheel file on the
 4. Install it:
 
 ```bash
-pip install AssetGen-<version>-py3-none-any.whl
+pip install assetgen-<version>-py3-none-any.whl
 
 # With inference extras
-pip install "AssetGen-<version>-py3-none-any.whl[inference]"
+pip install "assetgen-<version>-py3-none-any.whl[inference]"
 ```
 
 ### From source (development install)
 
 ```bash
-git clone https://github.com/aallbrig/AssetGen.git
-cd AssetGen
+git clone https://github.com/aallbrig/assetgen.git
+cd assetgen
 pip install -e ".[dev]"
 ```
 
@@ -71,16 +71,16 @@ The easiest way to stay current is the built-in `upgrade` command:
 
 ```bash
 # Check if a newer version exists, then prompt to upgrade
-AssetGen upgrade
+assetgen upgrade
 
 # Just check — exit 0 if up-to-date, exit 1 if outdated (useful in scripts)
-AssetGen upgrade --check
+assetgen upgrade --check
 
 # Upgrade without a confirmation prompt
-AssetGen upgrade --yes
+assetgen upgrade --yes
 
 # Include pre-releases
-AssetGen upgrade --pre
+assetgen upgrade --pre
 ```
 
 The `upgrade` command:
@@ -100,10 +100,10 @@ The `upgrade` command:
 ## Verify installation
 
 ```bash
-AssetGen version
-# AssetGen  version: 0.0.1  python: 3.12.3  platform: Linux
+assetgen version
+# assetgen  version: 0.0.1  python: 3.12.3  platform: Linux
 
-AssetGen --help
+assetgen --help
 ```
 
 ---

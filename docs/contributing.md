@@ -3,8 +3,8 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/aallbrig/AssetGen.git
-cd AssetGen
+git clone https://github.com/aallbrig/assetgen.git
+cd assetgen
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev,docs]"

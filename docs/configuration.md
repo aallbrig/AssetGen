@@ -36,9 +36,9 @@ skip_model_validation: false
 Manage with:
 
 ```bash
-AssetGen server config show
-AssetGen server config set allow_list '["stabilityai/TripoSR"]'
-AssetGen server config set skip_model_validation true
+assetgen server config show
+assetgen server config set allow_list '["stabilityai/TripoSR"]'
+assetgen server config set skip_model_validation true
 ```
 
 ---
@@ -53,8 +53,8 @@ output_dir: "."        # Default output directory for generated files
 Manage with:
 
 ```bash
-AssetGen client config show
-AssetGen client config set server_url "http://192.168.1.50:8742"
+assetgen client config show
+assetgen client config set server_url "http://192.168.1.50:8742"
 ```
 
 Setting `server_url` to a remote address means the client will never
@@ -79,7 +79,7 @@ catalog:
     task: "text-to-audio"
 ```
 
-Keys must exactly match a built-in job type (run `AssetGen tasks` for the full
+Keys must exactly match a built-in job type (run `assetgen tasks` for the full
 list).  After editing, restart the server — the catalog is loaded at startup.
 
 ---
